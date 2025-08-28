@@ -65,11 +65,13 @@ Simply visit [https://ennead-architects-llp.github.io/2025PerformaceReview/](htt
 
 ## 🔧 Technical Details
 
+- **Static Site**: Pure HTML/CSS/JavaScript - no build process required
 - **HTML5**: Semantic markup for accessibility
 - **CSS3**: Modern styling with Flexbox and Grid
-- **Vanilla JavaScript**: No external dependencies
+- **Vanilla JavaScript**: No external dependencies or frameworks
 - **Google Fonts**: Inter font family for modern typography
 - **Font Awesome**: Professional icons
+- **No Jekyll**: Direct static file serving
 
 ## 📱 Browser Support
 
