@@ -159,15 +159,25 @@ async function submitToMicrosoftForms(data) {
     const fieldMappings = {
         'employeeName': 'entry.red2b6b1ddca94d98b4fbac4518e17334' // Employee Name field ID from MS Forms
     };
+    
+    // Alternative field mapping if the above doesn't work
+    // Try these common Microsoft Forms field patterns:
+    // 'employeeName': 'entry.1234567890' // Generic pattern
+    // 'employeeName': 'entry.1' // Simple pattern
 
-    // Add form fields
+    // Add form fields with correct Microsoft Forms field mapping
     Object.keys(data).forEach(key => {
-        if (data[key] && fieldMappings[key]) {
+        if (data[key]) {
+            // Microsoft Forms uses the QuestionId as the field name
+            const fieldName = 'entry.red2b6b1ddca94d98b4fbac4518e17334';
+            
             const input = document.createElement('input');
             input.type = 'hidden';
-            input.name = fieldMappings[key];
+            input.name = fieldName;
             input.value = data[key];
             submitForm.appendChild(input);
+            
+            console.log(`Submitting field: ${key} = ${data[key]} with ID: ${fieldName}`);
         }
     });
 
