@@ -141,66 +141,72 @@ async function handleFormSubmission() {
 }
 
 async function submitToMicrosoftForms(data) {
-    // Create a hidden iframe to submit to Microsoft Forms
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.name = 'msFormsSubmit';
-    document.body.appendChild(iframe);
-
-    // Create a form to submit to Microsoft Forms
-    const submitForm = document.createElement('form');
-    submitForm.method = 'POST';
-    submitForm.action = MS_FORMS_URL;
-    submitForm.target = 'msFormsSubmit';
-    submitForm.style.display = 'none';
-
-    // Map our form fields to Microsoft Forms field names
-    // Based on the actual Microsoft Forms HTML structure
-    const fieldMappings = {
-        'employeeName': 'entry.red2b6b1ddca94d98b4fbac4518e17334' // Employee Name field ID from MS Forms
-    };
+    console.log('Starting Microsoft Forms submission...');
     
-    // Alternative field mapping if the above doesn't work
-    // Try these common Microsoft Forms field patterns:
-    // 'employeeName': 'entry.1234567890' // Generic pattern
-    // 'employeeName': 'entry.1' // Simple pattern
+    // Try multiple submission methods
+    try {
+        // Method 1: Direct POST with fetch (most reliable)
+        const formData = new URLSearchParams();
+        formData.append('entry.red2b6b1ddca94d98b4fbac4518e17334', data.employeeName);
+        
+        console.log('Attempting fetch submission...');
+        const response = await fetch(MS_FORMS_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Accept-Encoding': 'gzip, deflate',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+            },
+            body: formData,
+            mode: 'no-cors' // This is important for cross-origin requests
+        });
+        
+        console.log('Fetch response:', response);
+        return response;
+        
+    } catch (fetchError) {
+        console.log('Fetch method failed, trying iframe method...', fetchError);
+        
+        // Method 2: Iframe submission (fallback)
+        return new Promise((resolve, reject) => {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'msFormsSubmit';
+            document.body.appendChild(iframe);
 
-    // Add form fields with correct Microsoft Forms field mapping
-    Object.keys(data).forEach(key => {
-        if (data[key]) {
-            // Microsoft Forms uses the QuestionId as the field name
-            const fieldName = 'entry.red2b6b1ddca94d98b4fbac4518e17334';
-            
+            const submitForm = document.createElement('form');
+            submitForm.method = 'POST';
+            submitForm.action = MS_FORMS_URL;
+            submitForm.target = 'msFormsSubmit';
+            submitForm.style.display = 'none';
+
+            // Add the employee name field
             const input = document.createElement('input');
             input.type = 'hidden';
-            input.name = fieldName;
-            input.value = data[key];
+            input.name = 'entry.red2b6b1ddca94d98b4fbac4518e17334';
+            input.value = data.employeeName;
             submitForm.appendChild(input);
             
-            console.log(`Submitting field: ${key} = ${data[key]} with ID: ${fieldName}`);
-        }
-    });
+            console.log(`Submitting via iframe: employeeName = ${data.employeeName}`);
 
-    // Add timestamp
-    const timestamp = document.createElement('input');
-    timestamp.type = 'hidden';
-    timestamp.name = 'entry.0000000000';
-    timestamp.value = new Date().toISOString();
-    submitForm.appendChild(timestamp);
+            document.body.appendChild(submitForm);
+            submitForm.submit();
 
-    document.body.appendChild(submitForm);
-
-    // Submit the form
-    submitForm.submit();
-
-    // Clean up after submission
-    setTimeout(() => {
-        document.body.removeChild(iframe);
-        document.body.removeChild(submitForm);
-    }, 5000);
-
-    // Simulate a delay to make it feel like it's processing
-    return new Promise(resolve => setTimeout(resolve, 2000));
+            // Clean up after submission
+            setTimeout(() => {
+                try {
+                    document.body.removeChild(iframe);
+                    document.body.removeChild(submitForm);
+                } catch (e) {
+                    console.log('Cleanup error:', e);
+                }
+                resolve();
+            }, 3000);
+        });
+    }
 }
 
 // Notification system
