@@ -213,14 +213,10 @@ async function submitToMicrosoftForms(data) {
     const fieldMappings = {
         'employeeName': 'entry.1234567890', // Replace with actual MS Forms field ID
         'employeeId': 'entry.0987654321',
-        'department': 'entry.1111111111',
-        'position': 'entry.2222222222',
         'rating': 'entry.3333333333',
         'achievements': 'entry.4444444444',
         'improvements': 'entry.5555555555',
         'goals': 'entry.6666666666',
-        'collaboration': 'entry.7777777777',
-        'communication': 'entry.8888888888',
         'comments': 'entry.9999999999'
     };
 
