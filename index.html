@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 Performance Review</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-chart-line"></i>
+                    2025 Performance Review
+                </h1>
+                <p class="subtitle">Share your feedback and help us improve</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Performance Review Form</h2>
+                    <p>Please take a moment to complete the performance review form below.</p>
+                </div>
+                
+                <div class="form-container">
+                    <div class="form-preview">
+                        <div class="preview-content">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Microsoft Forms</h3>
+                            <p>Click the button below to access the performance review form</p>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="openFormBtn">
+                            <i class="fas fa-external-link-alt"></i>
+                            Open Performance Review Form
+                        </button>
+                        <button class="btn btn-secondary" id="previewBtn">
+                            <i class="fas fa-eye"></i>
+                            Preview Form
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features">
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure & Confidential</h3>
+                    <p>Your responses are protected and kept confidential</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Quick & Easy</h3>
+                    <p>Complete the form in just a few minutes</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile Friendly</h3>
+                    <p>Access the form from any device</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Performance Review. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Modal for form preview -->
+    <div class="modal" id="formModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Performance Review Form Preview</h3>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe 
+                    src="https://forms.office.com/r/W58xLC1vuW" 
+                    width="100%" 
+                    height="600px" 
+                    frameborder="0">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
