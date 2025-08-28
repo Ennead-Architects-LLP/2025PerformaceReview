@@ -3,19 +3,13 @@ const performanceForm = document.getElementById('performanceForm');
 const progressFill = document.getElementById('progressFill');
 const submitBtn = document.getElementById('submitBtn');
 const successMessage = document.getElementById('successMessage');
-const ratingStars = document.querySelectorAll('.rating-star');
-const ratingValue = document.getElementById('ratingValue');
 
 // Microsoft Forms URL for background submission
-const MS_FORMS_URL = 'https://forms.office.com/r/W58xLC1vuW';
-
-// Form validation and progress tracking
-let currentRating = 0;
+const MS_FORMS_URL = 'https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAQIpGjtUQ0wxN1NMMEgzN0pJTTc2MjE1M1hRU0RHNC4u&route=shorturl';
 
 // Initialize form functionality
 document.addEventListener('DOMContentLoaded', function() {
     initializeForm();
-    setupRatingSystem();
     setupProgressTracking();
 });
 
@@ -34,43 +28,8 @@ function initializeForm() {
     });
 }
 
-function setupRatingSystem() {
-    ratingStars.forEach(star => {
-        star.addEventListener('click', function() {
-            const rating = parseInt(this.dataset.rating);
-            setRating(rating);
-        });
-
-        star.addEventListener('mouseenter', function() {
-            const rating = parseInt(this.dataset.rating);
-            highlightStars(rating);
-        });
-
-        star.addEventListener('mouseleave', function() {
-            highlightStars(currentRating);
-        });
-    });
-}
-
-function setRating(rating) {
-    currentRating = rating;
-    ratingValue.value = rating;
-    highlightStars(rating);
-    updateProgress();
-}
-
-function highlightStars(rating) {
-    ratingStars.forEach((star, index) => {
-        if (index < rating) {
-            star.classList.add('active');
-        } else {
-            star.classList.remove('active');
-        }
-    });
-}
-
 function setupProgressTracking() {
-    const formFields = performanceForm.querySelectorAll('input, select, textarea');
+    const formFields = performanceForm.querySelectorAll('input, textarea');
     formFields.forEach(field => {
         field.addEventListener('input', updateProgress);
         field.addEventListener('change', updateProgress);
@@ -78,15 +37,11 @@ function setupProgressTracking() {
 }
 
 function updateProgress() {
-    const totalFields = performanceForm.querySelectorAll('input, select, textarea').length;
+    const totalFields = performanceForm.querySelectorAll('input, textarea').length;
     let completedFields = 0;
 
-    performanceForm.querySelectorAll('input, select, textarea').forEach(field => {
-        if (field.type === 'radio' || field.type === 'checkbox') {
-            if (field.checked) {
-                completedFields++;
-            }
-        } else if (field.value.trim() !== '') {
+    performanceForm.querySelectorAll('input, textarea').forEach(field => {
+        if (field.value.trim() !== '') {
             completedFields++;
         }
     });
@@ -113,13 +68,6 @@ function validateField(e) {
     }
 
     // Specific field validations
-    if (field.id === 'employeeId' && value !== '') {
-        if (!/^\d+$/.test(value)) {
-            showFieldError(field, 'Employee ID must contain only numbers');
-            return false;
-        }
-    }
-
     if (field.id === 'employeeName' && value !== '') {
         if (value.length < 2) {
             showFieldError(field, 'Name must be at least 2 characters long');
@@ -178,8 +126,6 @@ async function handleFormSubmission() {
         
         // Reset form
         performanceForm.reset();
-        currentRating = 0;
-        highlightStars(0);
         updateProgress();
         
         showNotification('Performance review submitted successfully!', 'success');
@@ -190,7 +136,7 @@ async function handleFormSubmission() {
     } finally {
         // Reset button
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Performance Review';
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit';
     }
 }
 
@@ -209,15 +155,9 @@ async function submitToMicrosoftForms(data) {
     submitForm.style.display = 'none';
 
     // Map our form fields to Microsoft Forms field names
-    // You'll need to inspect the actual Microsoft Forms to get the correct field names
+    // Based on the actual Microsoft Forms HTML structure
     const fieldMappings = {
-        'employeeName': 'entry.1234567890', // Replace with actual MS Forms field ID
-        'employeeId': 'entry.0987654321',
-        'rating': 'entry.3333333333',
-        'achievements': 'entry.4444444444',
-        'improvements': 'entry.5555555555',
-        'goals': 'entry.6666666666',
-        'comments': 'entry.9999999999'
+        'employeeName': 'entry.red2b6b1ddca94d98b4fbac4518e17334' // Employee Name field ID from MS Forms
     };
 
     // Add form fields
@@ -251,31 +191,6 @@ async function submitToMicrosoftForms(data) {
 
     // Simulate a delay to make it feel like it's processing
     return new Promise(resolve => setTimeout(resolve, 2000));
-}
-
-// Alternative method using fetch (if CORS allows)
-async function submitToMicrosoftFormsAlternative(data) {
-    try {
-        // This is an alternative approach using fetch
-        // Note: This might not work due to CORS restrictions
-        const response = await fetch(MS_FORMS_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams(data)
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        return response;
-    } catch (error) {
-        console.error('Fetch submission failed:', error);
-        // Fallback to iframe method
-        return submitToMicrosoftForms(data);
-    }
 }
 
 // Notification system
@@ -339,9 +254,6 @@ function loadDraft() {
             const field = performanceForm.querySelector(`[name="${key}"]`);
             if (field) {
                 field.value = data[key];
-                if (key === 'rating') {
-                    setRating(parseInt(data[key]));
-                }
             }
         });
         updateProgress();
