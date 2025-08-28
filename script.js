@@ -4,8 +4,8 @@ const progressFill = document.getElementById('progressFill');
 const submitBtn = document.getElementById('submitBtn');
 const successMessage = document.getElementById('successMessage');
 
-// Microsoft Forms URL for background submission
-const MS_FORMS_URL = 'https://forms.office.com/pages/responsepage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAQIpGjtUQ0wxN1NMMEgzN0pJTTc2MjE1M1hRU0RHNC4u&route=shorturl';
+// Microsoft Forms URL for background submission (corrected from HTML)
+const MS_FORMS_URL = 'https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAQIpGjtUQ0wxN1NMMEgzN0pJTTc2MjE1M1hRU0RHNC4u';
 
 // Initialize form functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -149,7 +149,12 @@ async function submitToMicrosoftForms(data) {
         const formData = new URLSearchParams();
         formData.append('entry.red2b6b1ddca94d98b4fbac4518e17334', data.employeeName);
         
-        console.log('Attempting fetch submission...');
+        // Add additional fields that Microsoft Forms might require
+        formData.append('pageHistory', '0');
+        formData.append('fbzx', '-1'); // Form submission token
+        formData.append('submit', 'Submit');
+        
+        console.log('Attempting fetch submission with data:', formData.toString());
         const response = await fetch(MS_FORMS_URL, {
             method: 'POST',
             headers: {
@@ -159,6 +164,8 @@ async function submitToMicrosoftForms(data) {
                 'Accept-Encoding': 'gzip, deflate',
                 'Connection': 'keep-alive',
                 'Upgrade-Insecure-Requests': '1',
+                'Origin': 'https://forms.office.com',
+                'Referer': MS_FORMS_URL,
             },
             body: formData,
             mode: 'no-cors' // This is important for cross-origin requests
@@ -190,7 +197,26 @@ async function submitToMicrosoftForms(data) {
             input.value = data.employeeName;
             submitForm.appendChild(input);
             
-            console.log(`Submitting via iframe: employeeName = ${data.employeeName}`);
+            // Add additional required fields
+            const pageHistory = document.createElement('input');
+            pageHistory.type = 'hidden';
+            pageHistory.name = 'pageHistory';
+            pageHistory.value = '0';
+            submitForm.appendChild(pageHistory);
+            
+            const fbzx = document.createElement('input');
+            fbzx.type = 'hidden';
+            fbzx.name = 'fbzx';
+            fbzx.value = '-1';
+            submitForm.appendChild(fbzx);
+            
+            const submitBtn = document.createElement('input');
+            submitBtn.type = 'hidden';
+            submitBtn.name = 'submit';
+            submitBtn.value = 'Submit';
+            submitForm.appendChild(submitBtn);
+            
+            console.log(`Submitting via iframe: employeeName = ${data.employeeName} with additional fields`);
 
             document.body.appendChild(submitForm);
             submitForm.submit();
