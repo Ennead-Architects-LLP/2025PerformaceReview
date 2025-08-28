@@ -6,6 +6,9 @@ const successMessage = document.getElementById('successMessage');
 const ratingStars = document.querySelectorAll('.rating-star');
 const ratingValue = document.getElementById('ratingValue');
 
+// Microsoft Forms URL for background submission
+const MS_FORMS_URL = 'https://forms.office.com/r/W58xLC1vuW';
+
 // Form validation and progress tracking
 let currentRating = 0;
 
@@ -148,7 +151,7 @@ function validateForm() {
     return isValid;
 }
 
-function handleFormSubmission() {
+async function handleFormSubmission() {
     if (!validateForm()) {
         showNotification('Please fill in all required fields correctly', 'error');
         return;
@@ -158,14 +161,16 @@ function handleFormSubmission() {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="loading"></span> Submitting...';
 
-    // Simulate form submission (replace with actual submission logic)
-    setTimeout(() => {
+    try {
         // Collect form data
         const formData = new FormData(performanceForm);
         const data = Object.fromEntries(formData);
         
-        // Log the data (replace with actual submission)
-        console.log('Form submitted:', data);
+        // Log the data for debugging
+        console.log('Form data to submit:', data);
+        
+        // Send data to Microsoft Forms in the background
+        await submitToMicrosoftForms(data);
         
         // Show success message
         performanceForm.style.display = 'none';
@@ -179,11 +184,102 @@ function handleFormSubmission() {
         
         showNotification('Performance review submitted successfully!', 'success');
         
+    } catch (error) {
+        console.error('Submission error:', error);
+        showNotification('There was an error submitting your form. Please try again.', 'error');
+    } finally {
         // Reset button
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Performance Review';
-        
-    }, 2000);
+    }
+}
+
+async function submitToMicrosoftForms(data) {
+    // Create a hidden iframe to submit to Microsoft Forms
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.name = 'msFormsSubmit';
+    document.body.appendChild(iframe);
+
+    // Create a form to submit to Microsoft Forms
+    const submitForm = document.createElement('form');
+    submitForm.method = 'POST';
+    submitForm.action = MS_FORMS_URL;
+    submitForm.target = 'msFormsSubmit';
+    submitForm.style.display = 'none';
+
+    // Map our form fields to Microsoft Forms field names
+    // You'll need to inspect the actual Microsoft Forms to get the correct field names
+    const fieldMappings = {
+        'employeeName': 'entry.1234567890', // Replace with actual MS Forms field ID
+        'employeeId': 'entry.0987654321',
+        'department': 'entry.1111111111',
+        'position': 'entry.2222222222',
+        'rating': 'entry.3333333333',
+        'achievements': 'entry.4444444444',
+        'improvements': 'entry.5555555555',
+        'goals': 'entry.6666666666',
+        'collaboration': 'entry.7777777777',
+        'communication': 'entry.8888888888',
+        'comments': 'entry.9999999999'
+    };
+
+    // Add form fields
+    Object.keys(data).forEach(key => {
+        if (data[key] && fieldMappings[key]) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = fieldMappings[key];
+            input.value = data[key];
+            submitForm.appendChild(input);
+        }
+    });
+
+    // Add timestamp
+    const timestamp = document.createElement('input');
+    timestamp.type = 'hidden';
+    timestamp.name = 'entry.0000000000';
+    timestamp.value = new Date().toISOString();
+    submitForm.appendChild(timestamp);
+
+    document.body.appendChild(submitForm);
+
+    // Submit the form
+    submitForm.submit();
+
+    // Clean up after submission
+    setTimeout(() => {
+        document.body.removeChild(iframe);
+        document.body.removeChild(submitForm);
+    }, 5000);
+
+    // Simulate a delay to make it feel like it's processing
+    return new Promise(resolve => setTimeout(resolve, 2000));
+}
+
+// Alternative method using fetch (if CORS allows)
+async function submitToMicrosoftFormsAlternative(data) {
+    try {
+        // This is an alternative approach using fetch
+        // Note: This might not work due to CORS restrictions
+        const response = await fetch(MS_FORMS_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response;
+    } catch (error) {
+        console.error('Fetch submission failed:', error);
+        // Fallback to iframe method
+        return submitToMicrosoftForms(data);
+    }
 }
 
 // Notification system
@@ -196,12 +292,13 @@ function showNotification(message, type = 'info') {
         top: 20px;
         right: 20px;
         background: ${type === 'success' ? '#1e3a2e' : type === 'error' ? '#3a1e1e' : '#1e2a3a'};
-        color: ${type === 'success' ? '#4ade80' : type === 'error' ? '#ff6b6b' : '#60a5fa'};
+        color: ${type === 'success' ? '#4ade80' : type === 'error' ? '#ef4444' : '#3b82f6'};
         padding: 15px 20px;
-        border-radius: 8px;
+        border-radius: 4px;
         z-index: 10000;
         animation: slideInRight 0.3s ease-out;
         border: 1px solid ${type === 'success' ? '#2d5a3d' : type === 'error' ? '#5a2d2d' : '#2d3a5a'};
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     `;
     
     document.body.appendChild(notification);
