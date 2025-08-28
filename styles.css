@@ -337,3 +337,49 @@ body {
     font-size: 0.9rem;
     margin-top: 5px;
 }
+
+/* Forms Embed */
+.forms-embed {
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.forms-embed iframe {
+    display: block;
+    background: #1a1a1a;
+}
+
+/* Direct Link Section */
+.direct-link-section {
+    text-align: center;
+    margin: 30px 0;
+    padding: 20px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.direct-link-section p {
+    color: #e0e0e0;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.direct-link-section .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    padding: 12px 24px;
+    background: #3b82f6;
+    color: white;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.direct-link-section .btn-submit:hover {
+    background: #2563eb;
+}

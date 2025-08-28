@@ -4,8 +4,9 @@ const progressFill = document.getElementById('progressFill');
 const submitBtn = document.getElementById('submitBtn');
 const successMessage = document.getElementById('successMessage');
 
-// Microsoft Forms URL for background submission (corrected from HTML)
+// Microsoft Forms URL and field mapping
 const MS_FORMS_URL = 'https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAQIpGjtUQ0wxN1NMMEgzN0pJTTc2MjE1M1hRU0RHNC4u';
+const MS_FORMS_FIELD_ID = 'entry.red2b6b1ddca94d98b4fbac4518e17334';
 
 // Initialize form functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -114,21 +115,24 @@ async function handleFormSubmission() {
         const formData = new FormData(performanceForm);
         const data = Object.fromEntries(formData);
         
-        // Log the data for debugging
         console.log('Form data to submit:', data);
         
-        // Send data to Microsoft Forms in the background
-        await submitToMicrosoftForms(data);
+        // Try multiple submission methods
+        const submissionSuccess = await tryMultipleSubmissionMethods(data);
         
-        // Show success message
-        performanceForm.style.display = 'none';
-        successMessage.style.display = 'block';
-        
-        // Reset form
-        performanceForm.reset();
-        updateProgress();
-        
-        showNotification('Performance review submitted successfully!', 'success');
+        if (submissionSuccess) {
+            // Show success message
+            performanceForm.style.display = 'none';
+            successMessage.style.display = 'block';
+            
+            // Reset form
+            performanceForm.reset();
+            updateProgress();
+            
+            showNotification('Performance review submitted successfully!', 'success');
+        } else {
+            throw new Error('All submission methods failed');
+        }
         
     } catch (error) {
         console.error('Submission error:', error);
@@ -140,99 +144,165 @@ async function handleFormSubmission() {
     }
 }
 
-async function submitToMicrosoftForms(data) {
-    console.log('Starting Microsoft Forms submission...');
+async function tryMultipleSubmissionMethods(data) {
+    console.log('Trying multiple submission methods...');
     
-    // Try multiple submission methods
+    // Method 1: Direct POST with fetch (no-cors)
     try {
-        // Method 1: Direct POST with fetch (most reliable)
-        const formData = new URLSearchParams();
-        formData.append('entry.red2b6b1ddca94d98b4fbac4518e17334', data.employeeName);
-        
-        // Add additional fields that Microsoft Forms might require
-        formData.append('pageHistory', '0');
-        formData.append('fbzx', '-1'); // Form submission token
-        formData.append('submit', 'Submit');
-        
-        console.log('Attempting fetch submission with data:', formData.toString());
-        const response = await fetch(MS_FORMS_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.5',
-                'Accept-Encoding': 'gzip, deflate',
-                'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1',
-                'Origin': 'https://forms.office.com',
-                'Referer': MS_FORMS_URL,
-            },
-            body: formData,
-            mode: 'no-cors' // This is important for cross-origin requests
-        });
-        
-        console.log('Fetch response:', response);
-        return response;
-        
-    } catch (fetchError) {
-        console.log('Fetch method failed, trying iframe method...', fetchError);
-        
-        // Method 2: Iframe submission (fallback)
-        return new Promise((resolve, reject) => {
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.name = 'msFormsSubmit';
-            document.body.appendChild(iframe);
-
-            const submitForm = document.createElement('form');
-            submitForm.method = 'POST';
-            submitForm.action = MS_FORMS_URL;
-            submitForm.target = 'msFormsSubmit';
-            submitForm.style.display = 'none';
-
-            // Add the employee name field
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'entry.red2b6b1ddca94d98b4fbac4518e17334';
-            input.value = data.employeeName;
-            submitForm.appendChild(input);
-            
-            // Add additional required fields
-            const pageHistory = document.createElement('input');
-            pageHistory.type = 'hidden';
-            pageHistory.name = 'pageHistory';
-            pageHistory.value = '0';
-            submitForm.appendChild(pageHistory);
-            
-            const fbzx = document.createElement('input');
-            fbzx.type = 'hidden';
-            fbzx.name = 'fbzx';
-            fbzx.value = '-1';
-            submitForm.appendChild(fbzx);
-            
-            const submitBtn = document.createElement('input');
-            submitBtn.type = 'hidden';
-            submitBtn.name = 'submit';
-            submitBtn.value = 'Submit';
-            submitForm.appendChild(submitBtn);
-            
-            console.log(`Submitting via iframe: employeeName = ${data.employeeName} with additional fields`);
-
-            document.body.appendChild(submitForm);
-            submitForm.submit();
-
-            // Clean up after submission
-            setTimeout(() => {
-                try {
-                    document.body.removeChild(iframe);
-                    document.body.removeChild(submitForm);
-                } catch (e) {
-                    console.log('Cleanup error:', e);
-                }
-                resolve();
-            }, 3000);
-        });
+        console.log('Attempting Method 1: Fetch with no-cors');
+        await submitViaFetch(data);
+        return true;
+    } catch (error) {
+        console.log('Method 1 failed:', error);
     }
+    
+    // Method 2: Hidden iframe submission
+    try {
+        console.log('Attempting Method 2: Hidden iframe');
+        await submitViaIframe(data);
+        return true;
+    } catch (error) {
+        console.log('Method 2 failed:', error);
+    }
+    
+    // Method 3: Form POST with proper headers
+    try {
+        console.log('Attempting Method 3: Form POST with headers');
+        await submitViaFormPost(data);
+        return true;
+    } catch (error) {
+        console.log('Method 3 failed:', error);
+    }
+    
+    // Method 4: Redirect to MS Forms with pre-filled data
+    try {
+        console.log('Attempting Method 4: Redirect with pre-filled data');
+        await submitViaRedirect(data);
+        return true;
+    } catch (error) {
+        console.log('Method 4 failed:', error);
+    }
+    
+    return false;
+}
+
+async function submitViaFetch(data) {
+    const formData = new URLSearchParams();
+    formData.append(MS_FORMS_FIELD_ID, data.employeeName);
+    
+    // Add additional fields that Microsoft Forms might require
+    formData.append('pageHistory', '0');
+    formData.append('fbzx', '-1');
+    formData.append('submit', 'Submit');
+    
+    const response = await fetch(MS_FORMS_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Accept-Encoding': 'gzip, deflate',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Origin': 'https://forms.office.com',
+            'Referer': MS_FORMS_URL,
+        },
+        body: formData,
+        mode: 'no-cors'
+    });
+    
+    console.log('Fetch response:', response);
+    return response;
+}
+
+function submitViaIframe(data) {
+    return new Promise((resolve, reject) => {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.name = 'msFormsSubmit';
+        document.body.appendChild(iframe);
+        
+        const submitForm = document.createElement('form');
+        submitForm.method = 'POST';
+        submitForm.action = MS_FORMS_URL;
+        submitForm.target = 'msFormsSubmit';
+        submitForm.style.display = 'none';
+        
+        // Add the employee name field
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = MS_FORMS_FIELD_ID;
+        input.value = data.employeeName;
+        submitForm.appendChild(input);
+        
+        // Add additional required fields
+        const pageHistory = document.createElement('input');
+        pageHistory.type = 'hidden';
+        pageHistory.name = 'pageHistory';
+        pageHistory.value = '0';
+        submitForm.appendChild(pageHistory);
+        
+        const fbzx = document.createElement('input');
+        fbzx.type = 'hidden';
+        fbzx.name = 'fbzx';
+        fbzx.value = '-1';
+        submitForm.appendChild(fbzx);
+        
+        const submitBtn = document.createElement('input');
+        submitBtn.type = 'hidden';
+        submitBtn.name = 'submit';
+        submitBtn.value = 'Submit';
+        submitForm.appendChild(submitBtn);
+        
+        console.log(`Submitting via iframe: ${MS_FORMS_FIELD_ID} = ${data.employeeName}`);
+        
+        document.body.appendChild(submitForm);
+        submitForm.submit();
+        
+        // Clean up after submission
+        setTimeout(() => {
+            try {
+                document.body.removeChild(iframe);
+                document.body.removeChild(submitForm);
+            } catch (e) {
+                console.log('Cleanup error:', e);
+            }
+            resolve();
+        }, 3000);
+    });
+}
+
+async function submitViaFormPost(data) {
+    const formData = new URLSearchParams();
+    formData.append(MS_FORMS_FIELD_ID, data.employeeName);
+    formData.append('pageHistory', '0');
+    formData.append('fbzx', '-1');
+    formData.append('submit', 'Submit');
+    
+    const response = await fetch(MS_FORMS_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData,
+        credentials: 'omit'
+    });
+    
+    console.log('Form POST response:', response);
+    return response;
+}
+
+function submitViaRedirect(data) {
+    // Create a URL with pre-filled data
+    const params = new URLSearchParams();
+    params.append(MS_FORMS_FIELD_ID, data.employeeName);
+    
+    const redirectUrl = `${MS_FORMS_URL}?${params.toString()}`;
+    
+    // Open in new window/tab
+    window.open(redirectUrl, '_blank');
+    
+    return Promise.resolve();
 }
 
 // Notification system
@@ -280,33 +350,6 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
-
-// Auto-save functionality (optional)
-function autoSave() {
-    const formData = new FormData(performanceForm);
-    const data = Object.fromEntries(formData);
-    localStorage.setItem('performanceReviewDraft', JSON.stringify(data));
-}
-
-function loadDraft() {
-    const draft = localStorage.getItem('performanceReviewDraft');
-    if (draft) {
-        const data = JSON.parse(draft);
-        Object.keys(data).forEach(key => {
-            const field = performanceForm.querySelector(`[name="${key}"]`);
-            if (field) {
-                field.value = data[key];
-            }
-        });
-        updateProgress();
-    }
-}
-
-// Auto-save every 30 seconds
-setInterval(autoSave, 30000);
-
-// Load draft on page load
-document.addEventListener('DOMContentLoaded', loadDraft);
 
 // Performance monitoring
 function monitorPerformance() {
