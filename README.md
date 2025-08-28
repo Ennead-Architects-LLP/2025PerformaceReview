@@ -4,7 +4,7 @@ A beautiful, modern website wrapper for Microsoft Forms that provides an enhance
 
 ## 🌐 Live Website
 
-**View the live website:** [https://szhang.github.io/2025PerformaceReview/](https://szhang.github.io/2025PerformaceReview/)
+**View the live website:** [https://ennead-architects-llp.github.io/2025PerformaceReview/](https://ennead-architects-llp.github.io/2025PerformaceReview/)
 
 ## ✨ Features
 
@@ -18,13 +18,13 @@ A beautiful, modern website wrapper for Microsoft Forms that provides an enhance
 ## 🚀 Quick Start
 
 ### Option 1: View Live Website
-Simply visit [https://szhang.github.io/2025PerformaceReview/](https://szhang.github.io/2025PerformaceReview/) to access the performance review form.
+Simply visit [https://ennead-architects-llp.github.io/2025PerformaceReview/](https://ennead-architects-llp.github.io/2025PerformaceReview/) to access the performance review form.
 
 ### Option 2: Run Locally
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/szhang/2025PerformaceReview.git
+   git clone https://github.com/Ennead-Architects-LLP/2025PerformaceReview.git
    cd 2025PerformaceReview
    ```
 
@@ -81,7 +81,7 @@ Simply visit [https://szhang.github.io/2025PerformaceReview/](https://szhang.git
 
 ## 🚀 Deployment
 
-This website is automatically deployed to GitHub Pages. Any changes pushed to the main branch will be live at [https://szhang.github.io/2025PerformaceReview/](https://szhang.github.io/2025PerformaceReview/).
+This website is automatically deployed to GitHub Pages. Any changes pushed to the main branch will be live at [https://ennead-architects-llp.github.io/2025PerformaceReview/](https://ennead-architects-llp.github.io/2025PerformaceReview/).
 
 ### To deploy manually:
 
