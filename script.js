@@ -165,21 +165,21 @@ async function handleFormSubmission() {
 async function tryMultipleSubmissionMethods(data) {
     logDebug('Starting multiple submission methods');
     
-    // Method 1: Direct POST with fetch and response verification
+    // Method 1: Backend Proxy (Primary method)
     try {
-        logDebug('Attempting Method 1: Fetch with verification');
-        const result = await submitViaFetch(data);
+        logDebug('Attempting Method 1: Backend Proxy');
+        const result = await submitViaBackendProxy(data);
         if (result.success) {
             return result;
         }
     } catch (error) {
-        logDebug('Method 1 failed', error);
+        logDebug('Method 1 (Backend Proxy) failed', error);
     }
     
-    // Method 2: Hidden iframe with response monitoring
+    // Method 2: Direct POST with fetch (fallback)
     try {
-        logDebug('Attempting Method 2: Hidden iframe with monitoring');
-        const result = await submitViaIframe(data);
+        logDebug('Attempting Method 2: Direct Fetch (fallback)');
+        const result = await submitViaFetch(data);
         if (result.success) {
             return result;
         }
@@ -187,10 +187,10 @@ async function tryMultipleSubmissionMethods(data) {
         logDebug('Method 2 failed', error);
     }
     
-    // Method 3: Form POST with proper headers and verification
+    // Method 3: Hidden iframe (fallback)
     try {
-        logDebug('Attempting Method 3: Form POST with verification');
-        const result = await submitViaFormPost(data);
+        logDebug('Attempting Method 3: Hidden iframe (fallback)');
+        const result = await submitViaIframe(data);
         if (result.success) {
             return result;
         }
@@ -198,9 +198,9 @@ async function tryMultipleSubmissionMethods(data) {
         logDebug('Method 3 failed', error);
     }
     
-    // Method 4: Redirect to MS Forms with pre-filled data
+    // Method 4: Redirect to MS Forms (last resort)
     try {
-        logDebug('Attempting Method 4: Redirect with pre-filled data');
+        logDebug('Attempting Method 4: Redirect (last resort)');
         const result = await submitViaRedirect(data);
         if (result.success) {
             return result;
@@ -431,6 +431,72 @@ function submitViaRedirect(data) {
             method: 'redirect', 
             error: 'Popup blocked or window failed to open' 
         });
+    }
+}
+
+// Backend Proxy submission function
+async function submitViaBackendProxy(data) {
+    logDebug('Starting backend proxy submission', { employeeName: data.employeeName });
+    
+    // Determine backend URL based on environment
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname.includes('127.0.0.1');
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    const isVercel = window.location.hostname.includes('vercel.app');
+    const isNetlify = window.location.hostname.includes('netlify.app');
+    
+    let backendUrl;
+    if (isLocalhost) {
+        backendUrl = 'http://localhost:3000/api/submit-to-ms-forms';
+    } else if (isGitHubPages) {
+        // For GitHub Pages, you'll need to use a serverless function or external API
+        backendUrl = 'https://your-backend-api.vercel.app/api/submit-to-ms-forms';
+    } else if (isVercel) {
+        backendUrl = '/api/submit-to-ms-forms';
+    } else if (isNetlify) {
+        backendUrl = '/.netlify/functions/server/api/submit-to-ms-forms';
+    } else {
+        backendUrl = '/api/submit-to-ms-forms'; // Default fallback
+    }
+    
+    logDebug('Backend URL', backendUrl);
+    
+    try {
+        const response = await fetch(backendUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                employeeName: data.employeeName
+            })
+        });
+        
+        logDebug('Backend proxy response received', { 
+            status: response.status, 
+            statusText: response.statusText 
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        logDebug('Backend proxy result', result);
+        
+        return {
+            success: result.success,
+            method: 'backend-proxy',
+            message: result.message,
+            details: result
+        };
+        
+    } catch (error) {
+        logDebug('Backend proxy error', error);
+        return { 
+            success: false, 
+            method: 'backend-proxy', 
+            error: error.message 
+        };
     }
 }
 
