@@ -1,6 +1,6 @@
 # 2025 Performance Review
 
-A beautiful, modern website wrapper for Microsoft Forms that provides an enhanced user experience for the 2025 Performance Review process.
+A beautiful, modern website that collects performance review data and submits it directly to Microsoft Forms.
 
 ## 🌐 Live Website
 
@@ -10,10 +10,11 @@ A beautiful, modern website wrapper for Microsoft Forms that provides an enhance
 
 - **Modern Design**: Beautiful gradient backgrounds and smooth animations
 - **Responsive Layout**: Works perfectly on desktop, tablet, and mobile devices
-- **Interactive Elements**: Hover effects, modal previews, and smooth transitions
-- **Form Integration**: Seamless integration with Microsoft Forms
-- **User-Friendly**: Clear call-to-action buttons and intuitive navigation
+- **Interactive Elements**: Hover effects and smooth transitions
+- **Direct Form Submission**: Collects data and submits directly to Microsoft Forms
+- **User-Friendly**: Clear call-to-action and intuitive navigation
 - **Performance Optimized**: Fast loading times and smooth animations
+- **No Server Required**: Pure static HTML/CSS/JavaScript
 
 ## 🚀 Quick Start
 
@@ -49,9 +50,10 @@ Simply visit [https://ennead-architects-llp.github.io/2025PerformaceReview/](htt
 
 ```
 2025PerformaceReview/
-├── index.html          # Main HTML file
+├── index.html          # Main HTML file with form
 ├── styles.css          # CSS styles and animations
-├── script.js           # JavaScript functionality
+├── script.js           # JavaScript functionality and form submission
+├── ref html/           # Reference Microsoft Forms HTML
 └── README.md           # Project documentation
 ```
 
@@ -71,7 +73,7 @@ Simply visit [https://ennead-architects-llp.github.io/2025PerformaceReview/](htt
 - **Vanilla JavaScript**: No external dependencies or frameworks
 - **Google Fonts**: Inter font family for modern typography
 - **Font Awesome**: Professional icons
-- **No Jekyll**: Direct static file serving
+- **Direct Form Submission**: Multiple fallback methods to submit to Microsoft Forms
 
 ## 📱 Browser Support
 
@@ -94,26 +96,30 @@ This website is automatically deployed to GitHub Pages. Any changes pushed to th
 
 ## 📊 Microsoft Forms Integration
 
-The website integrates with Microsoft Forms at: [https://forms.office.com/r/W58xLC1vuW](https://forms.office.com/r/W58xLC1vuW)
+The website collects data and submits it directly to the Microsoft Forms survey at: [https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAQIpGjtUQ0wxN1NMMEgzN0pJTTc2MjE1M1hRU0RHNC4u](https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAQIpGjtUQ0wxN1NMMEgzN0pJTTc2MjE1M1hRU0RHNC4u)
 
 ### Features:
-- **Direct Link**: Opens the form in a new tab
-- **Modal Preview**: View the form within the website
-- **Responsive**: Form works on all device sizes
+- **Data Collection**: Collects employee name and other required fields
+- **Direct Submission**: Submits data directly to Microsoft Forms
+- **Multiple Fallback Methods**: Uses POST, iframe, and fetch methods for reliability
+- **Form Validation**: Client-side validation before submission
+- **Success Feedback**: Shows confirmation when submission is successful
 
 ## 🎯 User Experience
 
-- **Clear Call-to-Action**: Prominent buttons to access the form
-- **Information Cards**: Key features and benefits clearly displayed
-- **Loading States**: Smooth animations and feedback
+- **Clear Form Interface**: Simple, clean form with required field validation
+- **Progress Tracking**: Visual progress bar showing completion status
+- **Loading States**: Smooth animations and feedback during submission
+- **Success Confirmation**: Clear success message after submission
 - **Accessibility**: Keyboard navigation and screen reader support
 
 ## 🔒 Security & Privacy
 
-- No data collection on the wrapper website
+- No data collection on the wrapper website (data goes directly to Microsoft Forms)
 - All form submissions go directly to Microsoft Forms
 - Secure HTTPS connection
 - No tracking or analytics (unless manually added)
+- No server-side processing or data storage
 
 ## 🤝 Contributing
 
