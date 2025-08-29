@@ -187,10 +187,11 @@ async function submitViaFetch(data) {
     const formDataObj = {};
     formDataObj[GOOGLE_FORMS_FIELD_ID] = data.employeeName;
     formDataObj['pageHistory'] = '0';
-    formDataObj['fbzx'] = '-1';
+    formDataObj['fbzx'] = '6156528852464951995'; // Correct fbzx value from the form
     formDataObj['submit'] = 'Submit';
     
     console.log('Form data prepared:', formDataObj);
+    console.log('Submitting to URL:', GOOGLE_FORMS_URL);
     
     try {
         // Use fetch API with no-cors like EI-Post
@@ -209,9 +210,12 @@ async function submitViaFetch(data) {
         });
         
         // Race between submission and timeout
-        await Promise.race([submitPromise, timeoutPromise]);
+        const response = await Promise.race([submitPromise, timeoutPromise]);
         
         console.log('Fetch submission completed successfully');
+        console.log('Response status:', response.status);
+        console.log('Response type:', response.type);
+        
         return { 
             success: true, 
             method: 'fetch',
@@ -243,7 +247,7 @@ function submitViaIframe(data) {
         const formFields = {
             [GOOGLE_FORMS_FIELD_ID]: data.employeeName,
             'pageHistory': '0',
-            'fbzx': '-1',
+            'fbzx': '6156528852464951995', // Correct fbzx value from the form
             'submit': 'Submit'
         };
         
