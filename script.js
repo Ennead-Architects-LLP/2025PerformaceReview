@@ -122,7 +122,7 @@ async function handleFormSubmission() {
         
         console.log('Form data collected', data);
         
-        // Submit to Microsoft Forms
+        // Submit to Microsoft Forms using the EI-Post approach
         const submissionResult = await submitToMicrosoftForms(data);
         
         if (submissionResult.success) {
@@ -160,16 +160,16 @@ async function submitToMicrosoftForms(data) {
     });
     
     try {
-        // Method 1: Try direct POST submission
-        const result = await submitViaDirectPost(data);
+        // Method 1: Try fetch with no-cors (like EI-Post)
+        const result = await submitViaFetch(data);
         if (result.success) {
             return result;
         }
         
-        // Method 2: Try fetch with no-cors as fallback
-        const fetchResult = await submitViaFetch(data);
-        if (fetchResult.success) {
-            return fetchResult;
+        // Method 2: Try iframe fallback (like EI-Post fallback)
+        const iframeResult = await submitViaIframe(data);
+        if (iframeResult.success) {
+            return iframeResult;
         }
         
         return { success: false, reason: 'All submission methods failed' };
@@ -180,92 +180,38 @@ async function submitToMicrosoftForms(data) {
     }
 }
 
-async function submitViaDirectPost(data) {
-    console.log('Attempting direct POST submission');
-    
-    const formData = new URLSearchParams();
-    formData.append(MS_FORMS_FIELD_ID, data.employeeName);
-    formData.append('pageHistory', '0');
-    formData.append('fbzx', '-1');
-    formData.append('submit', 'Submit');
-    
-    try {
-        const response = await fetch(MS_FORMS_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.5',
-                'Accept-Encoding': 'gzip, deflate',
-                'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1',
-                'Origin': 'https://forms.office.com',
-                'Referer': MS_FORMS_URL,
-            },
-            body: formData,
-            credentials: 'omit'
-        });
-        
-        console.log('Direct POST response', { 
-            status: response.status, 
-            statusText: response.statusText,
-            type: response.type
-        });
-        
-        // Try to read response text for verification
-        let responseText = '';
-        try {
-            responseText = await response.text();
-            console.log('Response text length', responseText.length);
-        } catch (e) {
-            console.log('Could not read response text', e);
-        }
-        
-        // Check if response indicates success
-        const isSuccess = responseText.includes('Thank you') || 
-                         responseText.includes('submitted') || 
-                         responseText.includes('success') ||
-                         response.status === 200;
-        
-        return { 
-            success: isSuccess, 
-            method: 'directPost',
-            responseStatus: response.status,
-            responseTextLength: responseText.length
-        };
-        
-    } catch (error) {
-        console.log('Direct POST error', error);
-        return { success: false, method: 'directPost', error: error.message };
-    }
-}
-
 async function submitViaFetch(data) {
-    console.log('Attempting fetch submission with no-cors');
+    console.log('Attempting fetch submission (EI-Post method)');
     
-    const formData = new URLSearchParams();
-    formData.append(MS_FORMS_FIELD_ID, data.employeeName);
-    formData.append('pageHistory', '0');
-    formData.append('fbzx', '-1');
-    formData.append('submit', 'Submit');
+    // Prepare form data like EI-Post does
+    const formDataObj = {};
+    formDataObj[MS_FORMS_FIELD_ID] = data.employeeName;
+    formDataObj['pageHistory'] = '0';
+    formDataObj['fbzx'] = '-1';
+    formDataObj['submit'] = 'Submit';
+    
+    console.log('Form data prepared:', formDataObj);
     
     try {
-        const response = await fetch(MS_FORMS_URL, {
+        // Use fetch API with no-cors like EI-Post
+        const submitPromise = fetch(MS_FORMS_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: formData,
-            mode: 'no-cors'
+            body: new URLSearchParams(formDataObj),
+            mode: 'no-cors' // Required for Microsoft Forms (like Google Forms)
         });
         
-        console.log('Fetch response received', { 
-            status: response.status, 
-            statusText: response.statusText,
-            type: response.type
+        // Set a timeout for the submission (like EI-Post)
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Submission timeout')), 5000);
         });
         
-        // With no-cors, we can't read the response, so we assume success
+        // Race between submission and timeout
+        await Promise.race([submitPromise, timeoutPromise]);
+        
+        console.log('Fetch submission completed successfully');
         return { 
             success: true, 
             method: 'fetch',
@@ -273,54 +219,148 @@ async function submitViaFetch(data) {
         };
         
     } catch (error) {
-        console.log('Fetch submission error', error);
+        console.log('Fetch submission failed:', error);
         return { success: false, method: 'fetch', error: error.message };
     }
 }
 
-// Notification system
+function submitViaIframe(data) {
+    return new Promise((resolve) => {
+        console.log('Attempting iframe submission (EI-Post fallback method)');
+        
+        // Create hidden iframe like EI-Post does
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        // Create hidden form like EI-Post does
+        const hiddenForm = document.createElement('form');
+        hiddenForm.method = 'POST';
+        hiddenForm.action = MS_FORMS_URL;
+        hiddenForm.target = iframe.name;
+        
+        // Add form fields like EI-Post does
+        const formFields = {
+            [MS_FORMS_FIELD_ID]: data.employeeName,
+            'pageHistory': '0',
+            'fbzx': '-1',
+            'submit': 'Submit'
+        };
+        
+        for (let [key, value] of Object.entries(formFields)) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            hiddenForm.appendChild(input);
+        }
+        
+        document.body.appendChild(hiddenForm);
+        hiddenForm.submit();
+        
+        // Clean up like EI-Post does
+        setTimeout(() => {
+            try {
+                document.body.removeChild(hiddenForm);
+                document.body.removeChild(iframe);
+            } catch (e) {
+                console.log('Cleanup error:', e);
+            }
+        }, 500);
+        
+        console.log('Iframe submission completed');
+        resolve({ 
+            success: true, 
+            method: 'iframe',
+            note: 'Form submitted via iframe fallback'
+        });
+    });
+}
+
+// Notification system (using EI-Post's improved version)
 function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotification = document.querySelector('.notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+
+    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
-    notification.textContent = message;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-message">${message}</span>
+            <button class="notification-close">&times;</button>
+        </div>
+    `;
+
+    // Add styles
     notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? '#1e3a2e' : type === 'error' ? '#3a1e1e' : '#1e2a3a'};
-        color: ${type === 'success' ? '#4ade80' : type === 'error' ? '#ef4444' : '#3b82f6'};
-        padding: 15px 20px;
-        border-radius: 4px;
+        background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         z-index: 10000;
+        max-width: 400px;
         animation: slideInRight 0.3s ease-out;
-        border: 1px solid ${type === 'success' ? '#2d5a3d' : type === 'error' ? '#5a2d2d' : '#2d3a5a'};
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease-out';
-        setTimeout(() => {
-            if (document.body.contains(notification)) {
-                document.body.removeChild(notification);
-            }
-        }, 300);
-    }, 4000);
-}
 
-// Add CSS animations for notifications
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
+    // Add animation keyframes
+    if (!document.querySelector('#notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            .notification-content {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+            }
+            .notification-close {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0;
+                line-height: 1;
+            }
+            .notification-close:hover {
+                opacity: 0.8;
+            }
+        `;
+        document.head.appendChild(style);
     }
-    
-    @keyframes slideOutRight {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);
+
+    // Add to page
+    document.body.appendChild(notification);
+
+    // Close button functionality
+    const closeBtn = notification.querySelector('.notification-close');
+    closeBtn.addEventListener('click', () => {
+        notification.remove();
+    });
+
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
+}
 
