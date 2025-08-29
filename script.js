@@ -122,7 +122,7 @@ async function handleFormSubmission() {
         
         console.log('Form data collected', data);
         
-        // Submit to Google Forms
+        // Submit to Google Forms using iframe method
         const submissionResult = await submitToGoogleForms(data);
         
         if (submissionResult.success) {
@@ -153,20 +153,20 @@ async function handleFormSubmission() {
 }
 
 async function submitToGoogleForms(data) {
-    console.log('Starting Google Forms submission', { 
+    console.log('Starting Google Forms submission (EI-Post method)', { 
         url: GOOGLE_FORMS_URL, 
         fieldId: GOOGLE_FORMS_FIELD_ID, 
         value: data.employeeName 
     });
     
     try {
-        // Method 1: Try fetch with no-cors
+        // Method 1: Try fetch with no-cors (like EI-Post)
         const result = await submitViaFetch(data);
         if (result.success) {
             return result;
         }
         
-        // Method 2: Try iframe fallback
+        // Method 2: Try iframe fallback (like EI-Post fallback)
         const iframeResult = await submitViaIframe(data);
         if (iframeResult.success) {
             return iframeResult;
@@ -181,26 +181,29 @@ async function submitToGoogleForms(data) {
 }
 
 async function submitViaFetch(data) {
-    console.log('Attempting fetch submission for Google Forms');
+    console.log('Attempting fetch submission (EI-Post method)');
     
-    // Prepare form data for Google Forms
+    // Prepare form data like EI-Post does
     const formDataObj = {};
     formDataObj[GOOGLE_FORMS_FIELD_ID] = data.employeeName;
+    formDataObj['pageHistory'] = '0';
+    formDataObj['fbzx'] = '-1';
+    formDataObj['submit'] = 'Submit';
     
     console.log('Form data prepared:', formDataObj);
     
     try {
-        // Use fetch API with no-cors for Google Forms
+        // Use fetch API with no-cors like EI-Post
         const submitPromise = fetch(GOOGLE_FORMS_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams(formDataObj),
-            mode: 'no-cors' // Required for Google Forms
+            mode: 'no-cors' // Required for Google Forms (like EI-Post)
         });
         
-        // Set a timeout for the submission
+        // Set a timeout for the submission (like EI-Post)
         const timeoutPromise = new Promise((_, reject) => {
             setTimeout(() => reject(new Error('Submission timeout')), 5000);
         });
@@ -223,22 +226,25 @@ async function submitViaFetch(data) {
 
 function submitViaIframe(data) {
     return new Promise((resolve) => {
-        console.log('Attempting iframe submission for Google Forms');
+        console.log('Attempting iframe submission (EI-Post fallback method)');
         
-        // Create hidden iframe
+        // Create hidden iframe like EI-Post does
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
         
-        // Create hidden form
+        // Create hidden form like EI-Post does
         const hiddenForm = document.createElement('form');
         hiddenForm.method = 'POST';
         hiddenForm.action = GOOGLE_FORMS_URL;
         hiddenForm.target = iframe.name;
         
-        // Add form fields for Google Forms
+        // Add form fields like EI-Post does
         const formFields = {
-            [GOOGLE_FORMS_FIELD_ID]: data.employeeName
+            [GOOGLE_FORMS_FIELD_ID]: data.employeeName,
+            'pageHistory': '0',
+            'fbzx': '-1',
+            'submit': 'Submit'
         };
         
         for (let [key, value] of Object.entries(formFields)) {
@@ -252,7 +258,7 @@ function submitViaIframe(data) {
         document.body.appendChild(hiddenForm);
         hiddenForm.submit();
         
-        // Clean up
+        // Clean up like EI-Post does
         setTimeout(() => {
             try {
                 document.body.removeChild(hiddenForm);
@@ -270,6 +276,8 @@ function submitViaIframe(data) {
         });
     });
 }
+
+
 
 // Notification system (using EI-Post's improved version)
 function showNotification(message, type = 'info') {
