@@ -4,9 +4,9 @@ const progressFill = document.getElementById('progressFill');
 const submitBtn = document.getElementById('submitBtn');
 const successMessage = document.getElementById('successMessage');
 
-// Microsoft Forms URL and field mapping
-const MS_FORMS_URL = 'https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAQIpGjtUQ0wxN1NMMEgzN0pJTTc2MjE1M1hRU0RHNC4u';
-const MS_FORMS_FIELD_ID = 'entry.red2b6b1ddca94d98b4fbac4518e17334';
+// Google Forms URL and field mapping
+const GOOGLE_FORMS_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdLeIudd5hJr-DFsB23DwyJstjEq8vvNYp57uBL_xZrDLJRrA/formResponse';
+const GOOGLE_FORMS_FIELD_ID = 'entry.498517422'; // Employee name field ID from Google Form
 
 // Initialize form functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -122,8 +122,8 @@ async function handleFormSubmission() {
         
         console.log('Form data collected', data);
         
-        // Submit to Microsoft Forms using the EI-Post approach
-        const submissionResult = await submitToMicrosoftForms(data);
+        // Submit to Google Forms
+        const submissionResult = await submitToGoogleForms(data);
         
         if (submissionResult.success) {
             console.log('Submission successful', submissionResult);
@@ -152,21 +152,21 @@ async function handleFormSubmission() {
     }
 }
 
-async function submitToMicrosoftForms(data) {
-    console.log('Starting Microsoft Forms submission', { 
-        url: MS_FORMS_URL, 
-        fieldId: MS_FORMS_FIELD_ID, 
+async function submitToGoogleForms(data) {
+    console.log('Starting Google Forms submission', { 
+        url: GOOGLE_FORMS_URL, 
+        fieldId: GOOGLE_FORMS_FIELD_ID, 
         value: data.employeeName 
     });
     
     try {
-        // Method 1: Try fetch with no-cors (like EI-Post)
+        // Method 1: Try fetch with no-cors
         const result = await submitViaFetch(data);
         if (result.success) {
             return result;
         }
         
-        // Method 2: Try iframe fallback (like EI-Post fallback)
+        // Method 2: Try iframe fallback
         const iframeResult = await submitViaIframe(data);
         if (iframeResult.success) {
             return iframeResult;
@@ -175,35 +175,32 @@ async function submitToMicrosoftForms(data) {
         return { success: false, reason: 'All submission methods failed' };
         
     } catch (error) {
-        console.log('Microsoft Forms submission error', error);
+        console.log('Google Forms submission error', error);
         return { success: false, reason: error.message };
     }
 }
 
 async function submitViaFetch(data) {
-    console.log('Attempting fetch submission (EI-Post method)');
+    console.log('Attempting fetch submission for Google Forms');
     
-    // Prepare form data like EI-Post does
+    // Prepare form data for Google Forms
     const formDataObj = {};
-    formDataObj[MS_FORMS_FIELD_ID] = data.employeeName;
-    formDataObj['pageHistory'] = '0';
-    formDataObj['fbzx'] = '-1';
-    formDataObj['submit'] = 'Submit';
+    formDataObj[GOOGLE_FORMS_FIELD_ID] = data.employeeName;
     
     console.log('Form data prepared:', formDataObj);
     
     try {
-        // Use fetch API with no-cors like EI-Post
-        const submitPromise = fetch(MS_FORMS_URL, {
+        // Use fetch API with no-cors for Google Forms
+        const submitPromise = fetch(GOOGLE_FORMS_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams(formDataObj),
-            mode: 'no-cors' // Required for Microsoft Forms (like Google Forms)
+            mode: 'no-cors' // Required for Google Forms
         });
         
-        // Set a timeout for the submission (like EI-Post)
+        // Set a timeout for the submission
         const timeoutPromise = new Promise((_, reject) => {
             setTimeout(() => reject(new Error('Submission timeout')), 5000);
         });
@@ -226,25 +223,22 @@ async function submitViaFetch(data) {
 
 function submitViaIframe(data) {
     return new Promise((resolve) => {
-        console.log('Attempting iframe submission (EI-Post fallback method)');
+        console.log('Attempting iframe submission for Google Forms');
         
-        // Create hidden iframe like EI-Post does
+        // Create hidden iframe
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
         
-        // Create hidden form like EI-Post does
+        // Create hidden form
         const hiddenForm = document.createElement('form');
         hiddenForm.method = 'POST';
-        hiddenForm.action = MS_FORMS_URL;
+        hiddenForm.action = GOOGLE_FORMS_URL;
         hiddenForm.target = iframe.name;
         
-        // Add form fields like EI-Post does
+        // Add form fields for Google Forms
         const formFields = {
-            [MS_FORMS_FIELD_ID]: data.employeeName,
-            'pageHistory': '0',
-            'fbzx': '-1',
-            'submit': 'Submit'
+            [GOOGLE_FORMS_FIELD_ID]: data.employeeName
         };
         
         for (let [key, value] of Object.entries(formFields)) {
@@ -258,7 +252,7 @@ function submitViaIframe(data) {
         document.body.appendChild(hiddenForm);
         hiddenForm.submit();
         
-        // Clean up like EI-Post does
+        // Clean up
         setTimeout(() => {
             try {
                 document.body.removeChild(hiddenForm);
