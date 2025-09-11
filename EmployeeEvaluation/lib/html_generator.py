@@ -8,6 +8,7 @@ import os
 import json
 from collections import defaultdict, Counter
 from typing import List, Dict
+from datetime import datetime
 from parser import get_employee_initials, clean_field_name
 
 
@@ -247,6 +248,14 @@ def get_css_styles() -> str:
             opacity: 0.9;
             position: relative;
             z-index: 1;
+            margin-bottom: 8px;
+        }
+
+        .last-updated {
+            font-size: 0.9rem !important;
+            opacity: 0.7 !important;
+            font-weight: 400 !important;
+            margin-bottom: 0 !important;
         }
 
         .header-content {
@@ -690,12 +699,16 @@ def get_css_styles() -> str:
 
 def generate_header(employees: List[Dict[str, str]]) -> str:
     """Generate the header section."""
+    # Get current timestamp
+    current_time = datetime.now().strftime("%B %d, %Y at %I:%M %p")
+
     return f"""
         <div class="header">
             <div class="header-content">
                 <div class="header-text">
                     <h1>Employee Evaluation Report</h1>
                     <p>Total Employees: {len(employees)}</p>
+                    <p class="last-updated">Last Updated: {current_time}</p>
                 </div>
                 <div class="header-actions">
                     <button class="download-btn excel-btn" onclick="downloadExcel()">
