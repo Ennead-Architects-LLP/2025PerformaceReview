@@ -1,11 +1,10 @@
 import sys
 
-from app.modules.orchestrator import EmployeeEvaluationOrchestrator
+from app.modules.cli import run_cli
 
 
 def main() -> int:
-    orchestrator = EmployeeEvaluationOrchestrator()
-    return orchestrator.run()
+    return run_cli()
 
 
 if __name__ == "__main__":

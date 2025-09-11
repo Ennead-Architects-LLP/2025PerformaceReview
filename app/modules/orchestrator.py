@@ -191,8 +191,8 @@ def validate_system() -> bool:
         
         # Check if required modules can be imported
         required_modules = [
-            'parser', 'excel_generator', 'html_generator', 
-            'utils', 'config', 'constants'
+            'app.modules.parser', 'app.modules.excel_generator', 'app.modules.html_generator', 
+            'app.modules.utils', 'app.modules.config', 'app.modules.constants'
         ]
         
         for module in required_modules:
