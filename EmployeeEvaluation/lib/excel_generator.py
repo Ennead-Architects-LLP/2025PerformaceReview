@@ -66,20 +66,17 @@ def create_excel_output(employees: List[Dict[str, str]], all_fields: List[str], 
     # Apply professional formatting
     apply_excel_formatting(ws, len(employees), len(df.columns))
     
-    # Save the workbook (in data source directory)
-    from constants import get_data_source_path
-    data_source_dir = get_data_source_path()
-    output_path = os.path.join(data_source_dir, f"_EvaluationSummary.xlsx")
-    wb.save(output_path)
-    
-    print(f"Excel file created: {output_path}")
-    
-    # Also create backup in script folder
+    # Save the workbook in docs folder for GitHub Pages
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    backup_path = os.path.join(project_root, f"_EvaluationSummary.xlsx")
-    wb.save(backup_path)
-    
-    print(f"Excel backup created: {backup_path}")
+    docs_dir = os.path.join(project_root, 'docs')
+    output_path = os.path.join(docs_dir, f"_EvaluationSummary.xlsx")
+
+    # Ensure docs directory exists
+    os.makedirs(docs_dir, exist_ok=True)
+
+    wb.save(output_path)
+
+    print(f"Excel file created: {output_path}")
     return output_path
 
 

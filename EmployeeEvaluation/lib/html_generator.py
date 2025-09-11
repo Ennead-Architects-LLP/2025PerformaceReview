@@ -51,22 +51,18 @@ def create_html_output(employees: List[Dict[str, str]], all_fields: List[str], o
     # Generate HTML content
     html_content = generate_html_template(employees, all_fields, chart_data)
     
-    # Write to file (in data source directory)
-    from constants import get_data_source_path
-    data_source_dir = get_data_source_path()
-    output_path = os.path.join(data_source_dir, f"_EvaluationSummary.html")
+    # Write to docs folder for GitHub Pages
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    docs_dir = os.path.join(project_root, 'docs')
+    output_path = os.path.join(docs_dir, f"_EvaluationSummary.html")
+
+    # Ensure docs directory exists
+    os.makedirs(docs_dir, exist_ok=True)
+
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
-    
+
     print(f"HTML file created: {output_path}")
-    
-    # Also create backup in script folder
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    backup_path = os.path.join(project_root, f"_EvaluationSummary.html")
-    with open(backup_path, 'w', encoding='utf-8') as f:
-        f.write(html_content)
-    
-    print(f"HTML backup created: {backup_path}")
     return output_path
 
 
@@ -245,12 +241,71 @@ def get_css_styles() -> str:
             position: relative;
             z-index: 1;
         }
-        
+
         .header p {
             font-size: 1.1rem;
             opacity: 0.9;
             position: relative;
             z-index: 1;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-text {
+            flex: 1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #16b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(22, 185, 129, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(22, 185, 129, 0.4);
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+        }
+
+        .excel-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .excel-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
         }
         
         .tabs {
@@ -637,8 +692,18 @@ def generate_header(employees: List[Dict[str, str]]) -> str:
     """Generate the header section."""
     return f"""
         <div class="header">
-            <h1>Employee Evaluation Report</h1>
-            <p>Total Employees: {len(employees)}</p>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>Employee Evaluation Report</h1>
+                    <p>Total Employees: {len(employees)}</p>
+                </div>
+                <div class="header-actions">
+                    <button class="download-btn excel-btn" onclick="downloadExcel()">
+                        <span class="btn-icon">📊</span>
+                        Download Excel
+                    </button>
+                </div>
+            </div>
         </div>
     """
 
@@ -1000,5 +1065,15 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
                 returnToTop.classList.remove('show');
             }}
         }});
+
+        // Download Excel file function
+        function downloadExcel() {{
+            const link = document.createElement('a');
+            link.href = '_EvaluationSummary.xlsx';
+            link.download = '_EvaluationSummary.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }}
     </script>
     """
