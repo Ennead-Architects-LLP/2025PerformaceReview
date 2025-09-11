@@ -12,6 +12,7 @@ from datetime import datetime
 from pathlib import Path
 # Removed parser import - functions moved to this module
 from .config import Config
+from .header_mapper import CardGroup, header_mapper
 
 
 def get_employee_initials(name: str) -> str:
@@ -708,6 +709,38 @@ def get_css_styles() -> str:
             font-size: 1rem;
         }
         
+        .suggestion-item {
+            cursor: pointer;
+            padding: 8px 16px;
+            background: rgba(43, 122, 120, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(43, 122, 120, 0.2);
+            transition: all 0.2s ease;
+            margin: 4px 0;
+            text-align: left;
+        }
+        
+        .suggestion-item:hover {
+            background: rgba(43, 122, 120, 0.2);
+            border-color: rgba(43, 122, 120, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(43, 122, 120, 0.15);
+        }
+        
+        .suggestions-container {
+            margin-top: 16px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .suggestions-title {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: #2B7A78;
+        }
+        
         
         .footer {
             background: #F0F8F7;
@@ -810,6 +843,53 @@ def generate_footer() -> str:
         </div>
     """
 
+
+def generate_employee_card_with_mapping(employee: Dict[str, Any], header_mappings: Dict[str, Any]) -> str:
+    """Generate employee card using header mapping system."""
+    # Get visible fields in card group order
+    visible_fields = header_mapper.get_visible_fields(header_mappings)
+    
+    # Group fields by their card group
+    grouped_fields = {}
+    for field in visible_fields:
+        group = field.group_under
+        if group not in grouped_fields:
+            grouped_fields[group] = []
+        grouped_fields[group].append(field)
+    
+    # Generate card HTML
+    card_html = f"""
+    <div class="employee-card">
+        <div class="employee-header">
+            <img src="{employee.get('profile_image', {}).get('display_path', 'assets/images/default-avatar.png')}" 
+                 alt="{employee.get('name', '')}" class="profile-image">
+            <div class="employee-info">
+                <div class="employee-name">{employee.get('name', '')}</div>
+                <div class="employee-time">{employee.get('date_of_evaluation', '')}</div>
+            </div>
+        </div>
+        <div class="fields-container">
+"""
+    
+    # Generate field groups in order
+    for group in header_mapper.card_group_order:
+        if group in grouped_fields and grouped_fields[group]:
+            group_name = group.value.replace('_', ' ').title()
+            card_html += f'            <div class="field-group"><div class="group-title">{group_name}</div>'
+            
+            for field in grouped_fields[group]:
+                field_value = employee.get(field.mapped_header, '')
+                if field_value and str(field_value).strip():
+                    display_name = field.original_header.replace('_', ' ').title()
+                    card_html += f'<div class="field"><div class="field-label">{display_name}</div><div class="field-value">{field_value}</div></div>'
+            
+            card_html += '</div>'
+    
+    card_html += """
+        </div>
+    </div>
+"""
+    return card_html
 
 def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
     """Generate HTML for employee cards from flat data."""
@@ -1049,6 +1129,117 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
             if (tabName === 'summary') {{
                 setTimeout(initializeCharts, 100);
             }}
+            
+            // Hide submitted fields when switching tabs
+            setTimeout(hideSubmittedField, 50);
+        }}
+        
+        // Fuzzy search function using Levenshtein distance
+        function calculateLevenshteinDistance(str1, str2) {{
+            const matrix = [];
+            const len1 = str1.length;
+            const len2 = str2.length;
+            
+            if (len1 === 0) return len2;
+            if (len2 === 0) return len1;
+            
+            // Initialize matrix
+            for (let i = 0; i <= len2; i++) {{
+                matrix[i] = [i];
+            }}
+            for (let j = 0; j <= len1; j++) {{
+                matrix[0][j] = j;
+            }}
+            
+            // Fill matrix
+            for (let i = 1; i <= len2; i++) {{
+                for (let j = 1; j <= len1; j++) {{
+                    if (str2.charAt(i - 1) === str1.charAt(j - 1)) {{
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    }} else {{
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1, // substitution
+                            matrix[i][j - 1] + 1,     // insertion
+                            matrix[i - 1][j] + 1      // deletion
+                        );
+                    }}
+                }}
+            }}
+            
+            return matrix[len2][len1];
+        }}
+        
+        // Find similar names using fuzzy search
+        function findSimilarNames(searchTerm, employeeNames, maxDistance = 3) {{
+            const suggestions = [];
+            const searchLower = searchTerm.toLowerCase();
+            
+            employeeNames.forEach(name => {{
+                const nameLower = name.toLowerCase();
+                
+                // Check for exact substring match first (highest priority)
+                if (nameLower.includes(searchLower) && nameLower !== searchLower) {{
+                    suggestions.push({{
+                        name: name,
+                        distance: 0,
+                        similarity: 1.0,
+                        type: 'substring'
+                    }});
+                    return;
+                }}
+                
+                // Check for starts with match
+                if (nameLower.startsWith(searchLower) && nameLower !== searchLower) {{
+                    suggestions.push({{
+                        name: name,
+                        distance: 0,
+                        similarity: 0.95,
+                        type: 'startsWith'
+                    }});
+                    return;
+                }}
+                
+                // Use Levenshtein distance for fuzzy matching
+                const distance = calculateLevenshteinDistance(searchLower, nameLower);
+                const maxLength = Math.max(searchLower.length, nameLower.length);
+                const similarity = 1 - (distance / maxLength);
+                
+                // Only suggest if similarity is above threshold and not exact match
+                if (similarity > 0.6 && distance <= maxDistance && nameLower !== searchLower) {{
+                    suggestions.push({{
+                        name: name,
+                        distance: distance,
+                        similarity: similarity,
+                        type: 'fuzzy'
+                    }});
+                }}
+            }});
+            
+            // Sort by type priority and then by similarity (highest first)
+            return suggestions
+                .sort((a, b) => {{
+                    // Priority: substring > startsWith > fuzzy
+                    const typePriority = {{ 'substring': 3, 'startsWith': 2, 'fuzzy': 1 }};
+                    const aPriority = typePriority[a.type] || 0;
+                    const bPriority = typePriority[b.type] || 0;
+                    
+                    if (aPriority !== bPriority) {{
+                        return bPriority - aPriority;
+                    }}
+                    return b.similarity - a.similarity;
+                }})
+                .slice(0, 3);
+        }}
+        
+        // Hide the Submitted field from employee cards
+        function hideSubmittedField() {{
+            const fields = document.querySelectorAll('.field-group .field');
+            fields.forEach(field => {{
+                const label = field.querySelector('.field-label');
+                if (label && label.textContent.trim() === 'Submitted') {{
+                    field.style.display = 'none';
+                }}
+            }});
         }}
         
         function filterEmployees() {{
@@ -1086,21 +1277,54 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
             const visibleCards = Array.from(employeeCards).filter(card => card.style.display !== 'none');
             let noResults = document.getElementById('no-results');
             if (visibleCards.length === 0 && searchTerm) {{
+                // Get all employee names for fuzzy search
+                const allEmployeeNames = Array.from(employeeCards).map(card => 
+                    card.querySelector('.employee-name').textContent
+                );
+                
+                // Find similar names using fuzzy search
+                const suggestions = findSimilarNames(searchTerm, allEmployeeNames);
+                
                 if (!noResults) {{
                     noResults = document.createElement('div');
                     noResults.id = 'no-results';
                     noResults.className = 'no-results';
-                    noResults.innerHTML = `
-                        <div class="no-results-message">
-                            <div>No employees found matching "` + searchTerm + `"</div>
-                            <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.7;">Try adjusting your search terms</div>
+                }}
+                
+                let suggestionHTML = '';
+                if (suggestions.length > 0) {{
+                    suggestionHTML = `
+                        <div class="suggestions-container">
+                            <div class="suggestions-title">Do you mean:</div>
+                            <div>
+                                ${{suggestions.map(suggestion => 
+                                    `<div class="suggestion-item" onclick="selectSuggestion('${{suggestion.name}}')">
+                                        ${{suggestion.name}}
+                                    </div>`
+                                ).join('')}}
+                            </div>
                         </div>
                     `;
-                    document.getElementById('employee-list').appendChild(noResults);
                 }}
+                
+                noResults.innerHTML = `
+                    <div class="no-results-message">
+                        <div>No employees found matching "${{searchTerm}}"</div>
+                        <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.7;">Try adjusting your search terms</div>
+                        ${{suggestionHTML}}
+                    </div>
+                `;
+                document.getElementById('employee-list').appendChild(noResults);
             }} else if (noResults) {{
                 noResults.remove();
             }}
+        }}
+        
+        // Function to handle suggestion selection
+        function selectSuggestion(suggestedName) {{
+            const searchBox = document.querySelector('.search-box');
+            searchBox.value = suggestedName;
+            filterEmployees();
         }}
         
         function initializeCharts() {{
@@ -1195,5 +1419,8 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
                 returnToTop.classList.remove('show');
             }}
         }});
+        
+        // Call the function when the page loads
+        document.addEventListener('DOMContentLoaded', hideSubmittedField);
     </script>
     """

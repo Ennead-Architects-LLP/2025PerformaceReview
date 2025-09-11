@@ -12,6 +12,7 @@ import re
 from .image_manager import ImageManager
 from .employee import Employee, EmployeeManager
 from .config import Config
+from .header_mapper import HeaderMapper, CardGroup
 
 
 class ExcelEmployeeParser:
@@ -27,10 +28,12 @@ class ExcelEmployeeParser:
         self.excel_path = Path(excel_path)
         self.df: Optional[pd.DataFrame] = None
         self.employees_data: List[Dict[str, Any]] = []
+        self.header_mapper = HeaderMapper()
+        self.header_mappings: Dict[str, Any] = {}
         
     def load_excel(self) -> bool:
         """
-        Load the Excel file into a pandas DataFrame.
+        Load the Excel file into a pandas DataFrame and create header mappings.
         
         Returns:
             True if successful, False otherwise
@@ -42,11 +45,35 @@ class ExcelEmployeeParser:
                 
             self.df = pd.read_excel(self.excel_path)
             print(f"✅ Successfully loaded Excel file: {self.df.shape[0]} rows, {self.df.shape[1]} columns")
+            
+            # Create header mappings
+            self.header_mappings = self.header_mapper.map_excel_headers(self.df)
+            print(f"📋 Created {len(self.header_mappings)} header mappings")
+            
+            # Print mapping summary for inspection
+            self._print_mapping_summary()
+            
             return True
             
         except Exception as e:
             print(f"Error loading Excel file: {e}")
             return False
+    
+    def _print_mapping_summary(self):
+        """Print a summary of header mappings for inspection."""
+        summary = self.header_mapper.get_mapping_summary()
+        
+        print(f"\n📊 Header Mapping Summary:")
+        print(f"   Total mappings: {summary['total_mappings']}")
+        print(f"   Card group order: {' → '.join(summary['card_group_order'])}")
+        
+        for group_name, group_info in summary['groups'].items():
+            if group_info['count'] > 0:
+                print(f"\n   📁 {group_name.replace('_', ' ').title()} ({group_info['count']} fields):")
+                for field in group_info['fields']:
+                    visibility = "👁️" if field['data_type_in_card'] != 'noshow' else "🙈"
+                    chart_type = "📊" if field['data_type_in_chart'] != 'noshow' else "🚫"
+                    print(f"      {visibility}{chart_type} {field['column_index']}: {field['original_header']} → {field['mapped_header']} ({field['data_type_in_card']})")
     
     def clean_column_name(self, col_name: str) -> str:
         """
@@ -74,7 +101,7 @@ class ExcelEmployeeParser:
     
     def extract_employee_data(self, row: pd.Series) -> Dict[str, Any]:
         """
-        Extract employee data from a single row.
+        Extract employee data from a single row using header mappings.
         
         Args:
             row: Pandas Series representing one row of data
@@ -84,129 +111,48 @@ class ExcelEmployeeParser:
         """
         employee = {}
         
-        # Basic employee information
-        employee['id'] = str(row.get('ID', ''))
-        employee['name'] = str(row.get('Employee Name', ''))
-        employee['title'] = str(row.get('Title', ''))
-        employee['role'] = str(row.get('Role', ''))
-        employee['email'] = str(row.get('Email', ''))
-        employee['start_time'] = str(row.get('Start time', ''))
-        employee['completion_time'] = str(row.get('Completion time', ''))
-        employee['date'] = str(row.get('Date', ''))
+        # Group data by card groups
+        grouped_data = {}
+        for group in CardGroup:
+            grouped_data[group] = {}
         
-        # Performance ratings (1-5 scale)
-        performance_ratings = {}
-        rating_columns = [
-            'Communication', 'Collaboration', 'Professionalism', 
-            'Technical Knowledge & Expertise', 'Workflow Implementation, Management, Execution'
-        ]
+        # Process each column using header mappings
+        for col_index, mapping in self.header_mappings.items():
+            original_header = mapping.original_header
+            if original_header in row.index:
+                value = row[original_header]
+                
+                # Skip empty values
+                if pd.isna(value) or not str(value).strip():
+                    continue
+                
+                # Clean the value
+                clean_value = str(value).strip()
+                
+                # Store in appropriate group
+                group = mapping.group_under
+                grouped_data[group][mapping.mapped_header] = clean_value
         
-        for col in rating_columns:
-            # Try exact match first
-            if col in row.index:
-                value = row[col]
-                if pd.notna(value) and str(value).strip():
-                    performance_ratings[col.lower().replace(' ', '_')] = str(value).strip()
+        
+        # Structure the employee data according to card groups
+        employee = {
+            'id': grouped_data[CardGroup.BASIC_INFO].get('id', ''),
+            'name': grouped_data[CardGroup.BASIC_INFO].get('employee_name', ''),
+            'title': grouped_data[CardGroup.BASIC_INFO].get('title', ''),
+            'role': grouped_data[CardGroup.BASIC_INFO].get('employee_role', ''),
+            'email': grouped_data[CardGroup.BASIC_INFO].get('email', ''),
+            'start_time': grouped_data[CardGroup.BASIC_INFO].get('start_time', ''),
+            'completion_time': grouped_data[CardGroup.BASIC_INFO].get('completion_time', ''),
+            'date': grouped_data[CardGroup.BASIC_INFO].get('date_of_evaluation', ''),
+            'submitted': grouped_data[CardGroup.BASIC_INFO].get('submitted', ''),
             
-            # Try variations with newlines
-            for alt_col in row.index:
-                if col in str(alt_col):
-                    value = row[alt_col]
-                    if pd.notna(value) and str(value).strip() and col.lower().replace(' ', '_') not in performance_ratings:
-                        performance_ratings[col.lower().replace(' ', '_')] = str(value).strip()
-        
-        employee['performance_ratings'] = performance_ratings
-        
-        # Performance comments
-        performance_comments = {}
-        comment_columns = [
-            'Communication2', 'Collaboration', 'Professionalism', 
-            'Technical Knowledge & Expertise', 'Workflow Implementation, Management, Execution'
-        ]
-        
-        for col in comment_columns:
-            # Look for comment columns (usually with '2' suffix or variations)
-            for alt_col in row.index:
-                if col in str(alt_col) and alt_col != col:
-                    value = row[alt_col]
-                    if pd.notna(value) and str(value).strip():
-                        # Skip if it's a rating (numeric)
-                        if not str(value).strip().isdigit():
-                            comment_key = col.lower().replace(' ', '_') + '_comments'
-                            performance_comments[comment_key] = str(value).strip()
-                            break
-        
-        employee['performance_comments'] = performance_comments
-        
-        # Software proficiency ratings
-        software_ratings = {}
-        software_columns = [
-            'Revit', 'Rhino', 'Enscape', 'D5', 'Vantage Point', 'Deltek/ADP',
-            'Newforma', 'Bluebeam', 'Grasshopper', 'Word', 'Powerpoint', 'Excel',
-            'Illustrator', 'Photoshop', 'Indesign'
-        ]
-        
-        for software in software_columns:
-            if software in row.index:
-                value = row[software]
-                if pd.notna(value) and str(value).strip():
-                    software_ratings[software.lower().replace(' ', '_').replace('/', '_')] = str(value).strip()
-        
-        employee['software_proficiency'] = software_ratings
-        
-        # Additional evaluation data
-        additional_data = {}
-        
-        # Overall performance rating
-        overall_perf_col = 'Rate Your Overall Performance This Year'
-        if overall_perf_col in row.index:
-            value = row[overall_perf_col]
-            if pd.notna(value) and str(value).strip():
-                additional_data['overall_performance_rating'] = str(value).strip()
-        
-        # Additional performance examples
-        examples_col = 'Are there specific examples of your performance you\'d like to share that weren\'t captured in earlier questions?'
-        if examples_col in row.index:
-            value = row[examples_col]
-            if pd.notna(value) and str(value).strip():
-                additional_data['performance_examples'] = str(value).strip()
-        
-        # Additional resources
-        resources_col = 'What additional resources would help you do your job more effectively?'
-        if resources_col in row.index:
-            value = row[resources_col]
-            if pd.notna(value) and str(value).strip():
-                additional_data['additional_resources'] = str(value).strip()
-        
-        # Employee strengths
-        strengths_col = 'Employee Strengths'
-        if strengths_col in row.index:
-            value = row[strengths_col]
-            if pd.notna(value) and str(value).strip():
-                additional_data['employee_strengths'] = str(value).strip()
-        
-        # Areas for growth
-        growth_col = 'Areas for Growth / Development Goals'
-        if growth_col in row.index:
-            value = row[growth_col]
-            if pd.notna(value) and str(value).strip():
-                additional_data['areas_for_growth'] = str(value).strip()
-        
-        # Studio culture feedback
-        culture_col = 'Please share your thoughts about the character and culture of our studio and practice.'
-        if culture_col in row.index:
-            value = row[culture_col]
-            if pd.notna(value) and str(value).strip():
-                additional_data['studio_culture_feedback'] = str(value).strip()
-        
-        # Software tools feedback
-        tools_col = 'Software & Tools2'
-        if tools_col in row.index:
-            value = row[tools_col]
-            if pd.notna(value) and str(value).strip():
-                additional_data['software_tools_feedback'] = str(value).strip()
-        
-        employee['additional_evaluation_data'] = additional_data
+            'performance_ratings': grouped_data[CardGroup.PERFORMANCE_RATINGS],
+            'performance_comments': grouped_data[CardGroup.PERFORMANCE_COMMENTS],
+            'software_proficiency': grouped_data[CardGroup.SOFTWARE_TOOLS],
+            'employee_development': grouped_data[CardGroup.EMPLOYEE_DEVELOPMENT],
+            'overall_assessment': grouped_data[CardGroup.OVERALL_ASSESSMENT],
+            'additional_data': grouped_data[CardGroup.ADDITIONAL_DATA]
+        }
         
         return employee
     
@@ -305,6 +251,22 @@ class ExcelEmployeeParser:
         }
         
         return summary
+    
+    def get_header_mappings(self) -> Dict[str, Any]:
+        """Get the current header mappings for inspection."""
+        return self.header_mapper.get_mapping_summary()
+    
+    def update_card_group_order(self, new_order: List[CardGroup]):
+        """Update the card group display order."""
+        self.header_mapper.update_card_group_order(new_order)
+    
+    def hide_field(self, original_header: str):
+        """Hide a field from display."""
+        self.header_mapper.hide_field(original_header)
+    
+    def show_field(self, original_header: str):
+        """Show a field in display."""
+        self.header_mapper.show_field(original_header)
 
 
 def parse_excel_to_json(excel_path: str, output_path: str = None, 
