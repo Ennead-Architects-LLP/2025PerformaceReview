@@ -11,14 +11,53 @@ from typing import Dict, Any
 class Config:
     """Configuration class for Employee Evaluation system."""
     
-    INPUT_FILE_PATTERN = "INPUT*.txt"
+    # Legacy file patterns (kept for backward compatibility)
     OUTPUT_HTML_FILENAME = "OUTPUT.html"
     OUTPUT_EXCEL_FILENAME = "OUTPUT.xlsx"
     OUTPUT_CSV_FILENAME = "OUTPUT.csv"
 
-    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Project structure
+    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     DOCS_DIR_NAME = "docs"
     OUTPUT_BASE_NAME = "_EvaluationSummary"
+    
+    # Excel parsing paths
+    EXCEL_INPUT_FILE = "assets/data/Employee Self-Evaluation Data Export From MS Form.xlsx"
+    JSON_OUTPUT_FILE = "assets/data/employee_data.json"
+    IMAGE_MAPPINGS_FILE = "assets/data/image_mappings.json"
+    
+    # Image processing paths
+    IMAGE_SOURCE_DIR = "C:/Users/szhang/github/EmployeeData/assets/images"
+    IMAGE_TARGET_DIR = "assets/images"
+    
+    # Website generation paths
+    WEBSITE_OUTPUT_DIR = "docs"
+    WEBSITE_CSS_DIR = "docs/css"
+    WEBSITE_JS_DIR = "docs/js"
+    WEBSITE_ASSETS_DIR = "docs/assets"
+    WEBSITE_IMAGES_DIR = "docs/assets/images"
+    
+    # Data directories
+    DATA_DIR = "assets/data"
+    ASSETS_DIR = "assets"
+    
+    # Default file names and paths
+    DEFAULT_AVATAR_PATH = "assets/images/default-avatar.png"
+    DEFAULT_JSON_OUTPUT = "employee_data.json"
+    DEFAULT_IMAGE_MAPPINGS = "data/image_mappings.json"
+    
+    # File extensions and patterns
+    SUPPORTED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".bmp"]
+    EXCEL_FILE_EXTENSION = ".xlsx"
+    JSON_FILE_EXTENSION = ".json"
+    
+    # Company and system information
+    COMPANY_NAME = "EnneadTab"
+    COPYRIGHT_YEAR = "2025"
+    SYSTEM_NAME = "Employee Evaluation Report System"
+    
+    # Background and external URLs
+    BACKGROUND_IMAGE_URL = "https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2021%2F08%2Fshanghai-astronomy-museum-ennead-architects-china-6.jpg?q=75&w=800&cbr=1&fit=max"
     
     HTML_TITLE = "Employee Evaluation Report"
     CHART_TYPE = "doughnut"
@@ -67,8 +106,7 @@ class Config:
     ANIMATION_DURATION = 1000
     ANIMATION_EASING = "easeOutQuart"
     
-    REQUIRED_FIELDS = ['name']
-    EXCLUDED_FIELDS = ['name', 'time']
+    # Removed REQUIRED_FIELDS and EXCLUDED_FIELDS - no longer needed for Excel parsing
     
     @classmethod
     def get_output_path(cls, filename: str) -> str:
@@ -104,3 +142,87 @@ class Config:
             'chart_min_width': cls.CHART_MIN_WIDTH,
             'colors': cls.COLORS
         }
+    
+    @classmethod
+    def get_excel_input_path(cls) -> str:
+        """Get the Excel input file path."""
+        return os.path.join(cls.PROJECT_ROOT, cls.EXCEL_INPUT_FILE)
+    
+    @classmethod
+    def get_json_output_path(cls) -> str:
+        """Get the JSON output file path."""
+        return os.path.join(cls.PROJECT_ROOT, cls.JSON_OUTPUT_FILE)
+    
+    @classmethod
+    def get_image_mappings_path(cls) -> str:
+        """Get the image mappings file path."""
+        return os.path.join(cls.PROJECT_ROOT, cls.IMAGE_MAPPINGS_FILE)
+    
+    @classmethod
+    def get_image_source_path(cls) -> str:
+        """Get the image source directory path."""
+        return cls.IMAGE_SOURCE_DIR
+    
+    @classmethod
+    def get_image_target_path(cls) -> str:
+        """Get the image target directory path."""
+        return os.path.join(cls.PROJECT_ROOT, cls.IMAGE_TARGET_DIR)
+    
+    @classmethod
+    def get_website_output_path(cls) -> str:
+        """Get the website output directory path."""
+        return os.path.join(cls.PROJECT_ROOT, cls.WEBSITE_OUTPUT_DIR)
+    
+    @classmethod
+    def get_data_dir_path(cls) -> str:
+        """Get the data directory path."""
+        return os.path.join(cls.PROJECT_ROOT, cls.DATA_DIR)
+    
+    @classmethod
+    def get_assets_dir_path(cls) -> str:
+        """Get the assets directory path."""
+        return os.path.join(cls.PROJECT_ROOT, cls.ASSETS_DIR)
+    
+    @classmethod
+    def ensure_directory_exists(cls, directory_path: str) -> bool:
+        """Ensure a directory exists, create if it doesn't."""
+        try:
+            os.makedirs(directory_path, exist_ok=True)
+            return True
+        except Exception:
+            return False
+    
+    @classmethod
+    def get_default_avatar_path(cls) -> str:
+        """Get the default avatar image path."""
+        return cls.DEFAULT_AVATAR_PATH
+    
+    @classmethod
+    def get_supported_image_extensions(cls) -> list:
+        """Get list of supported image file extensions."""
+        return cls.SUPPORTED_IMAGE_EXTENSIONS
+    
+    @classmethod
+    def is_supported_image_file(cls, filename: str) -> bool:
+        """Check if a file is a supported image format."""
+        return any(filename.lower().endswith(ext) for ext in cls.SUPPORTED_IMAGE_EXTENSIONS)
+    
+    @classmethod
+    def get_company_name(cls) -> str:
+        """Get the company name."""
+        return cls.COMPANY_NAME
+    
+    @classmethod
+    def get_copyright_year(cls) -> str:
+        """Get the copyright year."""
+        return cls.COPYRIGHT_YEAR
+    
+    @classmethod
+    def get_system_name(cls) -> str:
+        """Get the system name."""
+        return cls.SYSTEM_NAME
+    
+    @classmethod
+    def get_background_image_url(cls) -> str:
+        """Get the background image URL."""
+        return cls.BACKGROUND_IMAGE_URL

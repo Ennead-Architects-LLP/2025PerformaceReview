@@ -43,16 +43,7 @@ def format_file_size(size_bytes: int) -> str:
     return f"{size_bytes:.1f} {size_names[i]}"
 
 
-def validate_input_files(input_dir: str = None) -> List[str]:
-    if input_dir is None:
-        input_dir = get_project_root()
-    input_files = []
-    for filename in os.listdir(input_dir):
-        if filename.startswith('INPUT') and filename.endswith('.txt'):
-            filepath = os.path.join(input_dir, filename)
-            if os.path.isfile(filepath):
-                input_files.append(filepath)
-    return sorted(input_files)
+# Removed validate_input_files - no longer needed for txt processing
 
 
 def log_debug(message: str) -> None:
