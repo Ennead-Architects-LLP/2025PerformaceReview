@@ -7,7 +7,8 @@ Parses survey response files and extracts employee evaluation data.
 import os
 import re
 import chardet
-from typing import List, Dict, Tuple, Set
+from typing import List, Dict, Tuple, Set, Optional
+from fuzzywuzzy import fuzz, process
 from .constants import get_data_source_path, is_data_source_available
 
 
@@ -86,6 +87,12 @@ def parse_input_files() -> Tuple[List[Dict[str, str]], List[str]]:
                         seen_fields.add(key)
         except Exception as e:
             print(f"Error parsing {filename}: {e}")
+
+    # Apply fuzzy search to detect similar names and suggest corrections
+    if employees:
+        print(f"\n🔍 Analyzing employee names for potential duplicates or misspellings...")
+        employees = fuzzy_search_employee_names(employees)
+        print(f"✅ Processed {len(employees)} employee records with fuzzy name matching")
 
     return employees, all_fields
 
@@ -185,3 +192,117 @@ def get_employee_initials(name: str) -> str:
 
 def clean_field_name(field_name: str) -> str:
     return field_name.replace("_", " ").title()
+
+
+def find_similar_employee_names(target_name: str, employee_names: List[str], 
+                              limit: int = 3, threshold: int = 60) -> List[Tuple[str, int]]:
+    """
+    Find similar employee names using fuzzy string matching.
+    
+    Args:
+        target_name: The name to search for
+        employee_names: List of existing employee names to search against
+        limit: Maximum number of suggestions to return
+        threshold: Minimum similarity score (0-100) to include in results
+    
+    Returns:
+        List of tuples containing (name, similarity_score) sorted by score descending
+    """
+    if not target_name or not employee_names:
+        return []
+    
+    # Use fuzzywuzzy's process.extract for efficient fuzzy matching
+    matches = process.extract(target_name, employee_names, limit=limit, scorer=fuzz.ratio)
+    
+    # Filter by threshold and return as list of tuples
+    filtered_matches = [(name, score) for name, score in matches if score >= threshold]
+    
+    return filtered_matches
+
+
+def suggest_employee_name(input_name: str, existing_employees: List[Dict[str, str]], 
+                         threshold: int = 60) -> Optional[str]:
+    """
+    Suggest employee name corrections when exact match is not found.
+    
+    Args:
+        input_name: The employee name from input
+        existing_employees: List of existing employee data dictionaries
+        threshold: Minimum similarity score for suggestions
+    
+    Returns:
+        Suggested name if found, None if no good matches
+    """
+    if not input_name or not existing_employees:
+        return None
+    
+    # Extract all existing employee names
+    existing_names = [emp.get('employee_name', '') for emp in existing_employees 
+                     if emp.get('employee_name')]
+    
+    # Remove duplicates and empty names
+    existing_names = list(set([name.strip() for name in existing_names if name.strip()]))
+    
+    if not existing_names:
+        return None
+    
+    # Find similar names
+    similar_names = find_similar_employee_names(input_name, existing_names, 
+                                              limit=1, threshold=threshold)
+    
+    if similar_names:
+        suggested_name, score = similar_names[0]
+        print(f"⚠️  No exact match found for '{input_name}'. "
+              f"Did you mean '{suggested_name}'? (similarity: {score}%)")
+        return suggested_name
+    
+    return None
+
+
+def fuzzy_search_employee_names(employees: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """
+    Process employee list and suggest corrections for potentially misspelled names.
+    
+    Args:
+        employees: List of employee data dictionaries
+    
+    Returns:
+        List of employees with potentially corrected names
+    """
+    if not employees:
+        return employees
+    
+    processed_employees = []
+    seen_names = set()
+    
+    for emp in employees:
+        employee_name = emp.get('employee_name', '').strip()
+        
+        if not employee_name:
+            processed_employees.append(emp)
+            continue
+        
+        # Check for exact duplicates first
+        if employee_name.lower() in seen_names:
+            print(f"⚠️  Duplicate employee name found: '{employee_name}'")
+            continue
+        
+        # Check for fuzzy matches with existing names
+        existing_names = [e.get('employee_name', '').strip().lower() 
+                         for e in processed_employees if e.get('employee_name')]
+        
+        if existing_names:
+            similar_names = find_similar_employee_names(employee_name, existing_names, 
+                                                      limit=3, threshold=75)
+            
+            if similar_names:
+                suggestions = [name for name, score in similar_names]
+                print(f"⚠️  Similar name already exists: '{employee_name}'")
+                print(f"   Existing similar names: {', '.join(suggestions)}")
+                # Still add the employee but with a note
+                emp['name_suggestion_note'] = f"Similar to: {', '.join(suggestions)}"
+        
+        seen_names.add(employee_name.lower())
+        processed_employees.append(emp)
+    
+    return processed_employees
