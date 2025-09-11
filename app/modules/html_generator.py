@@ -175,7 +175,9 @@ def extract_all_fields_from_flat(employees: List[Dict[str, str]]) -> List[str]:
     
     for employee in employees:
         for key in employee.keys():
-            all_fields.add(key)
+            # Skip profile_image as it's a dict, not a string
+            if key != 'profile_image':
+                all_fields.add(key)
     
     return list(all_fields)
 
@@ -187,6 +189,9 @@ def prepare_chart_data_from_flat(employees: List[Dict[str, str]]) -> Dict[str, D
     
     for emp in employees:
         for field, value in emp.items():
+            # Skip profile_image and other non-string fields
+            if field == 'profile_image' or not isinstance(value, str):
+                continue
             if field.lower() not in excluded_fields and value and value.strip():
                 field_value_counts[field][value] += 1
     
@@ -506,20 +511,6 @@ def get_css_styles() -> str:
             flex-shrink: 0;
         }
         
-        .default-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #2B7A78, #1A5A58);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
-            border: 4px solid #2B7A78;
-            flex-shrink: 0;
-        }
         
         .employee-info {
             flex: 1;
@@ -837,12 +828,11 @@ def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
         profile_image_html = ""
         profile_image = employee.get('profile_image', {})
         if isinstance(profile_image, dict) and profile_image.get('has_image'):
-            image_path = profile_image.get('display_path', 'assets/images/default-avatar.png')
+            image_path = profile_image.get('display_path', 'assets/images/DEFAULT_PROFILE.jpg')
             profile_image_html = f'<img src="{image_path}" alt="{name}" class="profile-image">'
         else:
-            # Generate initials for default avatar
-            initials = ''.join([word[0].upper() for word in name.split()[:2]])
-            profile_image_html = f'<div class="default-avatar">{initials}</div>'
+            # Use default profile image
+            profile_image_html = f'<img src="assets/images/DEFAULT_PROFILE.jpg" alt="{name}" class="profile-image">'
         
         # Basic Information
         basic_info_html = ""
