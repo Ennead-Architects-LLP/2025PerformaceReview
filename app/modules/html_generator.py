@@ -835,8 +835,9 @@ def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
         
         # Profile Image
         profile_image_html = ""
-        if employee.get('profile_image') and employee['profile_image'].get('has_image'):
-            image_path = employee['profile_image'].get('display_path', 'assets/images/default-avatar.png')
+        profile_image = employee.get('profile_image', {})
+        if isinstance(profile_image, dict) and profile_image.get('has_image'):
+            image_path = profile_image.get('display_path', 'assets/images/default-avatar.png')
             profile_image_html = f'<img src="{image_path}" alt="{name}" class="profile-image">'
         else:
             # Generate initials for default avatar
