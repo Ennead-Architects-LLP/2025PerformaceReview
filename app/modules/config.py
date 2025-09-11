@@ -11,24 +11,23 @@ from typing import Dict, Any
 class Config:
     """Configuration class for Employee Evaluation system."""
     
-    # Legacy file patterns
-    INPUT_FILE_PATTERN = "INPUT*.txt"
+    # Legacy file patterns (kept for backward compatibility)
     OUTPUT_HTML_FILENAME = "OUTPUT.html"
     OUTPUT_EXCEL_FILENAME = "OUTPUT.xlsx"
     OUTPUT_CSV_FILENAME = "OUTPUT.csv"
 
     # Project structure
-    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     DOCS_DIR_NAME = "docs"
     OUTPUT_BASE_NAME = "_EvaluationSummary"
     
     # Excel parsing paths
-    EXCEL_INPUT_FILE = r"assets\data\Employee Self-Evaluation Data Export From MS Form.xlsx"
+    EXCEL_INPUT_FILE = "assets/data/Employee Self-Evaluation Data Export From MS Form.xlsx"
     JSON_OUTPUT_FILE = "assets/data/employee_data.json"
     IMAGE_MAPPINGS_FILE = "assets/data/image_mappings.json"
     
     # Image processing paths
-    IMAGE_SOURCE_DIR = r"C:\Users\szhang\github\EmployeeData\assets\images"
+    IMAGE_SOURCE_DIR = "C:/Users/szhang/github/EmployeeData/assets/images"
     IMAGE_TARGET_DIR = "assets/images"
     
     # Website generation paths
@@ -41,6 +40,24 @@ class Config:
     # Data directories
     DATA_DIR = "assets/data"
     ASSETS_DIR = "assets"
+    
+    # Default file names and paths
+    DEFAULT_AVATAR_PATH = "assets/images/default-avatar.png"
+    DEFAULT_JSON_OUTPUT = "employee_data.json"
+    DEFAULT_IMAGE_MAPPINGS = "data/image_mappings.json"
+    
+    # File extensions and patterns
+    SUPPORTED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".bmp"]
+    EXCEL_FILE_EXTENSION = ".xlsx"
+    JSON_FILE_EXTENSION = ".json"
+    
+    # Company and system information
+    COMPANY_NAME = "EnneadTab"
+    COPYRIGHT_YEAR = "2025"
+    SYSTEM_NAME = "Employee Evaluation Report System"
+    
+    # Background and external URLs
+    BACKGROUND_IMAGE_URL = "https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2021%2F08%2Fshanghai-astronomy-museum-ennead-architects-china-6.jpg?q=75&w=800&cbr=1&fit=max"
     
     HTML_TITLE = "Employee Evaluation Report"
     CHART_TYPE = "doughnut"
@@ -89,8 +106,7 @@ class Config:
     ANIMATION_DURATION = 1000
     ANIMATION_EASING = "easeOutQuart"
     
-    REQUIRED_FIELDS = ['name']
-    EXCLUDED_FIELDS = ['name', 'time']
+    # Removed REQUIRED_FIELDS and EXCLUDED_FIELDS - no longer needed for Excel parsing
     
     @classmethod
     def get_output_path(cls, filename: str) -> str:
@@ -175,3 +191,38 @@ class Config:
             return True
         except Exception:
             return False
+    
+    @classmethod
+    def get_default_avatar_path(cls) -> str:
+        """Get the default avatar image path."""
+        return cls.DEFAULT_AVATAR_PATH
+    
+    @classmethod
+    def get_supported_image_extensions(cls) -> list:
+        """Get list of supported image file extensions."""
+        return cls.SUPPORTED_IMAGE_EXTENSIONS
+    
+    @classmethod
+    def is_supported_image_file(cls, filename: str) -> bool:
+        """Check if a file is a supported image format."""
+        return any(filename.lower().endswith(ext) for ext in cls.SUPPORTED_IMAGE_EXTENSIONS)
+    
+    @classmethod
+    def get_company_name(cls) -> str:
+        """Get the company name."""
+        return cls.COMPANY_NAME
+    
+    @classmethod
+    def get_copyright_year(cls) -> str:
+        """Get the copyright year."""
+        return cls.COPYRIGHT_YEAR
+    
+    @classmethod
+    def get_system_name(cls) -> str:
+        """Get the system name."""
+        return cls.SYSTEM_NAME
+    
+    @classmethod
+    def get_background_image_url(cls) -> str:
+        """Get the background image URL."""
+        return cls.BACKGROUND_IMAGE_URL

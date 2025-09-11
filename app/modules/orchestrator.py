@@ -10,12 +10,10 @@ import sys
 from typing import List, Dict, Tuple
 
 # Import from modules package
-from .parser import parse_input_files
-from .excel_generator import create_excel_output
-from .html_generator import create_html_output
-from .utils import log_info, log_error, log_warning, print_summary, ensure_output_directory
+from .html_generator import create_html_output_from_json
+from .excel_parser import parse_excel_to_json
+from .utils import log_info, log_error, log_warning, ensure_output_directory
 from .config import Config
-from .constants import get_data_source_path, is_data_source_available
 
 
 class EmployeeEvaluationOrchestrator:
@@ -52,14 +50,15 @@ class EmployeeEvaluationOrchestrator:
         log_info("Starting Employee Evaluation Report Generation...")
     
     def _check_data_source(self) -> None:
-        """Check and log data source availability."""
-        data_source = get_data_source_path()
-        log_info(f"Data source path: {data_source}")
+        """Check and log Excel data source availability."""
+        excel_path = Config.get_excel_input_path()
+        log_info(f"Excel data source path: {excel_path}")
         
-        if is_data_source_available():
-            log_info("Data source is available")
+        if os.path.exists(excel_path):
+            log_info("Excel data source is available")
         else:
-            log_warning("Data source path not found - using local INPUT files")
+            log_error(f"Excel data source not found at: {excel_path}")
+            raise FileNotFoundError(f"Excel file not found: {excel_path}")
     
     def _setup_output_directory(self) -> None:
         """Setup output directory."""
@@ -67,85 +66,49 @@ class EmployeeEvaluationOrchestrator:
         log_info(f"Output directory: {output_dir}")
     
     def _parse_data(self) -> None:
-        """Parse input data."""
-        log_info("Parsing input files...")
-        self.employees, self.all_fields = parse_input_files()
+        """Parse Excel data and convert to JSON."""
+        log_info("Parsing Excel data...")
         
-        if not self.employees:
-            raise ValueError("No employee data found! Please check your input files.")
+        # Parse Excel to JSON
+        excel_path = Config.get_excel_input_path()
+        json_path = Config.get_json_output_path()
         
-        log_info(f"Found {len(self.employees)} employees with fields: {self.all_fields}")
+        # Ensure data directory exists
+        data_dir = Config.get_data_dir_path()
+        Config.ensure_directory_exists(data_dir)
+        
+        success = parse_excel_to_json(excel_path, json_path, copy_images=True)
+        if not success:
+            raise ValueError("Failed to parse Excel data!")
+        
+        log_info(f"Successfully parsed Excel data and saved to: {json_path}")
     
     def _generate_reports(self) -> None:
-        """Generate Excel and HTML reports."""
-        # Generate Excel output
-        log_info("Generating Excel report...")
-        excel_path = create_excel_output(
-            self.employees, 
-            self.all_fields, 
-            Config.OUTPUT_EXCEL_FILENAME
-        )
-        self.output_files.append(excel_path)
+        """Generate HTML website from JSON data."""
+        log_info("Generating HTML website...")
         
-        # Generate HTML output
-        log_info("Generating HTML report...")
-        html_path = create_html_output(
-            self.employees, 
-            self.all_fields, 
-            Config.OUTPUT_HTML_FILENAME
-        )
-        self.output_files.append(html_path)
+        json_path = Config.get_json_output_path()
+        website_path = Config.get_website_output_path()
+        
+        success = create_html_output_from_json(json_path, website_path)
+        if success:
+            self.output_files.append(website_path)
+            log_info(f"Successfully generated website at: {website_path}")
+        else:
+            raise ValueError("Failed to generate HTML website!")
     
     def _print_summary(self) -> None:
         """Print processing summary."""
-        print_summary(self.employees, self.all_fields, self.output_files)
+        log_info(f"Generated {len(self.output_files)} output files:")
+        for file_path in self.output_files:
+            log_info(f"  - {file_path}")
     
     def _log_completion(self) -> None:
         """Log completion message."""
         log_info("Report generation completed successfully!")
 
 
-def generate_reports_with_custom_paths(input_dir: str = None, output_dir: str = None) -> bool:
-    """
-    Generate reports with custom input and output directories.
-    
-    Args:
-        input_dir: Directory containing input files
-        output_dir: Directory for output files
-        
-    Returns:
-        True if successful, False otherwise
-    """
-    try:
-        # Change to input directory if specified
-        if input_dir:
-            original_dir = os.getcwd()
-            os.chdir(input_dir)
-        
-        # Ensure output directory exists
-        if output_dir:
-            ensure_output_directory(output_dir)
-        
-        # Parse and generate reports
-        employees, all_fields = parse_input_files()
-        
-        if not employees:
-            log_error("No employee data found!")
-            return False
-        
-        # Generate outputs
-        create_excel_output(employees, all_fields)
-        create_html_output(employees, all_fields)
-        
-        # Restore original directory
-        if input_dir:
-            os.chdir(original_dir)
-        
-        return True
-        
-    except Exception as e:
-        log_error(f"Error generating reports: {str(e)}")
-        return False
+# Removed generate_reports_with_custom_paths - no longer needed for txt processing
 
 
 def run_batch_processing(file_paths: List[str]) -> Dict[str, any]:
@@ -184,15 +147,16 @@ def validate_system() -> bool:
         True if system is valid, False otherwise
     """
     try:
-        # Check if data source is available
-        if not is_data_source_available():
-            log_warning("Data source not available")
+        # Check if Excel data source is available
+        excel_path = Config.get_excel_input_path()
+        if not os.path.exists(excel_path):
+            log_warning(f"Excel data source not available: {excel_path}")
             return False
         
         # Check if required modules can be imported
         required_modules = [
-            'app.modules.parser', 'app.modules.excel_generator', 'app.modules.html_generator', 
-            'app.modules.utils', 'app.modules.config', 'app.modules.constants'
+            'app.modules.excel_parser', 'app.modules.html_generator', 
+            'app.modules.utils', 'app.modules.config', 'app.modules.employee'
         ]
         
         for module in required_modules:

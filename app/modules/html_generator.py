@@ -10,8 +10,18 @@ from collections import defaultdict, Counter
 from typing import List, Dict, Any
 from datetime import datetime
 from pathlib import Path
-from .parser import get_employee_initials, clean_field_name
+# Removed parser import - functions moved to this module
 from .config import Config
+
+
+def get_employee_initials(name: str) -> str:
+    """Get employee initials from name."""
+    return ''.join([word[0].upper() for word in name.split()[:2]])
+
+
+def clean_field_name(field_name: str) -> str:
+    """Clean field name for display."""
+    return field_name.replace("_", " ").title()
 
 
 def get_excluded_chart_fields() -> set:
@@ -533,7 +543,7 @@ def generate_employee_cards(employees: List[Dict[str, Any]]) -> str:
         # Profile image handling
         profile_image = employee.get('profile_image', {})
         has_image = profile_image.get('has_image', False)
-        image_path = profile_image.get('display_path', 'assets/images/default-avatar.png')
+        image_path = profile_image.get('display_path', Config.get_default_avatar_path())
         
         # Generate initials for default avatar
         initials = ''.join([word[0].upper() for word in name.split()[:2]])

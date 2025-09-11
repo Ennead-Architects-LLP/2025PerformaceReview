@@ -115,7 +115,7 @@ class Employee:
     def set_profile_image(self, filename: str, confidence: float = None):
         """Set profile image information."""
         self.profile_image_filename = filename
-        self.profile_image_path = f"assets/images/{filename}" if filename else None
+        self.profile_image_path = f"{Config.IMAGE_TARGET_DIR}/{filename}" if filename else None
         self.image_match_confidence = confidence
     
     def set_performance_ratings(self, ratings: Dict[str, str]):
@@ -211,7 +211,7 @@ class Employee:
         """Get the path to display the profile image."""
         if self.profile_image_path:
             return self.profile_image_path
-        return "assets/images/default-avatar.png"  # Default fallback
+        return Config.get_default_avatar_path()  # Default fallback
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert employee data to dictionary for JSON serialization."""

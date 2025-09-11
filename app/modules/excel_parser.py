@@ -245,7 +245,7 @@ class ExcelEmployeeParser:
         print(f"🎉 Successfully parsed {len(employees)} employee records")
         return employees
     
-    def save_to_json(self, employees: List[Employee], output_path: str = "employee_data.json") -> bool:
+    def save_to_json(self, employees: List[Employee], output_path: str = None) -> bool:
         """
         Save the parsed employee data to a JSON file.
         
@@ -307,7 +307,7 @@ class ExcelEmployeeParser:
         return summary
 
 
-def parse_excel_to_json(excel_path: str, output_path: str = "data/employee_data.json", 
+def parse_excel_to_json(excel_path: str, output_path: str = None, 
                        copy_images: bool = True, image_source_dir: str = None) -> bool:
     """
     Convenience function to parse Excel file and save to JSON.
@@ -397,8 +397,8 @@ def parse_excel_to_json(excel_path: str, output_path: str = "data/employee_data.
 
 if __name__ == "__main__":
     # Example usage
-    excel_file = r"C:\Users\szhang\github\2025PerformaceReview\assets\data\Employee Self-Evaluation Data Export From MS Form.xlsx"
-    json_file = "employee_data.json"
+    excel_file = Config.get_excel_input_path()
+    json_file = Config.get_json_output_path()
     
     success = parse_excel_to_json(excel_file, json_file)
     if success:

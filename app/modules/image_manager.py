@@ -17,8 +17,7 @@ from .config import Config
 class ImageManager:
     """Manages employee profile images with smart matching."""
     
-    def __init__(self, source_images_dir: str = r"C:\Users\szhang\github\EmployeeData\assets\images", 
-                 target_images_dir: str = "assets/images"):
+    def __init__(self, source_images_dir: str = None, target_images_dir: str = None):
         """
         Initialize the image manager.
         
@@ -26,6 +25,11 @@ class ImageManager:
             source_images_dir: Directory containing source employee images
             target_images_dir: Directory to copy images to (relative to project root)
         """
+        if source_images_dir is None:
+            source_images_dir = Config.get_image_source_path()
+        if target_images_dir is None:
+            target_images_dir = Config.get_image_target_path()
+            
         self.source_dir = Path(source_images_dir)
         self.target_dir = Path(target_images_dir)
         self.image_mappings: Dict[str, str] = {}
@@ -230,7 +234,7 @@ class ImageManager:
         
         return self.image_mappings
     
-    def save_image_mappings(self, output_file: str = "data/image_mappings.json") -> bool:
+    def save_image_mappings(self, output_file: str = None) -> bool:
         """
         Save image mappings to a JSON file.
         
@@ -240,6 +244,9 @@ class ImageManager:
         Returns:
             True if successful, False otherwise
         """
+        if output_file is None:
+            output_file = Config.get_image_mappings_path()
+            
         try:
             output_path = Path(output_file)
             output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -267,7 +274,7 @@ class ImageManager:
         if employee_name in self.image_mappings and self.image_mappings[employee_name]:
             image_info = self.image_mappings[employee_name]
             if image_info.get('filename'):
-                return f"assets/images/{image_info['filename']}"
+                return f"{Config.IMAGE_TARGET_DIR}/{image_info['filename']}"
         return None
     
     def get_all_asset_images(self) -> List[str]:
