@@ -8,6 +8,7 @@ Excel parsing, image matching, and other data sources.
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field as dc_field
 from pathlib import Path
+from .config import Config
 
 
 @dataclass

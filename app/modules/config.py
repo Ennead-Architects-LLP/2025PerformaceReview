@@ -31,11 +31,11 @@ class Config:
     IMAGE_TARGET_DIR = "assets/images"
     
     # Website generation paths
-    WEBSITE_OUTPUT_DIR = "website"
-    WEBSITE_CSS_DIR = "website/css"
-    WEBSITE_JS_DIR = "website/js"
-    WEBSITE_ASSETS_DIR = "website/assets"
-    WEBSITE_IMAGES_DIR = "website/assets/images"
+    WEBSITE_OUTPUT_DIR = "docs"
+    WEBSITE_CSS_DIR = "docs/css"
+    WEBSITE_JS_DIR = "docs/js"
+    WEBSITE_ASSETS_DIR = "docs/assets"
+    WEBSITE_IMAGES_DIR = "docs/assets/images"
     
     # Data directories
     DATA_DIR = "assets/data"

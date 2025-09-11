@@ -1,27 +1,1006 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Evaluation Report</title>
-    <meta http-equiv="refresh" content="0; url=_EvaluationSummary.html">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background-color: #f5f5f5;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .redirect-message {
-            color: #333;
-            font-size: 18px;
+        
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: #1A1A1A;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(58, 175, 169, 0.9) 0%, rgba(43, 122, 120, 0.9) 100%), 
+                        url('https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2021%2F08%2Fshanghai-astronomy-museum-ennead-architects-china-6.jpg?q=75&w=800&cbr=1&fit=max');
+            background-size: 120%;
+            background-position: center;
+            background-attachment: fixed;
+            animation: rotateBackground 30s linear infinite;
+        }
+        
+        @keyframes rotateBackground {
+            0% {
+                background-size: 120%;
+                transform: rotate(0deg);
+            }
+            25% {
+                background-size: 125%;
+            }
+            50% {
+                background-size: 120%;
+                transform: rotate(0.5deg);
+            }
+            75% {
+                background-size: 125%;
+            }
+            100% {
+                background-size: 120%;
+                transform: rotate(0deg);
+            }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0F1419 0%, #1A5A58 100%);
+            color: #FFFFFF;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #F0F8F7;
+            border-bottom: 1px solid #1A5A58;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 20px 30px;
+            text-align: center;
+            background: transparent;
+            color: #1A5A58;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .tab:hover {
+            color: #0F1419;
+            background: rgba(26, 90, 88, 0.1);
+        }
+        
+        .tab.active {
+            color: #0F1419;
+            background: white;
+            box-shadow: 0 -2px 0 #2B7A78 inset;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 40px 30px;
+            min-height: 500px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .search-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border: 1px solid #E0E8E7;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.2s ease;
+            color: #1A1A1A;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #2B7A78;
+            box-shadow: 0 0 0 2px rgba(43, 122, 120, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: searchPulse 2s ease-in-out infinite;
+        }
+        
+        .search-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: opacity(0.7);
+            transition: filter 0.2s ease;
+        }
+        
+        @keyframes searchPulse {
+            0%, 100% {
+                transform: translateY(-50%) scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-50%) scale(1.1);
+                opacity: 0.7;
+            }
+        }
+        
+        .search-container:focus-within .search-icon {
+            opacity: 0.7;
+        }
+        
+        .search-box:not(:placeholder-shown) + .search-icon {
+            opacity: 0.3;
+        }
+        
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 24px;
+        }
+        
+        .employee-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #E0E8E7;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .employee-card:hover {
+            border-color: #2B7A78;
+            box-shadow: 0 4px 12px rgba(43, 122, 120, 0.1);
+        }
+        
+        .employee-name {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #0F1419;
+            margin-bottom: 12px;
+        }
+        
+        .employee-time {
+            color: #4A4A4A;
+            font-size: 0.875rem;
+            margin-bottom: 20px;
+        }
+        
+        .fields-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(45, 122, 120, 0.08);
+            margin-bottom: 12px;
+        }
+        
+        .field:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .field:hover {
+            border-bottom-color: rgba(45, 122, 120, 0.15);
+            transition: border-bottom-color 0.2s ease;
+        }
+        
+        .field-group {
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(240, 248, 247, 0.5);
+            border-radius: 8px;
+            border: 2px solid #2B7A78;
+        }
+        
+        .group-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0F1419;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(43, 122, 120, 0.3);
+        }
+        
+        .field-group .field {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(45, 122, 120, 0.1);
+        }
+        
+        .field-group .field:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .software-tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .software-tools-grid .field {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(45, 122, 120, 0.1);
+        }
+        
+        .software-tools-grid .field:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .software-tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .return-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3AAFA9, #2B7A78);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(45, 122, 120, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .return-to-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(45, 122, 120, 0.4);
+            background: linear-gradient(135deg, #2B7A78, #1A5A58);
+        }
+        
+        .return-to-top:active {
+            transform: translateY(0);
+        }
+        
+        .return-to-top.show {
+            display: flex;
+        }
+        
+        .field-label {
+            font-weight: 500;
+            color: #1A5A58;
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+        }
+        
+        .field-value {
+            color: #1A1A1A;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .software-tools-grid .field-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .rating-number {
+            font-weight: 600;
+            color: #1A1A1A;
+            font-size: 1rem;
+        }
+        
+        .rating-description {
+            font-size: 0.8rem;
+            color: #6B7280;
+            font-weight: 400;
+        }
+        
+        .field-group .field-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .chart {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #E0E8E7;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chart h3 {
+            margin: 0 0 20px 0;
+            color: #0F1419;
+            text-align: center;
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+        
+        .no-results {
+            text-align: center;
+            color: #4A4A4A;
+            padding: 40px 20px;
+            font-size: 1rem;
+        }
+        
+        
+        .footer {
+            background: #F0F8F7;
+            border-top: 1px solid #1A5A58;
+            padding: 20px 30px;
+            text-align: center;
+            color: #4A4A4A;
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: #2B7A78;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 16px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-content {
+                padding: 30px 20px;
+            }
+            
+            .employee-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
+    
 </head>
 <body>
-    <div class="redirect-message">
-        <p>Redirecting to Employee Evaluation Report...</p>
-        <p>If you are not redirected automatically, <a href="_EvaluationSummary.html">click here</a>.</p>
+    <div class="background-container"></div>
+    <div class="container">
+        
+        <div class="header">
+            <h1>Employee Evaluation Report</h1>
+            <p>Total Employees: 8</p>
+        </div>
+    
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('detailed')">Detailed View</button>
+            <button class="tab" onclick="showTab('summary')">Summary Charts</button>
+        </div>
+    
+        
+        <div id="detailed" class="tab-content active">
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search by employee name..." onkeyup="filterEmployees()">
+                <div class="search-icon">
+                    <img src="https://img.icons8.com/?size=100&id=e4NkZ7kWAD7f&format=png&color=000000" alt="Search" style="width: 20px; height: 20px;">
+                </div>
+            </div>
+            <div id="employee-list" class="employee-grid">
+                
+        <div class="employee-card">
+            <div class="employee-name">Brett Fabrikant</div>
+            <div class="employee-time">2025-09-09</div>
+            <div class="fields-container">
+                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Employee Role</div><div class="field-value">M365 Architect, M365 Security Administration</div></div></div>
+                <div class="field-group"><div class="group-title">Performance Ratings</div><div class="field"><div class="field-label">Communication Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Collaboration Rating</div><div class="field-value">I make strong efforts to collaborate with functional verticals within the organization. Many of the infrastructure and security efforts require close collaboration between separate areas of the business. This survey is a good example of how I collaborated with my team, HR and Studio developers to develop an automated solution. I make strong efforts to inform my leadership, peers and users on all my projects and tasks. I often respond to requests off typical business hours if needed and have done so many times in service on Ennead Architects users and project owners.</div></div><div class="field"><div class="field-label">Professionalism Rating</div><div class="field-value">I pride myself on being very reliable and I have a very strong work ethic with integrity. My team and leadership know how I bring my best attitude and effort in providing good security solutions.</div></div><div class="field"><div class="field-label">Technical Knowledge & Expertise Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Rating</div><div class="field-value">4</div></div></div>
+                
+                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Comments & Feedback</div><div class="field"><div class="field-label">Technical Knowledge & Expertise Comments</div><div class="field-value">The skills required to perform the array of responsibilities push me to keep my knowledge current and relevant to today and future needs.  I have developed a few different programs that Ennead can grow into as the digital workplace evolves. I often practice my trade independently of my work here at Ennead and maintain test cloud infrastructures for training and testing purposes.</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Comments</div><div class="field-value">A good percentage of my workweek is dedicated to IT, technology and office solutions. I proactively monitor threats to Ennead and perform many tasks to maintain the layers of security and Microsoft infrastructure, and I support Office 365 services such as email and sharing platforms under the Microsoft umbrella.</div></div></div>
+            </div>
+        </div>
+        
+        <div class="employee-card">
+            <div class="employee-name">Xinya Li</div>
+            <div class="employee-time">2025-09-10</div>
+            <div class="fields-container">
+                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Employee Role</div><div class="field-value">Architectural & Interior Designer, Interior Project Manager</div></div></div>
+                <div class="field-group"><div class="group-title">Performance Ratings</div><div class="field"><div class="field-label">Communication Rating</div><div class="field-value">5</div></div><div class="field"><div class="field-label">Collaboration Rating</div><div class="field-value">I keep an open attitude in collaboration, listen to different opinions, share progress clearly, and support the team to move forward together.</div></div><div class="field"><div class="field-label">Professionalism Rating</div><div class="field-value">I stay professional and reliable in my work, and over time my colleagues have come to recognize and trust this.</div></div><div class="field"><div class="field-label">Technical Knowledge & Expertise Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Rating</div><div class="field-value">4</div></div></div>
+                
+                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Comments & Feedback</div><div class="field"><div class="field-label">Technical Knowledge & Expertise Comments</div><div class="field-value">I have strong technical skills that I use in daily work, and I keep learning new tools and methods to get better.</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Comments</div><div class="field-value">I handle projects based on different needs, stay organized, work well with the team, and make sure tasks are done on time.</div></div></div>
+            </div>
+        </div>
+        
+        <div class="employee-card">
+            <div class="employee-name">Leah Li</div>
+            <div class="employee-time">2025-09-10</div>
+            <div class="fields-container">
+                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Employee Role</div><div class="field-value">Office admin and HR</div></div></div>
+                <div class="field-group"><div class="group-title">Performance Ratings</div><div class="field"><div class="field-label">Communication Rating</div><div class="field-value">5</div></div><div class="field"><div class="field-label">Collaboration Rating</div><div class="field-value">Support team well and figure out the issues priority, which could help the team find our the key reason and solve the problem.</div></div><div class="field"><div class="field-label">Professionalism Rating</div><div class="field-value">act reliably with integrity to maintain a professional demeanor in all work situations</div></div><div class="field"><div class="field-label">Technical Knowledge & Expertise Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Rating</div><div class="field-value">5</div></div></div>
+                
+                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Comments & Feedback</div><div class="field"><div class="field-label">Technical Knowledge & Expertise Comments</div><div class="field-value">strong technical knowledge for my role, apply it well to tasks and keep learning new developments.</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Comments</div><div class="field-value">effectively manage workflows from start and finish, coordinating tasks and delivering results across projects and various business areas.</div></div></div>
+            </div>
+        </div>
+        
+        <div class="employee-card">
+            <div class="employee-name">Vivian Zhan</div>
+            <div class="employee-time">2025-09-10</div>
+            <div class="fields-container">
+                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Employee Role</div><div class="field-value">Architecture Designer</div></div></div>
+                <div class="field-group"><div class="group-title">Performance Ratings</div><div class="field"><div class="field-label">Communication Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Collaboration Rating</div><div class="field-value">I approach collaboration with openness and respect. I value diverse perspectives and work to build trust within the team. I am proactive in sharing ideas, supporting colleagues, and aligning with group goals to ensure successful outcomes.</div></div><div class="field"><div class="field-label">Professionalism Rating</div><div class="field-value">I maintain a reliable and accountable work ethic, always meeting deadlines and delivering quality work. I act with integrity and respect in professional settings, and I take responsibility for my contributions while supporting the success of the team.</div></div><div class="field"><div class="field-label">Technical Knowledge & Expertise Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Rating</div><div class="field-value">3</div></div></div>
+                
+                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Comments & Feedback</div><div class="field"><div class="field-label">Technical Knowledge & Expertise Comments</div><div class="field-value">I have a solid understanding of the technical standards and tools required for my role. I apply this knowledge effectively in daily tasks and continuously look for ways to expand my expertise through practice and learning.</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Comments</div><div class="field-value">I manage workflows with attention to planning and detail, ensuring tasks are completed on time. While I see room to strengthen coordination across multiple stakeholders, I make steady progress in organizing priorities and delivering results efficiently.</div></div></div>
+            </div>
+        </div>
+        
+        <div class="employee-card">
+            <div class="employee-name">Matthew Hitscherich</div>
+            <div class="employee-time">2025-09-10</div>
+            <div class="fields-container">
+                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Employee Role</div><div class="field-value">Draftsman</div></div></div>
+                <div class="field-group"><div class="group-title">Performance Ratings</div><div class="field"><div class="field-label">Communication Rating</div><div class="field-value">3</div></div><div class="field"><div class="field-label">Collaboration Rating</div><div class="field-value">We do what we are told.</div></div><div class="field"><div class="field-label">Professionalism Rating</div><div class="field-value">Fritz Lang once said "when I hear the word culture I get out my wallet". This question is asking the same thing.</div></div><div class="field"><div class="field-label">Technical Knowledge & Expertise Rating</div><div class="field-value">3</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Rating</div><div class="field-value">3</div></div></div>
+                
+                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Comments & Feedback</div><div class="field"><div class="field-label">Technical Knowledge & Expertise Comments</div><div class="field-value">Yes, Please. More.</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Comments</div><div class="field-value">Yes, Please. More.</div></div></div>
+            </div>
+        </div>
+        
+        <div class="employee-card">
+            <div class="employee-name">Clayton Kaul</div>
+            <div class="employee-time">2025-09-09</div>
+            <div class="fields-container">
+                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Employee Role</div><div class="field-value">Project Architect / Project Manager </div></div></div>
+                <div class="field-group"><div class="group-title">Performance Ratings</div><div class="field"><div class="field-label">Communication Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Collaboration Rating</div><div class="field-value">I like to involve everyone on the team and ensure everyone feels values and free to contribute their perspective and ideas.   I try not to be quick to shut down ideas i disagree with but rather consider the potential and hope to modify the path if warranted and improved to do so.</div></div><div class="field"><div class="field-label">Professionalism Rating</div><div class="field-value">I try to bring the utmost professionalism into all conversations, especially with team members from other firms and owner.  Of course, i feel it is also okay, and warranted, to be able to have a familiar relationship with those you work with closely and often in order to 1. gain the trust of the team and create an enjoyable working environment for everyone involved.  Work is done better and more dedicated when those around you enjoy the company of their team mates and / or supervisors.</div></div><div class="field"><div class="field-label">Technical Knowledge & Expertise Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Rating</div><div class="field-value">4</div></div></div>
+                
+                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Comments & Feedback</div><div class="field"><div class="field-label">Technical Knowledge & Expertise Comments</div><div class="field-value">For my level within the firm, I feel i have a solid understanding of technical skills and detailing.   I like to rely on others still with higher levels of specific knowledge regarding technical details though and ensure we are delivering (or at least proposing to deliver) the best possible end product we can.</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Comments</div><div class="field-value">I am comfortable working in all phases of the project.  Though i don't have much exposure with ennead on the Proposal / Interviewing side, i believe that i am able to contribute in this manner should the opportunity arise.</div></div></div>
+            </div>
+        </div>
+        
+        <div class="employee-card">
+            <div class="employee-name">Regina Jiang</div>
+            <div class="employee-time">2025-09-11</div>
+            <div class="fields-container">
+                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Employee Role</div><div class="field-value">Project Manager</div></div></div>
+                <div class="field-group"><div class="group-title">Performance Ratings</div><div class="field"><div class="field-label">Communication Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Collaboration Rating</div><div class="field-value">I believe the best architectural solutions emerge from truly collaborative efforts. My approach is to facilitate and support the team, ensuring everyone—from our visionary designers to our technical staff and external partners—has a voice and feels empowered to contribute. In the China market, I see my role as a bridge, helping to synthesize diverse ideas and cultural nuances into a cohesive project direction. I am grateful for the talented teams I work with and focus on creating an environment of mutual trust and shared purpose.</div></div><div class="field"><div class="field-label">Professionalism Rating</div><div class="field-value">I endeavor to uphold the highest standards of professionalism that reflect well on Ennead's reputation. This means taking full accountability for my responsibilities, meeting commitments reliably, and always acting with integrity. I try to maintain a calm and constructive demeanor, especially during challenging phases of a project, focusing on solutions rather than problems. I view professionalism as an ongoing practice and consistently look for ways to better represent our firm's values to our clients and partners.</div></div><div class="field"><div class="field-label">Technical Knowledge & Expertise Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Rating</div><div class="field-value">5</div></div></div>
+                
+                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Comments & Feedback</div><div class="field"><div class="field-label">Technical Knowledge & Expertise Comments</div><div class="field-value">My technical knowledge is built on a strong foundation in architectural design principles, project delivery methodologies, and business development strategies specific to the built environment. I strive to continuously learn from our technical teams and consultants to ensure our proposals and project plans are not only creative but also technically sound and feasible for the China market. This is particularly important when new market opportunities emerge, such as a shift towards sustainable design or a new building typology we will do in China, i.e. Healthcare and Institutional Laboratory.</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Comments</div><div class="field-value">I focus on creating and managing efficient workflows to see projects and strategic initiatives through from conception to completion. This involves coordinating closely with our design, marketing, and finance teams to develop winning proposals, and then managing the project lifecycle to deliver on those promises. I rely on our established firm-wide systems and actively seek to improve local implementation, ensuring our operations in China are seamless, integrated, and effective in supporting our creative and business goals.</div></div></div>
+            </div>
+        </div>
+        
+        <div class="employee-card">
+            <div class="employee-name">R. Kevin Hamlett</div>
+            <div class="employee-time">2025-09-11</div>
+            <div class="fields-container">
+                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Employee Role</div><div class="field-value">Senior Designer</div></div></div>
+                <div class="field-group"><div class="group-title">Performance Ratings</div><div class="field"><div class="field-label">Communication Rating</div><div class="field-value">4</div></div><div class="field"><div class="field-label">Collaboration Rating</div><div class="field-value">I think that I collaborate effectively; however, the past few international projects have been unusual since most of the project team is in Shanghai. Direct communication is difficult w/ the time difference.</div></div><div class="field"><div class="field-label">Professionalism Rating</div><div class="field-value">I try to be as professional as possible in all situations. I understand that my actions represent our company and our reputation. I've done a number of projects for repeat clients that seem very happy w/ my design work.</div></div><div class="field"><div class="field-label">Technical Knowledge & Expertise Rating</div><div class="field-value">5</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Rating</div><div class="field-value">4</div></div></div>
+                
+                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Comments & Feedback</div><div class="field"><div class="field-label">Technical Knowledge & Expertise Comments</div><div class="field-value">I have assembled an interior detail library for our future projects, and I feel that will help speed up our future endeavors. I have also mentored junior designers and have helped them understand the detailing process.</div></div><div class="field"><div class="field-label">Workflow Implementation, Management, Execution Comments</div><div class="field-value">I feel that I am good w/ establishing a consistent project workflow and conveying that w/ the project team. I have also helped develop and refine our commercial marketing presentations for our residential, hospitality and interior pursuits.</div></div></div>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+    
+        
+        <div id="summary" class="tab-content">
+            <div class="chart-container">
+                
+        <div class="chart">
+            <h3>Date Of Evaluation</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-date_of_evaluation"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Studio Culture Feedback</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-studio_culture_feedback"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Software Tools Feedback</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-software_tools_feedback"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Vantage Point</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-vantage_point"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Grasshopper</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-grasshopper"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Performance Examples</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-performance_examples"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Deltek/Adp</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-deltek/adp"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Word</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-word"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Overall Performance</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-overall_performance"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Communication Rating</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-Communication_rating"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Bluebeam</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-bluebeam"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Additional Resources</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-additional_resources"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Newforma</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-newforma"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Employee Strengths</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-employee_strengths"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Professionalism Rating</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-Professionalism_rating"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Photoshop</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-photoshop"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>D5</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-d5"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Revit</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-revit"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Employee Role</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-employee_role"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Areas For Growth</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-areas_for_growth"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Workflow Implementation, Management, Execution Rating</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-Workflow Implementation, Management, Execution_rating"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Enscape</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-enscape"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Powerpoint</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-powerpoint"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Indesign</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-indesign"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Collaboration Rating</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-Collaboration_rating"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Technical Knowledge & Expertise Rating</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-Technical Knowledge & Expertise_rating"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Illustrator</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-illustrator"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Rhino</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-rhino"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Excel</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-excel"></canvas>
+            </div>
+        </div>
+        
+            </div>
+        </div>
+    
+        
+        <div class="footer">
+            <p>&copy; 2025 <a href="https://ennead-architects-llp.github.io/EnneadTabWiki/index.html" target="_blank">EnneadTab</a>. All rights reserved.</p>
+            <p>Employee Evaluation Report System</p>
+        </div>
+    
+    </div>
+    <button class="return-to-top" onclick="scrollToTop()" title="Return to top">↑</button>
+    
+    <script>
+        const employees = [{"employee_name": "Brett Fabrikant", "employee_role": "M365 Architect, M365 Security Administration", "evaluator_name": "", "date_of_evaluation": "2025-09-09", "submitted": "2025-09-09 13:44:11", "responder": "brett.fabrikant@ennead.com", "Communication_rating": "4", "Collaboration_rating": "I make strong efforts to collaborate with functional verticals within the organization. Many of the infrastructure and security efforts require close collaboration between separate areas of the business. This survey is a good example of how I collaborated with my team, HR and Studio developers to develop an automated solution. I make strong efforts to inform my leadership, peers and users on all my projects and tasks. I often respond to requests off typical business hours if needed and have done so many times in service on Ennead Architects users and project owners.", "Professionalism_rating": "I pride myself on being very reliable and I have a very strong work ethic with integrity. My team and leadership know how I bring my best attitude and effort in providing good security solutions.", "Technical Knowledge & Expertise_rating": "4", "Workflow Implementation, Management, Execution_rating": "4", "overall_performance": "", "Communication_comments": "", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "The skills required to perform the array of responsibilities push me to keep my knowledge current and relevant to today and future needs.  I have developed a few different programs that Ennead can grow into as the digital workplace evolves. I often practice my trade independently of my work here at Ennead and maintain test cloud infrastructures for training and testing purposes.", "Workflow Implementation, Management, Execution_comments": "A good percentage of my workweek is dedicated to IT, technology and office solutions. I proactively monitor threats to Ennead and perform many tasks to maintain the layers of security and Microsoft infrastructure, and I support Office 365 services such as email and sharing platforms under the Microsoft umbrella.", "revit": "0 (Not Applicable)", "rhino": "0 (Not Applicable)", "enscape": "0 (Not Applicable)", "d5": "0 (Not Applicable)", "vantage_point": "", "deltek/adp": "0 (Not Applicable)", "newforma": "2 (Needs to Improve)", "bluebeam": "0 (Not Applicable)", "grasshopper": "0 (Not Applicable)", "word": "4 (Exceeds Expectations)", "powerpoint": "4 (Exceeds Expectations)", "excel": "4 (Exceeds Expectations)", "illustrator": "", "photoshop": "0 (Not Applicable)", "indesign": "0 (Not Applicable)", "performance_examples": "", "additional_resources": "It could be helpful to have more interaction with the project teams to better understand their daily, weekly and monthly flow of tasks. This could give insightful information on how I can better facilitate their workloads.", "employee_strengths": "1. Reliability 2. Trustworthy 3. Effectiveness in tasks", "areas_for_growth": "Acquire certifications in AI and or AI security", "studio_culture_feedback": "", "software_tools_feedback": "Due to the constantly changing IT landscape and the quick adoption of AI, it would be helpful to acquire more official AI training, perhaps professional certification in a specific AI platform could be beneficial to Ennead."}, {"employee_name": "Xinya Li", "employee_role": "Architectural & Interior Designer, Interior Project Manager", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-09 22:56:15", "responder": "xli@ennead.com", "Communication_rating": "5", "Collaboration_rating": "I keep an open attitude in collaboration, listen to different opinions, share progress clearly, and support the team to move forward together.", "Professionalism_rating": "I stay professional and reliable in my work, and over time my colleagues have come to recognize and trust this.", "Technical Knowledge & Expertise_rating": "4", "Workflow Implementation, Management, Execution_rating": "4", "overall_performance": "", "Communication_comments": "", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "I have strong technical skills that I use in daily work, and I keep learning new tools and methods to get better.", "Workflow Implementation, Management, Execution_comments": "I handle projects based on different needs, stay organized, work well with the team, and make sure tasks are done on time.", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "3 (Meets Expectations)", "d5": "4 (Exceeds Expectations)", "vantage_point": "", "deltek/adp": "3 (Meets Expectations)", "newforma": "2 (Needs to Improve)", "bluebeam": "4 (Exceeds Expectations)", "grasshopper": "0 (Not Applicable)", "word": "4 (Exceeds Expectations)", "powerpoint": "4 (Exceeds Expectations)", "excel": "4 (Exceeds Expectations)", "illustrator": "", "photoshop": "4 (Exceeds Expectations)", "indesign": "4 (Exceeds Expectations)", "performance_examples": "", "additional_resources": "Additional training on AI software would be very helpful, as it could improve efficiency and bring new ideas to my work.", "employee_strengths": "1. Clear and practical communication\n\n2. Steady and reliable under pressure\n\n3. Supportive team player", "areas_for_growth": "Learn and apply more AI tools in daily work.....", "studio_culture_feedback": "", "software_tools_feedback": "More about the AI , maybe."}, {"employee_name": "Leah Li", "employee_role": "Office admin and HR", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-09 23:26:45", "responder": "lli@ennead.com", "Communication_rating": "5", "Collaboration_rating": "Support team well and figure out the issues priority, which could help the team find our the key reason and solve the problem.", "Professionalism_rating": "act reliably with integrity to maintain a professional demeanor in all work situations", "Technical Knowledge & Expertise_rating": "4", "Workflow Implementation, Management, Execution_rating": "5", "overall_performance": "", "Communication_comments": "", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "strong technical knowledge for my role, apply it well to tasks and keep learning new developments.", "Workflow Implementation, Management, Execution_comments": "effectively manage workflows from start and finish, coordinating tasks and delivering results across projects and various business areas.", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "3 (Meets Expectations)", "d5": "3 (Meets Expectations)", "vantage_point": "", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "3 (Meets Expectations)", "word": "3 (Meets Expectations)", "powerpoint": "3 (Meets Expectations)", "excel": "3 (Meets Expectations)", "illustrator": "", "photoshop": "3 (Meets Expectations)", "indesign": "3 (Meets Expectations)", "performance_examples": "", "additional_resources": "Improve the NY and SH office communication, I need travel to NY office and work with the department of Admin, finance and IT team to understand more and improve office operation.", "employee_strengths": "communication; find our the key reason and key problem of office operation; keep learning new knowledge", "areas_for_growth": "Work more closely with NY team of Admin, HR, IT and Finance, to understand more of each other", "studio_culture_feedback": "", "software_tools_feedback": "We need non-tech employee forms for software and tools"}, {"employee_name": "Vivian Zhan", "employee_role": "Architecture Designer", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-10 08:49:35", "responder": "Vivian.Zhan@ennead.com", "Communication_rating": "4", "Collaboration_rating": "I approach collaboration with openness and respect. I value diverse perspectives and work to build trust within the team. I am proactive in sharing ideas, supporting colleagues, and aligning with group goals to ensure successful outcomes.", "Professionalism_rating": "I maintain a reliable and accountable work ethic, always meeting deadlines and delivering quality work. I act with integrity and respect in professional settings, and I take responsibility for my contributions while supporting the success of the team.", "Technical Knowledge & Expertise_rating": "4", "Workflow Implementation, Management, Execution_rating": "3", "overall_performance": "", "Communication_comments": "", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "I have a solid understanding of the technical standards and tools required for my role. I apply this knowledge effectively in daily tasks and continuously look for ways to expand my expertise through practice and learning.", "Workflow Implementation, Management, Execution_comments": "I manage workflows with attention to planning and detail, ensuring tasks are completed on time. While I see room to strengthen coordination across multiple stakeholders, I make steady progress in organizing priorities and delivering results efficiently.", "revit": "3 (Meets Expectations)", "rhino": "4 (Exceeds Expectations)", "enscape": "3 (Meets Expectations)", "d5": "4 (Exceeds Expectations)", "vantage_point": "", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "3 (Meets Expectations)", "word": "3 (Meets Expectations)", "powerpoint": "3 (Meets Expectations)", "excel": "3 (Meets Expectations)", "illustrator": "", "photoshop": "4 (Exceeds Expectations)", "indesign": "4 (Exceeds Expectations)", "performance_examples": "", "additional_resources": "Access to more structured training sessions, mentorship opportunities, and updated learning materials would help me build stronger skills and work more efficiently. Additional project management tools or streamlined internal processes would also support better collaboration and delivery.", "employee_strengths": "Strong communication skills, ensuring clarity and collaboration in both verbal and written interactions.\n\nDependable and professional, consistently meeting deadlines and maintaining accountability.\n\nAdaptability and willingness to learn, quickly adjusting to new tools, workflows, and team needs.", "areas_for_growth": "Strengthen project management and coordination skills to improve workflow execution.\n\nExpand technical expertise by deepening knowledge of advanced software features.\n\nDevelop leadership abilities to take on greater responsibility in guiding projects and supporting team members.", "studio_culture_feedback": "", "software_tools_feedback": "I am comfortable with the core software and tools required for my role and use them effectively in daily work. Additional training in advanced features or integrations would help me increase efficiency and streamline workflows. I am open to learning new tools that can further support team collaboration and project delivery."}, {"employee_name": "Matthew Hitscherich", "employee_role": "Draftsman", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-10 13:14:04", "responder": "mhitscherich@ennead.com", "Communication_rating": "3", "Collaboration_rating": "We do what we are told.", "Professionalism_rating": "Fritz Lang once said \"when I hear the word culture I get out my wallet\". This question is asking the same thing.", "Technical Knowledge & Expertise_rating": "3", "Workflow Implementation, Management, Execution_rating": "3", "overall_performance": "", "Communication_comments": "", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "Yes, Please. More.", "Workflow Implementation, Management, Execution_comments": "Yes, Please. More.", "revit": "1 (Unsatisfactory)", "rhino": "3 (Meets Expectations)", "enscape": "0 (Not Applicable)", "d5": "3 (Meets Expectations)", "vantage_point": "", "deltek/adp": "0 (Not Applicable)", "newforma": "0 (Not Applicable)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "1 (Unsatisfactory)", "word": "0 (Not Applicable)", "powerpoint": "0 (Not Applicable)", "excel": "0 (Not Applicable)", "illustrator": "", "photoshop": "3 (Meets Expectations)", "indesign": "3 (Meets Expectations)", "performance_examples": "", "additional_resources": "A time machine.", "employee_strengths": "Willing to crawl through barbed wire on a daily basis.", "areas_for_growth": "I have 1 more ARE I want to finish. I keep failing it.", "studio_culture_feedback": "", "software_tools_feedback": "Yes. Grasshopper."}, {"employee_name": "Clayton Kaul", "employee_role": "Project Architect / Project Manager ", "evaluator_name": "", "date_of_evaluation": "2025-09-09", "submitted": "2025-09-10 17:22:05", "responder": "ckaul@ennead.com", "Communication_rating": "4", "Collaboration_rating": "I like to involve everyone on the team and ensure everyone feels values and free to contribute their perspective and ideas.   I try not to be quick to shut down ideas i disagree with but rather consider the potential and hope to modify the path if warranted and improved to do so.", "Professionalism_rating": "I try to bring the utmost professionalism into all conversations, especially with team members from other firms and owner.  Of course, i feel it is also okay, and warranted, to be able to have a familiar relationship with those you work with closely and often in order to 1. gain the trust of the team and create an enjoyable working environment for everyone involved.  Work is done better and more dedicated when those around you enjoy the company of their team mates and / or supervisors.", "Technical Knowledge & Expertise_rating": "4", "Workflow Implementation, Management, Execution_rating": "4", "overall_performance": "", "Communication_comments": "", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "For my level within the firm, I feel i have a solid understanding of technical skills and detailing.   I like to rely on others still with higher levels of specific knowledge regarding technical details though and ensure we are delivering (or at least proposing to deliver) the best possible end product we can.", "Workflow Implementation, Management, Execution_comments": "I am comfortable working in all phases of the project.  Though i don't have much exposure with ennead on the Proposal / Interviewing side, i believe that i am able to contribute in this manner should the opportunity arise.", "revit": "5 (Exceptional)", "rhino": "3 (Meets Expectations)", "enscape": "3 (Meets Expectations)", "d5": "1 (Unsatisfactory)", "vantage_point": "", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "4 (Exceeds Expectations)", "grasshopper": "1 (Unsatisfactory)", "word": "5 (Exceptional)", "powerpoint": "5 (Exceptional)", "excel": "4 (Exceeds Expectations)", "illustrator": "", "photoshop": "4 (Exceeds Expectations)", "indesign": "4 (Exceeds Expectations)", "performance_examples": "", "additional_resources": "At times, additional staff is helpful, but have managed the work load accordingly with staff given to manage fee.", "employee_strengths": "Focused and Determined.", "areas_for_growth": "Ability to multi-task with other projects more efficiently and delegate more work to other team-members during CA.", "studio_culture_feedback": "", "software_tools_feedback": "Integration of smarter tools within Revit."}, {"employee_name": "Regina Jiang", "employee_role": "Project Manager", "evaluator_name": "", "date_of_evaluation": "2025-09-11", "submitted": "2025-09-11 04:30:38", "responder": "rjiang@ennead.com", "Communication_rating": "4", "Collaboration_rating": "I believe the best architectural solutions emerge from truly collaborative efforts. My approach is to facilitate and support the team, ensuring everyone\u2014from our visionary designers to our technical staff and external partners\u2014has a voice and feels empowered to contribute. In the China market, I see my role as a bridge, helping to synthesize diverse ideas and cultural nuances into a cohesive project direction. I am grateful for the talented teams I work with and focus on creating an environment of mutual trust and shared purpose.", "Professionalism_rating": "I endeavor to uphold the highest standards of professionalism that reflect well on Ennead's reputation. This means taking full accountability for my responsibilities, meeting commitments reliably, and always acting with integrity. I try to maintain a calm and constructive demeanor, especially during challenging phases of a project, focusing on solutions rather than problems. I view professionalism as an ongoing practice and consistently look for ways to better represent our firm's values to our clients and partners.", "Technical Knowledge & Expertise_rating": "4", "Workflow Implementation, Management, Execution_rating": "5", "overall_performance": "", "Communication_comments": "", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "My technical knowledge is built on a strong foundation in architectural design principles, project delivery methodologies, and business development strategies specific to the built environment. I strive to continuously learn from our technical teams and consultants to ensure our proposals and project plans are not only creative but also technically sound and feasible for the China market. This is particularly important when new market opportunities emerge, such as a shift towards sustainable design or a new building typology we will do in China, i.e. Healthcare and Institutional Laboratory.", "Workflow Implementation, Management, Execution_comments": "I focus on creating and managing efficient workflows to see projects and strategic initiatives through from conception to completion. This involves coordinating closely with our design, marketing, and finance teams to develop winning proposals, and then managing the project lifecycle to deliver on those promises. I rely on our established firm-wide systems and actively seek to improve local implementation, ensuring our operations in China are seamless, integrated, and effective in supporting our creative and business goals.", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "2 (Needs to Improve)", "d5": "2 (Needs to Improve)", "vantage_point": "", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "2 (Needs to Improve)", "word": "3 (Meets Expectations)", "powerpoint": "3 (Meets Expectations)", "excel": "3 (Meets Expectations)", "illustrator": "", "photoshop": "3 (Meets Expectations)", "indesign": "3 (Meets Expectations)", "performance_examples": "", "additional_resources": "We have three offices now. By implementing structured channels for knowledge exchange and strategic alignment, we can better leverage our collective intelligence. This will allow each market to actively learn from the others' experiences, provide cross-regional support, and efficiently share resources, ultimately strengthening our firm's global position and driving unified growth.", "employee_strengths": "Communication skills.\nPresentation skills.\nComprehensive skills on competitions, for concepts, visualizations, as well as business connections.", "areas_for_growth": "Learn more about healthcare and laboratory knowledge and integrate them into BD scenarios.", "studio_culture_feedback": "", "software_tools_feedback": "AI for graphic generation, both images and videos."}, {"employee_name": "R. Kevin Hamlett", "employee_role": "Senior Designer", "evaluator_name": "", "date_of_evaluation": "2025-09-11", "submitted": "2025-09-11 11:27:42", "responder": "khamlett@ennead.com", "Communication_rating": "4", "Collaboration_rating": "I think that I collaborate effectively; however, the past few international projects have been unusual since most of the project team is in Shanghai. Direct communication is difficult w/ the time difference.", "Professionalism_rating": "I try to be as professional as possible in all situations. I understand that my actions represent our company and our reputation. I've done a number of projects for repeat clients that seem very happy w/ my design work.", "Technical Knowledge & Expertise_rating": "5", "Workflow Implementation, Management, Execution_rating": "4", "overall_performance": "", "Communication_comments": "", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "I have assembled an interior detail library for our future projects, and I feel that will help speed up our future endeavors. I have also mentored junior designers and have helped them understand the detailing process.", "Workflow Implementation, Management, Execution_comments": "I feel that I am good w/ establishing a consistent project workflow and conveying that w/ the project team. I have also helped develop and refine our commercial marketing presentations for our residential, hospitality and interior pursuits.", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "2 (Needs to Improve)", "d5": "2 (Needs to Improve)", "vantage_point": "", "deltek/adp": "5 (Exceptional)", "newforma": "3 (Meets Expectations)", "bluebeam": "5 (Exceptional)", "grasshopper": "2 (Needs to Improve)", "word": "5 (Exceptional)", "powerpoint": "0 (Not Applicable)", "excel": "3 (Meets Expectations)", "illustrator": "", "photoshop": "2 (Needs to Improve)", "indesign": "5 (Exceptional)", "performance_examples": "", "additional_resources": "I could use more software training. Prior to joining the office, I worked for companies that have a distinct design and production process using a limited number of programs, so I am unfamiliar w/ the full assortment that we have available. The international projects that I have been leading run at a very quick pace, and it has been difficult to find time to learn new programs. If the office could provide instruction, that would be helpful.", "employee_strengths": "30+ years of professional experience backed up w/ my portfolio of completed projects in multiple typologies, overall design insight, precedent knowledge and vision, technical skill w/ detailing and documentation.", "areas_for_growth": "The profession is changing rapidly and I would like to learn new types of software that would make my workflow more productive and easier. I would like to implement more sustainable design strategies in my design process.", "studio_culture_feedback": "", "software_tools_feedback": "I do not use all of the software listed above. For visualization, I rely on junior help. I would like to learn more about grasshopper and D5"}];
+        const chartData = {"employee_role": {"M365 Architect, M365 Security Administration": 1, "Architectural & Interior Designer, Interior Project Manager": 1, "Office admin and HR": 1, "Architecture Designer": 1, "Draftsman": 1, "Project Architect / Project Manager ": 1, "Project Manager": 1, "Senior Designer": 1}, "date_of_evaluation": {"2025-09-09": 2, "2025-09-10": 4, "2025-09-11": 2}, "Communication_rating": {"4": 5, "5": 2, "3": 1}, "Collaboration_rating": {"I make strong efforts to collaborate with functional verticals within the organization. Many of the infrastructure and security efforts require close collaboration between separate areas of the business. This survey is a good example of how I collaborated with my team, HR and Studio developers to develop an automated solution. I make strong efforts to inform my leadership, peers and users on all my projects and tasks. I often respond to requests off typical business hours if needed and have done so many times in service on Ennead Architects users and project owners.": 1, "I keep an open attitude in collaboration, listen to different opinions, share progress clearly, and support the team to move forward together.": 1, "Support team well and figure out the issues priority, which could help the team find our the key reason and solve the problem.": 1, "I approach collaboration with openness and respect. I value diverse perspectives and work to build trust within the team. I am proactive in sharing ideas, supporting colleagues, and aligning with group goals to ensure successful outcomes.": 1, "We do what we are told.": 1, "I like to involve everyone on the team and ensure everyone feels values and free to contribute their perspective and ideas.   I try not to be quick to shut down ideas i disagree with but rather consider the potential and hope to modify the path if warranted and improved to do so.": 1, "I believe the best architectural solutions emerge from truly collaborative efforts. My approach is to facilitate and support the team, ensuring everyone\u2014from our visionary designers to our technical staff and external partners\u2014has a voice and feels empowered to contribute. In the China market, I see my role as a bridge, helping to synthesize diverse ideas and cultural nuances into a cohesive project direction. I am grateful for the talented teams I work with and focus on creating an environment of mutual trust and shared purpose.": 1, "I think that I collaborate effectively; however, the past few international projects have been unusual since most of the project team is in Shanghai. Direct communication is difficult w/ the time difference.": 1}, "Professionalism_rating": {"I pride myself on being very reliable and I have a very strong work ethic with integrity. My team and leadership know how I bring my best attitude and effort in providing good security solutions.": 1, "I stay professional and reliable in my work, and over time my colleagues have come to recognize and trust this.": 1, "act reliably with integrity to maintain a professional demeanor in all work situations": 1, "I maintain a reliable and accountable work ethic, always meeting deadlines and delivering quality work. I act with integrity and respect in professional settings, and I take responsibility for my contributions while supporting the success of the team.": 1, "Fritz Lang once said \"when I hear the word culture I get out my wallet\". This question is asking the same thing.": 1, "I try to bring the utmost professionalism into all conversations, especially with team members from other firms and owner.  Of course, i feel it is also okay, and warranted, to be able to have a familiar relationship with those you work with closely and often in order to 1. gain the trust of the team and create an enjoyable working environment for everyone involved.  Work is done better and more dedicated when those around you enjoy the company of their team mates and / or supervisors.": 1, "I endeavor to uphold the highest standards of professionalism that reflect well on Ennead's reputation. This means taking full accountability for my responsibilities, meeting commitments reliably, and always acting with integrity. I try to maintain a calm and constructive demeanor, especially during challenging phases of a project, focusing on solutions rather than problems. I view professionalism as an ongoing practice and consistently look for ways to better represent our firm's values to our clients and partners.": 1, "I try to be as professional as possible in all situations. I understand that my actions represent our company and our reputation. I've done a number of projects for repeat clients that seem very happy w/ my design work.": 1}, "Technical Knowledge & Expertise_rating": {"4": 6, "3": 1, "5": 1}, "Workflow Implementation, Management, Execution_rating": {"4": 4, "5": 2, "3": 2}, "revit": {"0 (Not Applicable)": 1, "3 (Meets Expectations)": 5, "1 (Unsatisfactory)": 1, "5 (Exceptional)": 1}, "rhino": {"0 (Not Applicable)": 1, "3 (Meets Expectations)": 6, "4 (Exceeds Expectations)": 1}, "enscape": {"0 (Not Applicable)": 2, "3 (Meets Expectations)": 4, "2 (Needs to Improve)": 2}, "d5": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 2, "1 (Unsatisfactory)": 1, "2 (Needs to Improve)": 2}, "deltek/adp": {"0 (Not Applicable)": 2, "3 (Meets Expectations)": 5, "5 (Exceptional)": 1}, "newforma": {"2 (Needs to Improve)": 2, "3 (Meets Expectations)": 5, "0 (Not Applicable)": 1}, "bluebeam": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 4, "5 (Exceptional)": 1}, "grasshopper": {"0 (Not Applicable)": 2, "3 (Meets Expectations)": 2, "1 (Unsatisfactory)": 2, "2 (Needs to Improve)": 2}, "word": {"4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 3, "0 (Not Applicable)": 1, "5 (Exceptional)": 2}, "powerpoint": {"4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 3, "0 (Not Applicable)": 2, "5 (Exceptional)": 1}, "excel": {"4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 4, "0 (Not Applicable)": 1}, "photoshop": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 3, "2 (Needs to Improve)": 1}, "indesign": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 3, "5 (Exceptional)": 1}, "additional_resources": {"It could be helpful to have more interaction with the project teams to better understand their daily, weekly and monthly flow of tasks. This could give insightful information on how I can better facilitate their workloads.": 1, "Additional training on AI software would be very helpful, as it could improve efficiency and bring new ideas to my work.": 1, "Improve the NY and SH office communication, I need travel to NY office and work with the department of Admin, finance and IT team to understand more and improve office operation.": 1, "Access to more structured training sessions, mentorship opportunities, and updated learning materials would help me build stronger skills and work more efficiently. Additional project management tools or streamlined internal processes would also support better collaboration and delivery.": 1, "A time machine.": 1, "At times, additional staff is helpful, but have managed the work load accordingly with staff given to manage fee.": 1, "We have three offices now. By implementing structured channels for knowledge exchange and strategic alignment, we can better leverage our collective intelligence. This will allow each market to actively learn from the others' experiences, provide cross-regional support, and efficiently share resources, ultimately strengthening our firm's global position and driving unified growth.": 1, "I could use more software training. Prior to joining the office, I worked for companies that have a distinct design and production process using a limited number of programs, so I am unfamiliar w/ the full assortment that we have available. The international projects that I have been leading run at a very quick pace, and it has been difficult to find time to learn new programs. If the office could provide instruction, that would be helpful.": 1}, "employee_strengths": {"1. Reliability 2. Trustworthy 3. Effectiveness in tasks": 1, "1. Clear and practical communication\n\n2. Steady and reliable under pressure\n\n3. Supportive team player": 1, "communication; find our the key reason and key problem of office operation; keep learning new knowledge": 1, "Strong communication skills, ensuring clarity and collaboration in both verbal and written interactions.\n\nDependable and professional, consistently meeting deadlines and maintaining accountability.\n\nAdaptability and willingness to learn, quickly adjusting to new tools, workflows, and team needs.": 1, "Willing to crawl through barbed wire on a daily basis.": 1, "Focused and Determined.": 1, "Communication skills.\nPresentation skills.\nComprehensive skills on competitions, for concepts, visualizations, as well as business connections.": 1, "30+ years of professional experience backed up w/ my portfolio of completed projects in multiple typologies, overall design insight, precedent knowledge and vision, technical skill w/ detailing and documentation.": 1}, "areas_for_growth": {"Acquire certifications in AI and or AI security": 1, "Learn and apply more AI tools in daily work.....": 1, "Work more closely with NY team of Admin, HR, IT and Finance, to understand more of each other": 1, "Strengthen project management and coordination skills to improve workflow execution.\n\nExpand technical expertise by deepening knowledge of advanced software features.\n\nDevelop leadership abilities to take on greater responsibility in guiding projects and supporting team members.": 1, "I have 1 more ARE I want to finish. I keep failing it.": 1, "Ability to multi-task with other projects more efficiently and delegate more work to other team-members during CA.": 1, "Learn more about healthcare and laboratory knowledge and integrate them into BD scenarios.": 1, "The profession is changing rapidly and I would like to learn new types of software that would make my workflow more productive and easier. I would like to implement more sustainable design strategies in my design process.": 1}, "software_tools_feedback": {"Due to the constantly changing IT landscape and the quick adoption of AI, it would be helpful to acquire more official AI training, perhaps professional certification in a specific AI platform could be beneficial to Ennead.": 1, "More about the AI , maybe.": 1, "We need non-tech employee forms for software and tools": 1, "I am comfortable with the core software and tools required for my role and use them effectively in daily work. Additional training in advanced features or integrations would help me increase efficiency and streamline workflows. I am open to learning new tools that can further support team collaboration and project delivery.": 1, "Yes. Grasshopper.": 1, "Integration of smarter tools within Revit.": 1, "AI for graphic generation, both images and videos.": 1, "I do not use all of the software listed above. For visualization, I rely on junior help. I would like to learn more about grasshopper and D5": 1}};
+        
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Initialize charts if summary tab is selected
+            if (tabName === 'summary') {
+                setTimeout(initializeCharts, 100);
+            }
+        }
+        
+        function filterEmployees() {
+            const searchBox = document.querySelector('.search-box');
+            const searchIcon = document.querySelector('.search-icon');
+            const searchTerm = searchBox.value.toLowerCase();
+            const employeeCards = document.querySelectorAll('.employee-card');
+            
+            // Show/hide search icon based on input content
+            const searchIconImg = searchIcon.querySelector('img');
+            if (searchTerm.length > 0) {
+                searchIcon.style.opacity = '0.3';
+                searchIcon.style.animation = 'none';
+                if (searchIconImg) {
+                    searchIconImg.style.filter = 'opacity(0.5)';
+                }
+            } else {
+                searchIcon.style.opacity = '0.5';
+                searchIcon.style.animation = 'searchPulse 2s ease-in-out infinite';
+                if (searchIconImg) {
+                    searchIconImg.style.filter = 'opacity(0.7)';
+                }
+            }
+            
+            employeeCards.forEach(card => {
+                const name = card.querySelector('.employee-name').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show no results message if no cards are visible
+            const visibleCards = Array.from(employeeCards).filter(card => card.style.display !== 'none');
+            let noResults = document.getElementById('no-results');
+            if (visibleCards.length === 0 && searchTerm) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.id = 'no-results';
+                    noResults.className = 'no-results';
+                    noResults.innerHTML = `
+                        <div class="no-results-message">
+                            <div>No employees found matching "` + searchTerm + `"</div>
+                            <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.7;">Try adjusting your search terms</div>
                         </div>
+                    `;
+                    document.getElementById('employee-list').appendChild(noResults);
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
+        }
+        
+        function initializeCharts() {
+            Object.keys(chartData).forEach(field => {
+                const canvas = document.getElementById(`chart-${field}`);
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    const data = chartData[field];
+                    
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: Object.keys(data),
+                            datasets: [{
+                                data: Object.values(data),
+                                backgroundColor: [
+                                    'rgba(43, 122, 120, 0.8)',    // Primary teal
+                                    'rgba(26, 90, 88, 0.8)',      // Darker teal
+                                    'rgba(15, 20, 25, 0.8)',      // Dark text
+                                    'rgba(58, 175, 169, 0.8)',    // Accent teal
+                                    'rgba(74, 74, 74, 0.8)',      // Secondary text
+                                    'rgba(240, 248, 247, 0.8)',   // Light background
+                                    'rgba(224, 232, 231, 0.8)',   // Border color
+                                    'rgba(43, 122, 120, 0.6)'     // Lighter primary
+                                ],
+                                borderColor: [
+                                    'rgba(43, 122, 120, 1)',
+                                    'rgba(26, 90, 88, 1)',
+                                    'rgba(15, 20, 25, 1)',
+                                    'rgba(58, 175, 169, 1)',
+                                    'rgba(74, 74, 74, 1)',
+                                    'rgba(240, 248, 247, 1)',
+                                    'rgba(224, 232, 231, 1)',
+                                    'rgba(43, 122, 120, 1)'
+                                ],
+                                borderWidth: 2,
+                                hoverOffset: 10
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        usePointStyle: true,
+                                        font: {
+                                            family: 'Inter',
+                                            size: 12
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    titleColor: 'white',
+                                    bodyColor: 'white',
+                                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                                    borderWidth: 1,
+                                    cornerRadius: 8,
+                                    displayColors: true
+                                }
+                            },
+                            cutout: '60%',
+                            animation: {
+                                animateRotate: true,
+                                animateScale: true,
+                                duration: 1000,
+                                easing: 'easeOutQuart'
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Return to top functionality
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Show/hide return to top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const returnToTop = document.querySelector('.return-to-top');
+            if (window.pageYOffset > 300) {
+                returnToTop.classList.add('show');
+            } else {
+                returnToTop.classList.remove('show');
+            }
+        });
+    </script>
+    
 </body>
 </html>

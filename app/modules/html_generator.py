@@ -60,11 +60,14 @@ def create_html_output_from_json(data_file: str = None, output_dir: str = None) 
         
         print(f"✅ Loaded {len(employees)} employee records from JSON")
         
-        # Extract all fields from the JSON structure
-        all_fields = extract_all_fields_from_json(employees)
+        # Convert to flat structure for the new format
+        flat_employees = convert_to_flat_structure(employees)
         
-        chart_data = prepare_chart_data_from_json(employees)
-        html_content = generate_html_template(employees, all_fields, chart_data)
+        # Extract all fields from the flat structure
+        all_fields = extract_all_fields_from_flat(flat_employees)
+        
+        chart_data = prepare_chart_data_from_flat(flat_employees)
+        html_content = generate_html_template(flat_employees, all_fields, chart_data)
 
         # Create output directory
         output_path = Path(output_dir)
@@ -86,7 +89,7 @@ def create_html_output_from_json(data_file: str = None, output_dir: str = None) 
         
         # Write JavaScript file
         with open(output_path / "js" / "script.js", 'w', encoding='utf-8') as f:
-            f.write(generate_javascript_content(employees, chart_data))
+            f.write(generate_javascript_content(flat_employees, chart_data))
         
         # Copy images to website assets
         copy_images_to_website(output_path)
@@ -102,52 +105,90 @@ def create_html_output_from_json(data_file: str = None, output_dir: str = None) 
         return ""
 
 
-def extract_all_fields_from_json(employees: List[Dict[str, Any]]) -> List[str]:
-    """Extract all field names from JSON employee data."""
+def convert_to_flat_structure(employees: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+    """Convert nested employee data to flat structure for the new HTML format."""
+    flat_employees = []
+    
+    for employee in employees:
+        flat_emp = {}
+        
+        # Basic information
+        flat_emp['employee_name'] = employee.get('name', '')
+        flat_emp['title'] = employee.get('title', '')
+        flat_emp['employee_role'] = employee.get('role', '')
+        flat_emp['email'] = employee.get('email', '')
+        flat_emp['evaluator_name'] = employee.get('evaluator_name', '')
+        flat_emp['date_of_evaluation'] = employee.get('date', '').split(' ')[0] if employee.get('date') else ''
+        flat_emp['submitted'] = employee.get('completion_time', '')
+        flat_emp['responder'] = employee.get('email', '')
+        
+        # Profile image information - keep as dict for HTML generation
+        profile_image = employee.get('profile_image', {})
+        flat_emp['profile_image'] = profile_image
+        
+        # Performance ratings
+        performance_ratings = employee.get('performance_ratings', {})
+        for key, value in performance_ratings.items():
+            if key == 'overall_performance':
+                flat_emp['overall_performance'] = str(value) if value else ''
+            else:
+                # Convert key to match expected format
+                clean_key = key.replace('_', ' ').title().replace(' ', ' & ').replace('&', '&')
+                if 'Technical' in clean_key:
+                    clean_key = 'Technical Knowledge & Expertise'
+                elif 'Workflow' in clean_key:
+                    clean_key = 'Workflow Implementation, Management, Execution'
+                flat_emp[f'{clean_key}_rating'] = str(value) if value else ''
+        
+        # Performance comments
+        performance_comments = employee.get('performance_comments', {})
+        for key, value in performance_comments.items():
+            # Convert key to match expected format
+            clean_key = key.replace('_comments', '').replace('_', ' ').title()
+            if 'Technical' in clean_key:
+                clean_key = 'Technical Knowledge & Expertise'
+            elif 'Workflow' in clean_key:
+                clean_key = 'Workflow Implementation, Management, Execution'
+            flat_emp[f'{clean_key}_comments'] = str(value) if value else ''
+        
+        # Software proficiency
+        software_proficiency = employee.get('software_proficiency', {})
+        for key, value in software_proficiency.items():
+            # Handle special case for deltek_adp
+            if key == 'deltek_adp':
+                key = 'deltek/adp'
+            flat_emp[key] = str(value) if value else ''
+        
+        # Additional evaluation data
+        additional_data = employee.get('additional_evaluation_data', {})
+        for key, value in additional_data.items():
+            flat_emp[key] = str(value) if value else ''
+        
+        flat_employees.append(flat_emp)
+    
+    return flat_employees
+
+
+def extract_all_fields_from_flat(employees: List[Dict[str, str]]) -> List[str]:
+    """Extract all field names from flat employee data."""
     all_fields = set()
     
     for employee in employees:
-        # Add basic fields
-        for key in ['name', 'title', 'role', 'email']:
-            if key in employee:
-                all_fields.add(key)
-        
-        # Add performance ratings fields
-        performance_ratings = employee.get('performance_ratings', {})
-        for key in performance_ratings.keys():
-            all_fields.add(f"performance_ratings_{key}")
-        
-        # Add software proficiency fields
-        software_proficiency = employee.get('software_proficiency', {})
-        for key in software_proficiency.keys():
-            all_fields.add(f"software_proficiency_{key}")
-        
-        # Add additional evaluation data fields
-        additional_data = employee.get('additional_evaluation_data', {})
-        for key in additional_data.keys():
-            all_fields.add(f"additional_data_{key}")
+        for key in employee.keys():
+            all_fields.add(key)
     
     return list(all_fields)
 
 
-def prepare_chart_data_from_json(employees: List[Dict[str, Any]]) -> Dict[str, Dict[str, int]]:
-    """Prepare chart data from JSON employee data."""
+def prepare_chart_data_from_flat(employees: List[Dict[str, str]]) -> Dict[str, Dict[str, int]]:
+    """Prepare chart data from flat employee data."""
     excluded_fields = get_excluded_chart_fields()
     field_value_counts = defaultdict(Counter)
     
     for emp in employees:
-        # Process performance ratings
-        performance_ratings = emp.get('performance_ratings', {})
-        for field, value in performance_ratings.items():
-            if value and str(value).isdigit():
-                field_value_counts[f"performance_{field}"][str(value)] += 1
-        
-        # Process software proficiency
-        software_proficiency = emp.get('software_proficiency', {})
-        for field, value in software_proficiency.items():
-            if value and "Not Applicable" not in str(value):
-                clean_value = str(value).split('(')[0].strip()
-                field_value_counts[f"software_{field}"][clean_value] += 1
+        for field, value in emp.items():
+            if field.lower() not in excluded_fields and value and value.strip():
+                field_value_counts[field][value] += 1
     
     return {field: dict(counter) for field, counter in field_value_counts.items()}
 
@@ -167,7 +208,7 @@ def copy_images_to_website(output_path: Path):
 
 def create_html_output(employees: List[Dict[str, str]], all_fields: List[str], output_filename: str = 'OUTPUT.html') -> str:
     """Legacy function for backward compatibility."""
-    chart_data = prepare_chart_data(employees, all_fields)
+    chart_data = prepare_chart_data_from_flat(employees)
     html_content = generate_html_template(employees, all_fields, chart_data)
 
     docs_dir = Config.get_docs_dir()
@@ -179,24 +220,6 @@ def create_html_output(employees: List[Dict[str, str]], all_fields: List[str], o
 
     print(f"HTML file created: {output_path}")
     return output_path
-
-
-def prepare_chart_data(employees: List[Dict[str, str]], all_fields: List[str]) -> Dict[str, Dict[str, int]]:
-    excluded_fields = get_excluded_chart_fields()
-    excluded_from_charts = [field for field in all_fields if any(excluded.lower() in field.lower() or field.lower() in excluded.lower() for excluded in excluded_fields)]
-    if excluded_from_charts:
-        print(f"Excluding from charts: {excluded_from_charts}")
-
-    field_value_counts = defaultdict(Counter)
-    for emp in employees:
-        for field in all_fields:
-            if any(excluded.lower() in field.lower() or field.lower() in excluded.lower() for excluded in excluded_fields):
-                continue
-            if field in emp and emp[field]:
-                field_value_counts[field][emp[field]] += 1
-
-    chart_data = {field: dict(counter) for field, counter in field_value_counts.items()}
-    return chart_data
 
 
 def generate_html_template(employees: List[Dict[str, str]], all_fields: List[str], chart_data: Dict[str, Dict[str, int]]) -> str:
@@ -226,262 +249,529 @@ def generate_html_template(employees: List[Dict[str, str]], all_fields: List[str
 </html>
 """
 
-# The remaining helpers are identical to the previous version and omitted for brevity
-# to keep this edit minimal.
-
 
 def get_css_styles() -> str:
     """Generate CSS styles for the website."""
     return """
-/* Employee Performance Review Website Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 40px;
-    color: white;
-}
-
-.header h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
-.header p {
-    font-size: 1.2rem;
-    opacity: 0.9;
-}
-
-.stats-overview {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 40px;
-}
-
-.stat-card {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    backdrop-filter: blur(10px);
-}
-
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #667eea;
-    margin-bottom: 5px;
-}
-
-.stat-label {
-    color: #666;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.employee-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 30px;
-    margin-bottom: 40px;
-}
-
-.employee-card {
-    background: white;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.employee-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-}
-
-.employee-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    gap: 20px;
-}
-
-.profile-image {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #667eea;
-    flex-shrink: 0;
-}
-
-.default-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
-    border: 4px solid #667eea;
-    flex-shrink: 0;
-}
-
-.employee-info h3 {
-    font-size: 1.4rem;
-    color: #333;
-    margin-bottom: 5px;
-}
-
-.employee-title {
-    color: #667eea;
-    font-weight: 600;
-    margin-bottom: 3px;
-}
-
-.employee-role {
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.employee-email {
-    color: #888;
-    font-size: 0.8rem;
-}
-
-.performance-section, .software-section, .additional-section {
-    margin-bottom: 15px;
-}
-
-.performance-section h4, .software-section h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 2px solid #f0f0f0;
-}
-
-.ratings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-}
-
-.rating-item {
-    padding: 8px 12px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    font-size: 0.9rem;
-}
-
-.software-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 8px;
-}
-
-.software-item {
-    padding: 6px 10px;
-    background: #e3f2fd;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    text-align: center;
-    color: #1976d2;
-    font-weight: 500;
-}
-
-.additional-info {
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.footer {
-    text-align: center;
-    padding: 40px 20px;
-    color: white;
-    opacity: 0.8;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    
-    .header h1 {
-        font-size: 2rem;
-    }
-    
-    .employee-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .employee-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-    }
-    
-    .ratings-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .software-grid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
-}
-"""
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: #1A1A1A;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(58, 175, 169, 0.9) 0%, rgba(43, 122, 120, 0.9) 100%), 
+                        url('https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2021%2F08%2Fshanghai-astronomy-museum-ennead-architects-china-6.jpg?q=75&w=800&cbr=1&fit=max');
+            background-size: 120%;
+            background-position: center;
+            background-attachment: fixed;
+            animation: rotateBackground 30s linear infinite;
+        }
+        
+        @keyframes rotateBackground {
+            0% {
+                background-size: 120%;
+                transform: rotate(0deg);
+            }
+            25% {
+                background-size: 125%;
+            }
+            50% {
+                background-size: 120%;
+                transform: rotate(0.5deg);
+            }
+            75% {
+                background-size: 125%;
+            }
+            100% {
+                background-size: 120%;
+                transform: rotate(0deg);
+            }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0F1419 0%, #1A5A58 100%);
+            color: #FFFFFF;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #F0F8F7;
+            border-bottom: 1px solid #1A5A58;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 20px 30px;
+            text-align: center;
+            background: transparent;
+            color: #1A5A58;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .tab:hover {
+            color: #0F1419;
+            background: rgba(26, 90, 88, 0.1);
+        }
+        
+        .tab.active {
+            color: #0F1419;
+            background: white;
+            box-shadow: 0 -2px 0 #2B7A78 inset;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 40px 30px;
+            min-height: 500px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .search-container {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 16px 20px 16px 50px;
+            border: 1px solid #E0E8E7;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.2s ease;
+            color: #1A1A1A;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #2B7A78;
+            box-shadow: 0 0 0 2px rgba(43, 122, 120, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: searchPulse 2s ease-in-out infinite;
+        }
+        
+        .search-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: opacity(0.7);
+            transition: filter 0.2s ease;
+        }
+        
+        @keyframes searchPulse {
+            0%, 100% {
+                transform: translateY(-50%) scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-50%) scale(1.1);
+                opacity: 0.7;
+            }
+        }
+        
+        .search-container:focus-within .search-icon {
+            opacity: 0.7;
+        }
+        
+        .search-box:not(:placeholder-shown) + .search-icon {
+            opacity: 0.3;
+        }
+        
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 24px;
+        }
+        
+        .employee-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #E0E8E7;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .employee-card:hover {
+            border-color: #2B7A78;
+            box-shadow: 0 4px 12px rgba(43, 122, 120, 0.1);
+        }
+        
+        .employee-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        
+        .profile-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #2B7A78;
+            flex-shrink: 0;
+        }
+        
+        .default-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2B7A78, #1A5A58);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            border: 4px solid #2B7A78;
+            flex-shrink: 0;
+        }
+        
+        .employee-info {
+            flex: 1;
+        }
+        
+        .employee-name {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #0F1419;
+            margin-bottom: 8px;
+        }
+        
+        .employee-time {
+            color: #4A4A4A;
+            font-size: 0.875rem;
+        }
+        
+        .fields-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(45, 122, 120, 0.08);
+            margin-bottom: 12px;
+        }
+        
+        .field:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .field:hover {
+            border-bottom-color: rgba(45, 122, 120, 0.15);
+            transition: border-bottom-color 0.2s ease;
+        }
+        
+        .field-group {
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(240, 248, 247, 0.5);
+            border-radius: 8px;
+            border: 2px solid #2B7A78;
+        }
+        
+        .group-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0F1419;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(43, 122, 120, 0.3);
+        }
+        
+        .field-group .field {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(45, 122, 120, 0.1);
+        }
+        
+        .field-group .field:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .software-tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .software-tools-grid .field {
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(45, 122, 120, 0.1);
+        }
+        
+        .software-tools-grid .field:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .software-tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .return-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3AAFA9, #2B7A78);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(45, 122, 120, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .return-to-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(45, 122, 120, 0.4);
+            background: linear-gradient(135deg, #2B7A78, #1A5A58);
+        }
+        
+        .return-to-top:active {
+            transform: translateY(0);
+        }
+        
+        .return-to-top.show {
+            display: flex;
+        }
+        
+        .field-label {
+            font-weight: 500;
+            color: #1A5A58;
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+        }
+        
+        .field-value {
+            color: #1A1A1A;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .software-tools-grid .field-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .rating-number {
+            font-weight: 600;
+            color: #1A1A1A;
+            font-size: 1rem;
+        }
+        
+        .rating-description {
+            font-size: 0.8rem;
+            color: #6B7280;
+            font-weight: 400;
+        }
+        
+        .field-group .field-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .chart {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #E0E8E7;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chart h3 {
+            margin: 0 0 20px 0;
+            color: #0F1419;
+            text-align: center;
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+        
+        .no-results {
+            text-align: center;
+            color: #4A4A4A;
+            padding: 40px 20px;
+            font-size: 1rem;
+        }
+        
+        
+        .footer {
+            background: #F0F8F7;
+            border-top: 1px solid #1A5A58;
+            padding: 20px 30px;
+            text-align: center;
+            color: #4A4A4A;
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: #2B7A78;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 16px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tab-content {
+                padding: 30px 20px;
+            }
+            
+            .employee-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    """
 
 
 def generate_header(employees: List[Dict[str, str]]) -> str:
     current_time = datetime.now().strftime("%B %d, %Y at %I:%M %p")
     return f"""
         <div class="header">
-            <div class="header-content">
-                <div class="header-text">
-                    <h1>Employee Evaluation Report</h1>
-                    <p>Total Employees: {len(employees)}</p>
-                    <p class="last-updated">Last Updated: {current_time}</p>
-                </div>
-                <div class="header-actions">
-                    <button class="download-btn excel-btn" onclick="downloadExcel()">
-                        <span class="btn-icon">📊</span>
-                        Download Excel
-                    </button>
-                </div>
-            </div>
+            <h1>Employee Evaluation Report</h1>
+            <p>Total Employees: {len(employees)}</p>
         </div>
     """
 
@@ -530,71 +820,125 @@ def generate_footer() -> str:
     """
 
 
-def generate_employee_cards(employees: List[Dict[str, Any]]) -> str:
-    """Generate HTML for employee cards from JSON data."""
+def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
+    """Generate HTML for employee cards from flat data."""
     cards_html = ""
     
     for employee in employees:
-        name = employee.get('name', 'Unknown')
+        name = employee.get('employee_name', 'Unknown')
+        role = employee.get('employee_role', '')
         title = employee.get('title', '')
-        role = employee.get('role', '')
         email = employee.get('email', '')
+        evaluator = employee.get('evaluator_name', '')
+        date = employee.get('date_of_evaluation', '')
+        submitted = employee.get('submitted', '')
         
-        # Profile image handling
-        profile_image = employee.get('profile_image', {})
-        has_image = profile_image.get('has_image', False)
-        image_path = profile_image.get('display_path', Config.get_default_avatar_path())
+        # Profile Image
+        profile_image_html = ""
+        if employee.get('profile_image') and employee['profile_image'].get('has_image'):
+            image_path = employee['profile_image'].get('display_path', 'assets/images/default-avatar.png')
+            profile_image_html = f'<img src="{image_path}" alt="{name}" class="profile-image">'
+        else:
+            # Generate initials for default avatar
+            initials = ''.join([word[0].upper() for word in name.split()[:2]])
+            profile_image_html = f'<div class="default-avatar">{initials}</div>'
         
-        # Generate initials for default avatar
-        initials = ''.join([word[0].upper() for word in name.split()[:2]])
+        # Basic Information
+        basic_info_html = ""
+        if title:
+            basic_info_html += f'<div class="field"><div class="field-label">Title</div><div class="field-value">{title}</div></div>'
+        if role:
+            basic_info_html += f'<div class="field"><div class="field-label">Role</div><div class="field-value">{role}</div></div>'
+        if email:
+            basic_info_html += f'<div class="field"><div class="field-label">Email</div><div class="field-value">{email}</div></div>'
+        if evaluator:
+            basic_info_html += f'<div class="field"><div class="field-label">Evaluator</div><div class="field-value">{evaluator}</div></div>'
+        if submitted:
+            basic_info_html += f'<div class="field"><div class="field-label">Submitted</div><div class="field-value">{submitted}</div></div>'
         
-        # Performance ratings
-        ratings = employee.get('performance_ratings', {})
-        
-        # Software proficiency
-        software = employee.get('software_proficiency', {})
-        
-        # Additional data
-        additional = employee.get('additional_evaluation_data', {})
-        
-        # Generate performance ratings HTML
+        # Performance Ratings
         ratings_html = ""
-        for rating_name, rating_value in ratings.items():
-            if rating_value and isinstance(rating_value, str) and rating_value.isdigit():
-                clean_name = rating_name.replace('_', ' ').title()
-                ratings_html += f'<div class="rating-item"><span>{clean_name}: {rating_value}/5</span></div>'
+        rating_fields = ['Communication_rating', 'Collaboration_rating', 'Professionalism_rating', 
+                        'Technical Knowledge & Expertise_rating', 'Workflow Implementation, Management, Execution_rating']
         
-        # Generate software proficiency HTML
+        for field in rating_fields:
+            if field in employee and employee[field]:
+                value = employee[field]
+                if value and value != '0 (Not Applicable)':
+                    clean_name = field.replace('_rating', ' Rating')
+                    if '(' in value and ')' in value:
+                        rating_num = value.split('(')[0].strip()
+                        rating_desc = '(' + value.split('(')[1]
+                        ratings_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value"><span class="rating-number">{rating_num}</span><span class="rating-description">{rating_desc}</span></div></div>'
+                    else:
+                        ratings_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value">{value}</div></div>'
+        
+        # Performance Comments
+        comments_html = ""
+        comment_fields = ['Communication_comments', 'Collaboration_comments', 'Professionalism_comments',
+                         'Technical Knowledge & Expertise_comments', 'Workflow Implementation, Management, Execution_comments']
+        
+        for field in comment_fields:
+            if field in employee and employee[field]:
+                clean_name = field.replace('_comments', ' Comments').replace('_', ' ')
+                comments_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value">{employee[field]}</div></div>'
+        
+        # Overall Assessment
+        overall_html = ""
+        if employee.get('overall_performance'):
+            overall_html += f'<div class="field"><div class="field-label">Overall Performance</div><div class="field-value">{employee["overall_performance"]}</div></div>'
+        if employee.get('performance_examples'):
+            overall_html += f'<div class="field"><div class="field-label">Performance Examples</div><div class="field-value">{employee["performance_examples"]}</div></div>'
+        if employee.get('additional_resources'):
+            overall_html += f'<div class="field"><div class="field-label">Additional Resources Needed</div><div class="field-value">{employee["additional_resources"]}</div></div>'
+        
+        # Employee Development
+        development_html = ""
+        if employee.get('employee_strengths'):
+            development_html += f'<div class="field"><div class="field-label">Employee Strengths</div><div class="field-value">{employee["employee_strengths"]}</div></div>'
+        if employee.get('areas_for_growth'):
+            development_html += f'<div class="field"><div class="field-label">Areas for Growth & Development</div><div class="field-value">{employee["areas_for_growth"]}</div></div>'
+        if employee.get('studio_culture_feedback'):
+            development_html += f'<div class="field"><div class="field-label">Studio Culture Feedback</div><div class="field-value">{employee["studio_culture_feedback"]}</div></div>'
+        
+        # Software & Tools
         software_html = ""
-        for software_name, proficiency in software.items():
-            if proficiency and proficiency != "0 (Not Applicable)":
-                clean_name = software_name.replace('_', ' ').title()
-                software_html += f'<div class="software-item">{clean_name}: {proficiency}</div>'
+        software_fields = ['revit', 'rhino', 'enscape', 'd5', 'vantage_point', 'deltek/adp', 'newforma', 
+                          'bluebeam', 'grasshopper', 'word', 'powerpoint', 'excel', 'illustrator', 'photoshop', 'indesign']
         
-        # Generate additional info HTML
-        additional_html = ""
-        if additional.get('employee_strengths'):
-            additional_html += f'<div class="additional-info"><strong>Strengths:</strong> {additional["employee_strengths"]}</div>'
-        if additional.get('areas_for_growth'):
-            additional_html += f'<div class="additional-info"><strong>Growth Areas:</strong> {additional["areas_for_growth"]}</div>'
+        for field in software_fields:
+            if field in employee and employee[field]:
+                value = employee[field]
+                if value and value != '0 (Not Applicable)':
+                    clean_name = field.replace('_', ' ').title()
+                    if '(' in value and ')' in value:
+                        rating_num = value.split('(')[0].strip()
+                        rating_desc = '(' + value.split('(')[1]
+                        software_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value"><span class="rating-number">{rating_num}</span><span class="rating-description">{rating_desc}</span></div></div>'
+                    else:
+                        software_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value">{value}</div></div>'
+        
+        # Software Tools Feedback
+        if employee.get('software_tools_feedback'):
+            software_html += f'<div class="field"><div class="field-label">Software & Tools Feedback</div><div class="field-value">{employee["software_tools_feedback"]}</div></div>'
         
         card_html = f"""
         <div class="employee-card">
             <div class="employee-header">
-                {'<img src="' + image_path + '" alt="' + name + '" class="profile-image">' if has_image else f'<div class="default-avatar">{initials}</div>'}
+                {profile_image_html}
                 <div class="employee-info">
-                    <h3>{name}</h3>
-                    <div class="employee-title">{title}</div>
-                    <div class="employee-role">{role}</div>
-                    {f'<div class="employee-email">{email}</div>' if email else ''}
+                    <div class="employee-name">{name}</div>
+                    <div class="employee-time">{date}</div>
                 </div>
             </div>
-            
-            {f'<div class="performance-section"><h4>Performance Ratings</h4><div class="ratings-grid">{ratings_html}</div></div>' if ratings_html else ''}
-            
-            {f'<div class="software-section"><h4>Software Proficiency</h4><div class="software-grid">{software_html}</div></div>' if software_html else ''}
-            
-            {f'<div class="additional-section">{additional_html}</div>' if additional_html else ''}
+            <div class="fields-container">
+                {f'<div class="field-group"><div class="group-title">Basic Information</div>{basic_info_html}</div>' if basic_info_html else ''}
+                {f'<div class="field-group"><div class="group-title">Performance Ratings</div>{ratings_html}</div>' if ratings_html else ''}
+                {f'<div class="field-group"><div class="group-title">Performance Comments</div>{comments_html}</div>' if comments_html else ''}
+                {f'<div class="field-group"><div class="group-title">Overall Assessment</div>{overall_html}</div>' if overall_html else ''}
+                {f'<div class="field-group"><div class="group-title">Employee Development</div>{development_html}</div>' if development_html else ''}
+                {f'<div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid">{software_html}</div></div>' if software_html else ''}
+            </div>
         </div>
         """
         
@@ -604,15 +948,27 @@ def generate_employee_cards(employees: List[Dict[str, Any]]) -> str:
 
 
 def generate_charts_html(all_fields: List[str]) -> str:
-    return ""
-
-
-def generate_javascript_content(employees: List[Dict[str, Any]], chart_data: Dict[str, Dict[str, int]]) -> str:
-    """Generate JavaScript content for the website."""
-    total_employees = len(employees)
-    employees_with_images = sum(1 for emp in employees 
-                              if emp.get('profile_image', {}).get('has_image', False))
+    """Generate HTML for charts."""
+    charts_html = ""
+    excluded_fields = get_excluded_chart_fields()
     
+    for field in all_fields:
+        if field.lower() not in excluded_fields:
+            clean_name = field.replace('_', ' ').title()
+            charts_html += f"""
+        <div class="chart">
+            <h3>{clean_name}</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-{field}"></canvas>
+            </div>
+        </div>
+        """
+    
+    return charts_html
+
+
+def generate_javascript_content(employees: List[Dict[str, str]], chart_data: Dict[str, Dict[str, int]]) -> str:
+    """Generate JavaScript content for the website."""
     return f"""
 // Employee Performance Review Website JavaScript
 
@@ -656,9 +1012,7 @@ document.addEventListener('DOMContentLoaded', function() {{
     
     // Statistics
     console.log('Employee Performance Review Dashboard');
-    console.log('Total Employees: {total_employees}');
-    console.log('Employees with Images: {employees_with_images}');
-    console.log('Image Coverage: {round(employees_with_images/total_employees*100) if total_employees > 0 else 0}%');
+    console.log('Total Employees: {len(employees)}');
 }});
 
 // Utility functions
@@ -677,18 +1031,178 @@ function downloadExcel() {{
 
 
 def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, Dict[str, int]]) -> str:
-    """Legacy function for backward compatibility."""
-    excel_name = f"{Config.OUTPUT_BASE_NAME}.xlsx"
+    """Generate JavaScript for the HTML template."""
     return f"""
     <script>
-        // JavaScript omitted for brevity (unchanged)
-        function downloadExcel() {{
-            const link = document.createElement('a');
-            link.href = '{excel_name}';
-            link.download = '{excel_name}';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        const employees = {json.dumps(employees)};
+        const chartData = {json.dumps(chart_data)};
+        
+        function showTab(tabName) {{
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {{
+                content.classList.remove('active');
+            }});
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {{
+                tab.classList.remove('active');
+            }});
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Initialize charts if summary tab is selected
+            if (tabName === 'summary') {{
+                setTimeout(initializeCharts, 100);
+            }}
         }}
+        
+        function filterEmployees() {{
+            const searchBox = document.querySelector('.search-box');
+            const searchIcon = document.querySelector('.search-icon');
+            const searchTerm = searchBox.value.toLowerCase();
+            const employeeCards = document.querySelectorAll('.employee-card');
+            
+            // Show/hide search icon based on input content
+            const searchIconImg = searchIcon.querySelector('img');
+            if (searchTerm.length > 0) {{
+                searchIcon.style.opacity = '0.3';
+                searchIcon.style.animation = 'none';
+                if (searchIconImg) {{
+                    searchIconImg.style.filter = 'opacity(0.5)';
+                }}
+            }} else {{
+                searchIcon.style.opacity = '0.5';
+                searchIcon.style.animation = 'searchPulse 2s ease-in-out infinite';
+                if (searchIconImg) {{
+                    searchIconImg.style.filter = 'opacity(0.7)';
+                }}
+            }}
+            
+            employeeCards.forEach(card => {{
+                const name = card.querySelector('.employee-name').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {{
+                    card.style.display = 'block';
+                }} else {{
+                    card.style.display = 'none';
+                }}
+            }});
+            
+            // Show no results message if no cards are visible
+            const visibleCards = Array.from(employeeCards).filter(card => card.style.display !== 'none');
+            let noResults = document.getElementById('no-results');
+            if (visibleCards.length === 0 && searchTerm) {{
+                if (!noResults) {{
+                    noResults = document.createElement('div');
+                    noResults.id = 'no-results';
+                    noResults.className = 'no-results';
+                    noResults.innerHTML = `
+                        <div class="no-results-message">
+                            <div>No employees found matching "` + searchTerm + `"</div>
+                            <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.7;">Try adjusting your search terms</div>
+                        </div>
+                    `;
+                    document.getElementById('employee-list').appendChild(noResults);
+                }}
+            }} else if (noResults) {{
+                noResults.remove();
+            }}
+        }}
+        
+        function initializeCharts() {{
+            Object.keys(chartData).forEach(field => {{
+                const canvas = document.getElementById(`chart-${{field}}`);
+                if (canvas) {{
+                    const ctx = canvas.getContext('2d');
+                    const data = chartData[field];
+                    
+                    new Chart(ctx, {{
+                        type: 'doughnut',
+                        data: {{
+                            labels: Object.keys(data),
+                            datasets: [{{
+                                data: Object.values(data),
+                                backgroundColor: [
+                                    'rgba(43, 122, 120, 0.8)',    // Primary teal
+                                    'rgba(26, 90, 88, 0.8)',      // Darker teal
+                                    'rgba(15, 20, 25, 0.8)',      // Dark text
+                                    'rgba(58, 175, 169, 0.8)',    // Accent teal
+                                    'rgba(74, 74, 74, 0.8)',      // Secondary text
+                                    'rgba(240, 248, 247, 0.8)',   // Light background
+                                    'rgba(224, 232, 231, 0.8)',   // Border color
+                                    'rgba(43, 122, 120, 0.6)'     // Lighter primary
+                                ],
+                                borderColor: [
+                                    'rgba(43, 122, 120, 1)',
+                                    'rgba(26, 90, 88, 1)',
+                                    'rgba(15, 20, 25, 1)',
+                                    'rgba(58, 175, 169, 1)',
+                                    'rgba(74, 74, 74, 1)',
+                                    'rgba(240, 248, 247, 1)',
+                                    'rgba(224, 232, 231, 1)',
+                                    'rgba(43, 122, 120, 1)'
+                                ],
+                                borderWidth: 2,
+                                hoverOffset: 10
+                            }}]
+                        }},
+                        options: {{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {{
+                                legend: {{
+                                    position: 'bottom',
+                                    labels: {{
+                                        padding: 20,
+                                        usePointStyle: true,
+                                        font: {{
+                                            family: 'Inter',
+                                            size: 12
+                                        }}
+                                    }}
+                                }},
+                                tooltip: {{
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    titleColor: 'white',
+                                    bodyColor: 'white',
+                                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                                    borderWidth: 1,
+                                    cornerRadius: 8,
+                                    displayColors: true
+                                }}
+                            }},
+                            cutout: '60%',
+                            animation: {{
+                                animateRotate: true,
+                                animateScale: true,
+                                duration: 1000,
+                                easing: 'easeOutQuart'
+                            }}
+                        }}
+                    }});
+                }}
+            }});
+        }}
+        
+        // Return to top functionality
+        function scrollToTop() {{
+            window.scrollTo({{
+                top: 0,
+                behavior: 'smooth'
+            }});
+        }}
+        
+        // Show/hide return to top button based on scroll position
+        window.addEventListener('scroll', function() {{
+            const returnToTop = document.querySelector('.return-to-top');
+            if (window.pageYOffset > 300) {{
+                returnToTop.classList.add('show');
+            }} else {{
+                returnToTop.classList.remove('show');
+            }}
+        }});
     </script>
     """
