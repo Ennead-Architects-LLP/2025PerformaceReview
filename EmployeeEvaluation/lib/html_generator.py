@@ -15,14 +15,16 @@ from parser import get_employee_initials, clean_field_name
 def get_excluded_chart_fields() -> set:
     """
     Get the set of fields that should be excluded from chart generation.
-    These are comment fields and evaluator name that contain customized text.
-    
+    These are comment fields, evaluator names, employee names, timestamps,
+    and other metadata fields that contain customized text or identifiers
+    that are not useful for visualization.
+
     Returns:
         Set of field names to exclude from charts
     """
     return {
         'professionalism_comments',
-        'communication_comments', 
+        'communication_comments',
         'collaboration_comments',
         'workflow implementation, management, execution_comments',
         'software & tools_overall_comments',
@@ -30,7 +32,12 @@ def get_excluded_chart_fields() -> set:
         'employee areas for growth & development',
         'additional_comments_regarding_performance',
         'evaluator_name',
-        'technical knowledge & expertise_comments'
+        'technical knowledge & expertise_comments',
+        'responder',      # Email field - not useful for charts
+        'submitted',      # Timestamp field - not useful for charts
+        'employee name',  # Employee identifier - not useful for charts
+        'employee_name',  # Employee identifier - not useful for charts
+        'name'            # Generic name field - not useful for charts
     }
 
 
@@ -70,16 +77,17 @@ def create_html_output(employees: List[Dict[str, str]], all_fields: List[str], o
 def prepare_chart_data(employees: List[Dict[str, str]], all_fields: List[str]) -> Dict[str, Dict[str, int]]:
     """
     Prepare chart data by counting field values.
-    Excludes comment fields and evaluator name as they contain customized text.
-    
+    Excludes comment fields, evaluator name, and metadata fields that contain
+    customized text or are not useful for visualization.
+
     Args:
         employees: List of employee dictionaries
         all_fields: List of all field names
-        
+
     Returns:
         Dictionary containing chart data for each field
     """
-    # Fields to exclude from charts (comment fields and evaluator name)
+    # Fields to exclude from charts (comment fields, evaluator name, and metadata)
     excluded_fields = get_excluded_chart_fields()
     
     # Log excluded fields for transparency
