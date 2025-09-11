@@ -55,9 +55,10 @@ def create_html_output(employees: List[Dict[str, str]], all_fields: List[str], o
     """
     # Prepare data for charts
     chart_data = prepare_chart_data(employees, all_fields)
-    
+    date_progression_data = prepare_date_progression_data(employees)
+
     # Generate HTML content
-    html_content = generate_html_template(employees, all_fields, chart_data)
+    html_content = generate_html_template(employees, all_fields, chart_data, date_progression_data)
     
     # Write to docs folder for GitHub Pages
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -89,32 +90,110 @@ def prepare_chart_data(employees: List[Dict[str, str]], all_fields: List[str]) -
     """
     # Fields to exclude from charts (comment fields, evaluator name, and metadata)
     excluded_fields = get_excluded_chart_fields()
-    
+
     # Log excluded fields for transparency
     excluded_from_charts = [field for field in all_fields if any(excluded.lower() in field.lower() or field.lower() in excluded.lower() for excluded in excluded_fields)]
     if excluded_from_charts:
         print(f"Excluding from charts: {excluded_from_charts}")
-    
+
     field_value_counts = defaultdict(Counter)
-    
+
     for emp in employees:
         for field in all_fields:
             # Skip excluded fields (case-insensitive partial matching)
             if any(excluded.lower() in field.lower() or field.lower() in excluded.lower() for excluded in excluded_fields):
                 continue
-                
+
             if field in emp and emp[field]:
                 field_value_counts[field][emp[field]] += 1
-    
+
     # Convert to regular dictionaries
     chart_data = {}
     for field, counter in field_value_counts.items():
         chart_data[field] = dict(counter)
-    
+
     return chart_data
 
 
-def generate_html_template(employees: List[Dict[str, str]], all_fields: List[str], chart_data: Dict[str, Dict[str, int]]) -> str:
+def prepare_date_progression_data(employees: List[Dict[str, str]]) -> Dict[str, any]:
+    """
+    Prepare date progression data for visualization.
+    Shows cumulative data collection over time and today's volume.
+
+    Args:
+        employees: List of employee dictionaries
+
+    Returns:
+        Dictionary containing date progression data
+    """
+    from collections import defaultdict
+    from datetime import datetime, date
+
+    # Collect dates and count evaluations per date
+    date_counts = defaultdict(int)
+    today = date.today()
+    today_str = today.strftime("%Y-%m-%d")
+
+    for emp in employees:
+        date_str = emp.get('date_of_evaluation', emp.get('time', ''))
+        if date_str:
+            # Try to parse the date - handle various formats
+            try:
+                # Handle different date formats
+                if '/' in date_str:
+                    # Format: MM/DD/YYYY
+                    parsed_date = datetime.strptime(date_str, "%m/%d/%Y").date()
+                elif '-' in date_str:
+                    # Format: YYYY-MM-DD or MM-DD-YYYY
+                    try:
+                        parsed_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+                    except ValueError:
+                        parsed_date = datetime.strptime(date_str, "%m-%d-%Y").date()
+                else:
+                    # Skip if format is not recognized
+                    continue
+
+                date_key = parsed_date.strftime("%Y-%m-%d")
+                date_counts[date_key] += 1
+            except (ValueError, IndexError):
+                # If date parsing fails, try to extract just the date part
+                continue
+
+    # Sort dates and create cumulative data
+    sorted_dates = sorted(date_counts.keys())
+    cumulative_data = []
+    running_total = 0
+
+    for date_key in sorted_dates:
+        running_total += date_counts[date_key]
+        cumulative_data.append({
+            'date': date_key,
+            'daily_count': date_counts[date_key],
+            'cumulative_count': running_total
+        })
+
+    # Calculate today's volume and progress metrics
+    today_volume = date_counts.get(today_str, 0)
+    total_evaluations = len(employees)
+    unique_dates = len(sorted_dates)
+
+    # Calculate average daily volume
+    avg_daily_volume = total_evaluations / max(unique_dates, 1)
+
+    return {
+        'cumulative_data': cumulative_data,
+        'today_volume': today_volume,
+        'total_evaluations': total_evaluations,
+        'unique_dates': unique_dates,
+        'avg_daily_volume': round(avg_daily_volume, 1),
+        'date_range': {
+            'start': sorted_dates[0] if sorted_dates else None,
+            'end': sorted_dates[-1] if sorted_dates else None
+        }
+    }
+
+
+def generate_html_template(employees: List[Dict[str, str]], all_fields: List[str], chart_data: Dict[str, Dict[str, int]], date_progression_data: Dict[str, any]) -> str:
     """
     Generate the complete HTML template.
     
@@ -143,14 +222,14 @@ def generate_html_template(employees: List[Dict[str, str]], all_fields: List[str
         {generate_header(employees)}
         {generate_tabs()}
         {generate_detailed_tab(employees)}
-        {generate_summary_tab(employees, all_fields)}
+        {generate_summary_tab(employees, all_fields, date_progression_data)}
         {generate_footer()}
     </div>
     
     <button class="return-to-top" onclick="scrollToTop()" title="Return to top">
         ↑
     </button>
-    {generate_javascript(employees, chart_data)}
+        {generate_javascript(employees, chart_data, date_progression_data)}
 </body>
 </html>
 """
@@ -675,30 +754,90 @@ def get_css_styles() -> str:
             text-decoration: underline;
         }
         
+        .date-progression-chart {
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+        }
+
+        .progress-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #4A4A4A;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1A5A58;
+        }
+
+        .today-volume {
+            color: #059669 !important;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
                 border-radius: 16px;
             }
-            
+
             .header {
                 padding: 30px 20px;
             }
-            
+
             .header h1 {
                 font-size: 2rem;
             }
-            
+
             .tab-content {
                 padding: 30px 20px;
             }
-            
+
             .employee-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .chart-container {
                 grid-template-columns: 1fr;
+            }
+
+            .progress-metrics {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 16px;
+            }
+
+            .metric-value {
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -756,11 +895,12 @@ def generate_detailed_tab(employees: List[Dict[str, str]]) -> str:
     """
 
 
-def generate_summary_tab(employees: List[Dict[str, str]], all_fields: List[str]) -> str:
+def generate_summary_tab(employees: List[Dict[str, str]], all_fields: List[str], date_progression_data: Dict[str, any]) -> str:
     """Generate the summary charts tab."""
     return f"""
         <div id="summary" class="tab-content">
             <div class="chart-container">
+                {generate_date_progression_chart_html(date_progression_data)}
                 {generate_charts_html(all_fields)}
             </div>
         </div>
@@ -890,17 +1030,52 @@ def _generate_field_group(emp: Dict[str, str], fields: List[str], group_title: s
     return group_html
 
 
+def generate_date_progression_chart_html(date_progression_data: Dict[str, any]) -> str:
+    """Generate HTML for the date progression chart."""
+    today_volume = date_progression_data.get('today_volume', 0)
+    total_evaluations = date_progression_data.get('total_evaluations', 0)
+    avg_daily_volume = date_progression_data.get('avg_daily_volume', 0)
+    unique_dates = date_progression_data.get('unique_dates', 0)
+
+    return f'''
+        <div class="chart date-progression-chart">
+            <h3>Data Collection Progress</h3>
+            <div class="progress-metrics">
+                <div class="metric">
+                    <span class="metric-label">Today's Volume:</span>
+                    <span class="metric-value today-volume">{today_volume}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Total Evaluations:</span>
+                    <span class="metric-value">{total_evaluations}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Avg Daily Volume:</span>
+                    <span class="metric-value">{avg_daily_volume}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Active Days:</span>
+                    <span class="metric-value">{unique_dates}</span>
+                </div>
+            </div>
+            <div style="position: relative; height: 400px;">
+                <canvas id="chart-date-progression"></canvas>
+            </div>
+        </div>
+    '''
+
+
 def generate_charts_html(all_fields: List[str]) -> str:
     """Generate HTML for chart containers, excluding comment fields."""
     # Fields to exclude from charts (comment fields and evaluator name)
     excluded_fields = get_excluded_chart_fields()
-    
+
     charts_html = ""
     for field in all_fields:
         # Skip excluded fields (case-insensitive partial matching)
         if any(excluded.lower() in field.lower() or field.lower() in excluded.lower() for excluded in excluded_fields):
             continue
-            
+
         charts_html += f'''
         <div class="chart">
             <h3>{clean_field_name(field)}</h3>
@@ -912,12 +1087,13 @@ def generate_charts_html(all_fields: List[str]) -> str:
     return charts_html
 
 
-def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, Dict[str, int]]) -> str:
+def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, Dict[str, int]], date_progression_data: Dict[str, any]) -> str:
     """Generate the JavaScript code for interactivity."""
     return f"""
     <script>
         const employees = {json.dumps(employees)};
         const chartData = {json.dumps(chart_data)};
+        const dateProgressionData = {json.dumps(date_progression_data)};
         
         function showTab(tabName) {{
             // Hide all tab contents
@@ -938,7 +1114,10 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
             
             // Initialize charts if summary tab is selected
             if (tabName === 'summary') {{
-                setTimeout(initializeCharts, 100);
+                setTimeout(() => {{
+                    initializeCharts();
+                    initializeDateProgressionChart();
+                }}, 100);
             }}
         }}
         
@@ -1068,7 +1247,131 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
                 }}
             }});
         }}
-        
+
+        function initializeDateProgressionChart() {{
+            const canvas = document.getElementById('chart-date-progression');
+            if (canvas && dateProgressionData.cumulative_data && dateProgressionData.cumulative_data.length > 0) {{
+                const ctx = canvas.getContext('2d');
+
+                const cumulativeData = dateProgressionData.cumulative_data;
+                const labels = cumulativeData.map(item => {{
+                    const date = new Date(item.date);
+                    return date.toLocaleDateString('en-US', {{
+                        month: 'short',
+                        day: 'numeric'
+                    }});
+                }});
+
+                const cumulativeValues = cumulativeData.map(item => item.cumulative_count);
+                const dailyValues = cumulativeData.map(item => item.daily_count);
+
+                // Create gradient for cumulative line
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
+                gradient.addColorStop(1, 'rgba(59, 130, 246, 0.2)');
+
+                new Chart(ctx, {{
+                    type: 'line',
+                    data: {{
+                        labels: labels,
+                        datasets: [{{
+                            label: 'Cumulative Evaluations',
+                            data: cumulativeValues,
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            backgroundColor: gradient,
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        }}, {{
+                            label: 'Daily Volume',
+                            data: dailyValues,
+                            type: 'bar',
+                            backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y1'
+                        }}]
+                    }},
+                    options: {{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {{
+                            mode: 'index',
+                            intersect: false
+                        }},
+                        plugins: {{
+                            title: {{
+                                display: true,
+                                text: 'Data Collection Progress Over Time',
+                                font: {{
+                                    size: 16,
+                                    weight: 'bold'
+                                }}
+                            }},
+                            legend: {{
+                                display: true,
+                                position: 'top'
+                            }},
+                            tooltip: {{
+                                callbacks: {{
+                                    afterBody: function(context) {{
+                                        const dataIndex = context[0].dataIndex;
+                                        const daily = dailyValues[dataIndex];
+                                        const cumulative = cumulativeValues[dataIndex];
+                                        return [
+                                            `Daily: ${{daily}} evaluations`,
+                                            `Cumulative: ${{cumulative}} total`
+                                        ];
+                                    }}
+                                }}
+                            }}
+                        }},
+                        scales: {{
+                            x: {{
+                                title: {{
+                                    display: true,
+                                    text: 'Date'
+                                }}
+                            }},
+                            y: {{
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {{
+                                    display: true,
+                                    text: 'Cumulative Evaluations'
+                                }},
+                                grid: {{
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                }}
+                            }},
+                            y1: {{
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {{
+                                    display: true,
+                                    text: 'Daily Volume'
+                                }},
+                                grid: {{
+                                    drawOnChartArea: false
+                                }},
+                                ticks: {{
+                                    precision: 0
+                                }}
+                            }}
+                        }},
+                        elements: {{
+                            point: {{
+                                radius: 4,
+                                hoverRadius: 6
+                            }}
+                        }}
+                    }}
+                }});
+            }}
+        }}
+
         // Return to top functionality
         function scrollToTop() {{
             window.scrollTo({{
