@@ -171,25 +171,29 @@ class ExcelEmployeeParser:
             grouped_data[group][mapping.mapped_header] = clean_value
         
         
-        # Structure the employee data using mapped headers as keys
-        employee = {
-            'id': grouped_data[CardGroup.BASIC_INFO].get('id', ''),
-            'employee_name': grouped_data[CardGroup.BASIC_INFO].get('employee_name', ''),
-            'title': grouped_data[CardGroup.BASIC_INFO].get('title', ''),
-            'employee_role': grouped_data[CardGroup.BASIC_INFO].get('employee_role', ''),
-            'email': grouped_data[CardGroup.BASIC_INFO].get('email', ''),
-            'start_time': grouped_data[CardGroup.BASIC_INFO].get('start_time', ''),
-            'completion_time': grouped_data[CardGroup.BASIC_INFO].get('completion_time', ''),
-            'date_of_evaluation': grouped_data[CardGroup.BASIC_INFO].get('date_of_evaluation', ''),
-            'submitted': grouped_data[CardGroup.BASIC_INFO].get('submitted', ''),
+        # Create the employee data dict with all grouped data
+        # The Employee class will handle the dynamic attributes
+        employee = {}
+        for group in CardGroup:
+            group_name = group.value  # e.g., 'basic_info', 'performance_ratings', etc.
+            employee[group_name] = grouped_data[group]
 
+        # For backward compatibility, also add some common fields at the top level
+        # These will be dynamically available based on the actual mapped headers
+        basic_info = grouped_data[CardGroup.BASIC_INFO]
+
+        # Add common fields that might be expected by other code
+        employee.update({
             'performance_ratings': grouped_data[CardGroup.PERFORMANCE_RATINGS],
             'performance_comments': grouped_data[CardGroup.PERFORMANCE_COMMENTS],
             'software_proficiency': grouped_data[CardGroup.SOFTWARE_TOOLS],
             'employee_development': grouped_data[CardGroup.EMPLOYEE_DEVELOPMENT],
             'overall_assessment': grouped_data[CardGroup.OVERALL_ASSESSMENT],
             'additional_data': grouped_data[CardGroup.ADDITIONAL_DATA]
-        }
+        })
+
+        # Add all basic_info fields at the top level too (for easier access)
+        employee.update(basic_info)
         
         return employee
     
@@ -212,8 +216,15 @@ class ExcelEmployeeParser:
             try:
                 employee_data = self.extract_employee_data(row)
                 
-                # Only add if we have essential data
-                if employee_data.get('employee_name') and employee_data.get('employee_name').strip():
+                # Only add if we have essential data - check for any employee name field
+                employee_name = None
+                # Check common employee name field names
+                for possible_name in ['employee_name', 'Employee Name_FOR_EXAMPLE', 'Employee Name Alt_FOR_EXAMPLE', 'name']:
+                    if employee_data.get(possible_name):
+                        employee_name = employee_data[possible_name].strip()
+                        break
+
+                if employee_name:
                     # Create Employee object from data
                     employee = Employee.from_excel_data(employee_data)
                     employees.append(employee)

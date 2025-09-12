@@ -95,22 +95,22 @@ class HeaderMapper:
             (9, "Date", "Date of Evaluation_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.PROGRESSION, 8),
         ]
         
-        # Performance Ratings Group (columns 10, 12, 14, 16, 18)
+        # Performance Ratings Group
         rating_mappings = [
             (10, "Communication", "Communication Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 1),
-            (12, "Collaboration", "Collaboration Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 2),
-            (14, "Professionalism", "Professionalism Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 3),
-            (16, "Technical Knowledge & Expertise", "Technical Knowledge & Expertise Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 4),
-            (18, "Workflow Implementation, Management, Execution", "Workflow Implementation, Management, Execution Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 5),
+            (12, "Collaboration\xa0\n", "Collaboration Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 2),
+            (14, "Professionalism\n", "Professionalism Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 3),
+            (16, "Technical Knowledge & Expertise\xa0\n", "Technical Knowledge & Expertise Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 4),
+            (18, "Workflow Implementation, Management, Execution (Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)\xa0", "Workflow Implementation, Management, Execution Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 5),
         ]
 
-        # Performance Comments Group (columns 11, 13, 15, 17, 19)
+        # Performance Comments Group
         comment_mappings = [
             (11, "Communication2", "Communication Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
             (13, "Collaboration", "Collaboration Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
             (15, "Professionalism", "Professionalism Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 3),
-            (17, "Technical Knowledge & Expertise", "Technical Knowledge & Expertise Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 4),
-            (19, "Workflow Implementation, Management, Execution", "Workflow Implementation, Management, Execution Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 5),
+            (17, "Technical Knowledge & Expertise\xa0", "Technical Knowledge & Expertise Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 4),
+            (19, "Workflow Implementation, Management, Execution\xa0(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)\xa0", "Workflow Implementation, Management, Execution Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 5),
         ]
         
         # Software Tools Group (columns 19-33)
@@ -204,7 +204,9 @@ class HeaderMapper:
                                     if m.mapped_header not in used_mappings]
 
                 if available_mappings:
-                    # Use the first available mapping for this header
+                    # For duplicate headers, choose the mapping with the closest column index
+                    # Sort by how close the predefined index is to the actual index
+                    available_mappings.sort(key=lambda m: abs(m.column_index - col_index))
                     mapping = available_mappings[0]
 
                     mapping.column_index = col_index
