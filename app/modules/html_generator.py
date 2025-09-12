@@ -100,11 +100,46 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
 <body>
     <div class="background-container"></div>
     <div class="container">
-        <h1 class="main-title">Employee Evaluation Report</h1>
+        <div class="header">
+            <h1>Employee Evaluation Report</h1>
+            <div class="report-description">Questions designed and handed out by Wilmarie Morales. Data visualization by DesignTechnology.</div>
+        </div>
         <div id="employee-list">
 ''' + cards_html + '''
         </div>
+        
+        <!-- Return to Top Button -->
+        <button id="returnToTop" class="return-to-top" onclick="scrollToTop()" title="Return to Top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m18 15-6-6-6 6"/>
+            </svg>
+        </button>
     </div>
+    
+    <script>
+        // Return to Top functionality
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Show/hide button based on scroll position
+        window.addEventListener('scroll', function() {
+            const returnToTopButton = document.getElementById('returnToTop');
+            if (window.pageYOffset > 300) {
+                returnToTopButton.style.display = 'block';
+            } else {
+                returnToTopButton.style.display = 'none';
+            }
+        });
+        
+        // Initialize button as hidden
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('returnToTop').style.display = 'none';
+        });
+    </script>
 </body>
 </html>'''
 
@@ -957,7 +992,24 @@ def generate_employee_cards(employees) -> str:
                     attr_value = getattr(employee, attr_name)
                     if not callable(attr_value) and attr_value:
                         if "date" in attr_name.lower() and "evaluation" in attr_name.lower():
-                            date_of_evaluation = str(attr_value)
+                            # Format date to YYYY-MM-DD
+                            try:
+                                from datetime import datetime
+                                if isinstance(attr_value, str):
+                                    # Try parsing common date formats
+                                    for fmt in ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d', '%m/%d/%Y', '%d/%m/%Y']:
+                                        try:
+                                            dt = datetime.strptime(attr_value, fmt)
+                                            date_of_evaluation = dt.strftime('%Y-%m-%d')
+                                            break
+                                        except ValueError:
+                                            continue
+                                elif hasattr(attr_value, 'strftime'):
+                                    date_of_evaluation = attr_value.strftime('%Y-%m-%d')
+                                else:
+                                    date_of_evaluation = str(attr_value)
+                            except:
+                                date_of_evaluation = str(attr_value)
                             break
 
             # Profile Image - check if employee has profile image
@@ -1001,7 +1053,7 @@ def generate_employee_cards(employees) -> str:
                             grouped_fields[group] = []
                         # Format date fields to YYYY-MM-DD
                         formatted_value = str(value) if value else ''
-                        if mapping.data_type == 'date' and value:
+                        if mapping.data_type_in_card == CardType.TEXT and ('date' in mapping.mapped_header.lower() or 'evaluation' in mapping.mapped_header.lower()) and value:
                             try:
                                 from datetime import datetime
                                 if isinstance(value, str):
@@ -1036,7 +1088,7 @@ def generate_employee_cards(employees) -> str:
                                     grouped_fields[group] = []
                                 # Format date fields to YYYY-MM-DD
                                 formatted_value = str(attr_value) if attr_value else ''
-                                if mapping.data_type == 'date' and attr_value:
+                                if mapping.data_type_in_card == CardType.TEXT and ('date' in mapping.mapped_header.lower() or 'evaluation' in mapping.mapped_header.lower()) and attr_value:
                                     try:
                                         from datetime import datetime
                                         if isinstance(attr_value, str):
@@ -1050,7 +1102,7 @@ def generate_employee_cards(employees) -> str:
                                                     continue
                                         elif hasattr(attr_value, 'strftime'):
                                             formatted_value = attr_value.strftime('%Y-%m-%d')
-                                    except:
+                                    except Exception as e:
                                         formatted_value = str(attr_value)
                                 grouped_fields[group].append((mapping, formatted_value))
                             # Skip NOSHOW fields

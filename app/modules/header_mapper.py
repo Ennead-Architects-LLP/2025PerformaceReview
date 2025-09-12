@@ -87,12 +87,12 @@ class HeaderMapper:
             (1, "Start time", "start_time", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 6),
             (2, "Completion time", "completion_time", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 7),
             (3, "Email", "Email_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 5),
-            (4, "Name", "Employee Name_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 2),
+            (4, "Name", "Employee Name_FOR_TEST", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 2),
             (5, "Last modified time", "last_modified", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 10),
             (6, "Employee Name", "Employee Name Alt_FOR_TEST", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 11),  # Alternative name field
             (7, "Title", "Title_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 3),
             (8, "Role", "Employee Role_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 4),
-            (9, "Date", "Date of Evaluation_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.PROGRESSION, 8),
+            (9, "Date", "Date of Evaluation_FOR_TEST", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.PROGRESSION, 8),
         ]
         
         # Performance Ratings Group
