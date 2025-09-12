@@ -17,9 +17,9 @@ class CardGroup(Enum):
     PERFORMANCE_RATINGS = "performance_ratings"
     PERFORMANCE_COMMENTS = "performance_comments"
     SOFTWARE_TOOLS = "software_tools"
-    ADDITIONAL_DATA = "additional_data"
     EMPLOYEE_DEVELOPMENT = "employee_development"
     OVERALL_ASSESSMENT = "overall_assessment"
+    ADDITIONAL_DATA = "additional_data"
 
 
 class CardType(Enum):
@@ -57,7 +57,7 @@ class HeaderMapper:
     def __init__(self):
         """Initialize the header mapper with default configurations."""
         self.header_mappings: Dict[int, HeaderMapping] = {}  # Key is column index (0, 1, 2, ...)
-        self.header_mappings_by_name: Dict[str, HeaderMapping] = {}  # Key is original header name
+        self.header_mappings_by_name: Dict[str, List[HeaderMapping]] = {}  # Key is original header name, value is list of mappings
         self.card_group_order: List[CardGroup] = [
             CardGroup.BASIC_INFO,
             CardGroup.PERFORMANCE_RATINGS,
@@ -86,69 +86,69 @@ class HeaderMapper:
             (0, "ID", "id", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 1),
             (1, "Start time", "start_time", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 6),
             (2, "Completion time", "completion_time", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 7),
-            (3, "Email", "email", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 5),
-            (4, "Name", "employee_name", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 2),
+            (3, "Email", "Email_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 5),
+            (4, "Name", "Employee Name_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 2),
             (5, "Last modified time", "last_modified", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 10),
-            (6, "Employee Name", "employee_name_alt", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 11),  # Alternative name field
-            (7, "Title", "title", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 3),
-            (8, "Role", "employee_role", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 4),
-            (9, "Date", "date_of_evaluation", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.PROGRESSION, 8),
+            (6, "Employee Name", "Employee Name Alt_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 11),  # Alternative name field
+            (7, "Title", "title_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 3),
+            (8, "Role", "Employee Role_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 4),
+            (9, "Date", "Date of Evaluation_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.PROGRESSION, 8),
         ]
         
-        # Performance Ratings Group (columns 9-13)
+        # Performance Ratings Group (columns 10, 12, 14, 16, 18)
         rating_mappings = [
-            (9, "Communication", "communication_rating", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 1),
-            (10, "Collaboration", "collaboration_rating", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 2),
-            (11, "Professionalism", "professionalism_rating", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 3),
-            (12, "Technical Knowledge & Expertise", "technical_knowledge_expertise_rating", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 4),
-            (13, "Workflow Implementation, Management, Execution", "workflow_implementation_management_execution_rating", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 5),
+            (10, "Communication", "Communication Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 1),
+            (12, "Collaboration", "Collaboration Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 2),
+            (14, "Professionalism", "Professionalism Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 3),
+            (16, "Technical Knowledge & Expertise", "Technical Knowledge & Expertise Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 4),
+            (18, "Workflow Implementation, Management, Execution", "Workflow Implementation, Management, Execution Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 5),
         ]
-        
-        # Performance Comments Group (columns 14-18)
+
+        # Performance Comments Group (columns 11, 13, 15, 17, 19)
         comment_mappings = [
-            (14, "Communication2", "communication_comments", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
-            (15, "Collaboration2", "collaboration_comments", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
-            (16, "Professionalism2", "professionalism_comments", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 3),
-            (17, "Technical Knowledge & Expertise2", "technical_knowledge_expertise_comments", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 4),
-            (18, "Workflow Implementation, Management, Execution2", "workflow_implementation_management_execution_comments", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 5),
+            (11, "Communication2", "Communication Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
+            (13, "Collaboration", "Collaboration Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
+            (15, "Professionalism", "Professionalism Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 3),
+            (17, "Technical Knowledge & Expertise", "Technical Knowledge & Expertise Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 4),
+            (19, "Workflow Implementation, Management, Execution", "Workflow Implementation, Management, Execution Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 5),
         ]
         
         # Software Tools Group (columns 19-33)
         software_mappings = [
-            (19, "Revit", "revit", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 1),
-            (20, "Rhino", "rhino", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 2),
-            (21, "Enscape", "enscape", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 3),
-            (22, "D5", "d5", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 4),
-            (23, "Vantage Point", "vantage_point", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 5),
-            (24, "Deltek/ADP", "deltek_adp", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 6),
-            (25, "Newforma", "newforma", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 7),
-            (26, "Bluebeam", "bluebeam", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 8),
-            (27, "Grasshopper", "grasshopper", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 9),
-            (28, "Word", "word", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 10),
-            (29, "Powerpoint", "powerpoint", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 11),
+            (19, "Revit", "Revit_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 1),
+            (20, "Rhino", "Rhino_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 2),
+            (21, "Enscape", "Enscape_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 3),
+            (22, "D5", "D5_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 4),
+            (23, "Vantage Point", "Vantage Point_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 5),
+            (24, "Deltek/ADP", "Deltek/ADP_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 6),
+            (25, "Newforma", "Newforma_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 7),
+            (26, "Bluebeam", "Bluebeam_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 8),
+            (27, "Grasshopper", "Grasshopper_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 9),
+            (28, "Word", "Word_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 10),
+            (29, "Powerpoint", "Powerpoint_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 11),
             (30, "Excel", "excel", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 12),
-            (31, "Illustrator", "illustrator", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 13),
-            (32, "Photoshop", "photoshop", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 14),
-            (33, "Indesign", "indesign", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 15),
+            (31, "Illustrator", "Illustrator_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 13),
+            (32, "Photoshop", "Photoshop_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 14),
+            (33, "Indesign", "Indesign_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 15),
         ]
         
         # Employee Development Group (columns 34-35)
         development_mappings = [
-            (34, "Employee Strengths", "employee_strengths", CardGroup.EMPLOYEE_DEVELOPMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
-            (35, "Areas for Growth / Development Goals", "areas_for_growth", CardGroup.EMPLOYEE_DEVELOPMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
+            (34, "Employee Strengths", "Employee Strengths_FOR_EXAMPLE", CardGroup.EMPLOYEE_DEVELOPMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
+            (35, "Areas for Growth / Development Goals", "Areas for Growth / Development Goals_FOR_EXAMPLE", CardGroup.EMPLOYEE_DEVELOPMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
         ]
         
         # Overall Assessment Group (columns 36-38)
         assessment_mappings = [
-            (36, "Rate Your Overall Performance This Year", "overall_performance", CardGroup.OVERALL_ASSESSMENT, CardType.RATING_NUM, ChartType.DONUT, 1),
-            (37, "Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?", "performance_examples", CardGroup.OVERALL_ASSESSMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
-            (38, "What additional resources would help you do your job more effectively?", "additional_resources", CardGroup.OVERALL_ASSESSMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 3),
+            (36, "Rate Your Overall Performance This Year", "Overall Performance Rating_FOR_EXAMPLE", CardGroup.OVERALL_ASSESSMENT, CardType.RATING_NUM, ChartType.DONUT, 1),
+            (37, "Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?", "Performance Examples_FOR_EXAMPLE", CardGroup.OVERALL_ASSESSMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
+            (38, "What additional resources would help you do your job more effectively?", "Additional Resources_FOR_EXAMPLE", CardGroup.OVERALL_ASSESSMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 3),
         ]
         
         # Additional Data Group (columns 39-40)
         additional_mappings = [
-            (39, "Please share your thoughts about the character and culture of our studio and practice.", "studio_culture_feedback", CardGroup.ADDITIONAL_DATA, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
-            (40, "Software & Tools2", "software_tools_feedback", CardGroup.ADDITIONAL_DATA, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
+            (39, "Please share your thoughts about the character and culture of our studio and practice.", "Studio Culture Feedback_FOR_EXAMPLE", CardGroup.ADDITIONAL_DATA, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
+            (40, "Software & Tools2", "Software & Tools Feedback_FOR_EXAMPLE", CardGroup.ADDITIONAL_DATA, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
         ]
         
         # Combine all mappings
@@ -176,15 +176,17 @@ class HeaderMapper:
                 data_type_in_chart=data_type_in_chart,
                 display_order=display_order
             )
-            
+
             # Store by numeric index (primary key) and by name (for lookup)
             self.header_mappings[column_index] = mapping
-            self.header_mappings_by_name[original_header] = mapping
+            if original_header not in self.header_mappings_by_name:
+                self.header_mappings_by_name[original_header] = []
+            self.header_mappings_by_name[original_header].append(mapping)
     
     def map_excel_headers(self, df: pd.DataFrame) -> Dict[int, HeaderMapping]:
         """
         Map actual Excel headers to our predefined mappings using column indices.
-        Handles duplicate column names by preferring numeric data over text data.
+        Handles duplicate column names by mapping to different predefined mappings.
 
         Args:
             df: Pandas DataFrame from Excel file
@@ -193,14 +195,22 @@ class HeaderMapper:
             Dictionary mapping column indices to HeaderMapping objects
         """
         actual_mappings = {}
+        used_mappings = set()  # Track which mapped_headers have been used
 
-        # First pass: exact matches
+        # First pass: exact matches with duplicate handling
         for col_index, actual_header in enumerate(df.columns):
             if actual_header in self.header_mappings_by_name:
-                mapping = self.header_mappings_by_name[actual_header]
-                mapping.column_index = col_index
-                mapping.column_letter = self._column_number_to_letter(col_index)
-                actual_mappings[col_index] = mapping
+                available_mappings = [m for m in self.header_mappings_by_name[actual_header]
+                                    if m.mapped_header not in used_mappings]
+
+                if available_mappings:
+                    # Use the first available mapping for this header
+                    mapping = available_mappings[0]
+
+                    mapping.column_index = col_index
+                    mapping.column_letter = self._column_number_to_letter(col_index)
+                    actual_mappings[col_index] = mapping
+                    used_mappings.add(mapping.mapped_header)
 
         # Second pass: fuzzy matches with conflict resolution
         for col_index, actual_header in enumerate(df.columns):
@@ -383,12 +393,14 @@ class HeaderMapper:
     def hide_field(self, original_header: str):
         """Hide a field from display by setting CardType to NOSHOW."""
         if original_header in self.header_mappings_by_name:
-            self.header_mappings_by_name[original_header].data_type_in_card = CardType.NOSHOW
-    
+            for mapping in self.header_mappings_by_name[original_header]:
+                mapping.data_type_in_card = CardType.NOSHOW
+
     def show_field(self, original_header: str, card_type: CardType = CardType.TEXT):
         """Show a field in display by setting CardType."""
         if original_header in self.header_mappings_by_name:
-            self.header_mappings_by_name[original_header].data_type_in_card = card_type
+            for mapping in self.header_mappings_by_name[original_header]:
+                mapping.data_type_in_card = card_type
     
     def get_mapping_summary(self) -> Dict[str, Any]:
         """Get a summary of all mappings for inspection."""

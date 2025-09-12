@@ -22,13 +22,14 @@ def get_excluded_chart_fields() -> set:
     excluded_fields = set()
 
     # Get all header mappings
-    header_mappings = header_mapper.header_mappings_by_name
+    header_mappings_by_name = header_mapper.header_mappings_by_name
 
     # Check each mapping to see if it should be excluded from charts
-    for mapping in header_mappings.values():
-        # If the field is marked as NOSHOW for charts, exclude it
-        if mapping.data_type_in_chart == ChartType.NOSHOW:
-            excluded_fields.add(mapping.mapped_header.lower())
+    for mapping_list in header_mappings_by_name.values():
+        for mapping in mapping_list:
+            # If the field is marked as NOSHOW for charts, exclude it
+            if mapping.data_type_in_chart == ChartType.NOSHOW:
+                excluded_fields.add(mapping.mapped_header.lower())
 
     # Also exclude some system fields that are never charted
     system_exclusions = {
@@ -909,7 +910,7 @@ def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
     cards_html = ""
 
     # Get header mappings to determine what should be displayed
-    header_mappings = header_mapper.header_mappings_by_name
+    header_mappings = header_mapper.header_mappings
 
     for employee in employees:
         name = employee.get('employee_name', 'Unknown')
@@ -998,8 +999,8 @@ def generate_field_group_html(employee: Dict[str, str], group: CardGroup, field_
 def generate_field_html(mapping, field_value: str) -> str:
     """Generate HTML for a single field based entirely on CardType from mapping."""
 
-    # Use original_header from mapping for display label (cleaned up)
-    display_label = clean_display_label(mapping.original_header)
+    # Use mapped_header from mapping for display label
+    display_label = mapping.mapped_header
 
     # Handle empty/null values - no hardcoded messages
     if not field_value or not str(field_value).strip():
@@ -1559,7 +1560,7 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
                                             padding: 20,
                                             usePointStyle: true,
                                             font: {{
-                                                family: 'Inter',
+                                                family: 'Poppins',
                                                 size: 12
                                             }}
                                         }}

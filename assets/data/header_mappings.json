@@ -73,7 +73,7 @@
     "index_column": 7,
     "index_letter": "H",
     "header_text": "Title",
-    "mapped_header": "title",
+    "mapped_header": "title_FOR_EXAMPLE",
     "group_under": "basic_info",
     "data_type_in_card": "text",
     "data_type_in_chart": "noshow",

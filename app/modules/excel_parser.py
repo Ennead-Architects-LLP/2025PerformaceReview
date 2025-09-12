@@ -153,34 +153,36 @@ class ExcelEmployeeParser:
         
         # Process each column using header mappings
         for col_index, mapping in self.header_mappings.items():
-            original_header = mapping.original_header
-            if original_header in row:
-                value = row[original_header]
-                
-                # Skip empty values
-                if pd.isna(value) or not str(value).strip():
-                    continue
-                
-                # Clean the value
-                clean_value = str(value).strip()
-                
-                # Store in appropriate group
-                group = mapping.group_under
-                grouped_data[group][mapping.mapped_header] = clean_value
+            # Use column index to get value (safer than header name)
+            try:
+                value = row.iloc[col_index]
+            except IndexError:
+                continue
+
+            # Skip empty values
+            if pd.isna(value) or not str(value).strip():
+                continue
+
+            # Clean the value
+            clean_value = str(value).strip()
+
+            # Store in appropriate group using mapped header as key
+            group = mapping.group_under
+            grouped_data[group][mapping.mapped_header] = clean_value
         
         
-        # Structure the employee data according to card groups
+        # Structure the employee data using mapped headers as keys
         employee = {
             'id': grouped_data[CardGroup.BASIC_INFO].get('id', ''),
-            'name': grouped_data[CardGroup.BASIC_INFO].get('employee_name', ''),
+            'employee_name': grouped_data[CardGroup.BASIC_INFO].get('employee_name', ''),
             'title': grouped_data[CardGroup.BASIC_INFO].get('title', ''),
-            'role': grouped_data[CardGroup.BASIC_INFO].get('employee_role', ''),
+            'employee_role': grouped_data[CardGroup.BASIC_INFO].get('employee_role', ''),
             'email': grouped_data[CardGroup.BASIC_INFO].get('email', ''),
             'start_time': grouped_data[CardGroup.BASIC_INFO].get('start_time', ''),
             'completion_time': grouped_data[CardGroup.BASIC_INFO].get('completion_time', ''),
-            'date': grouped_data[CardGroup.BASIC_INFO].get('date_of_evaluation', ''),
+            'date_of_evaluation': grouped_data[CardGroup.BASIC_INFO].get('date_of_evaluation', ''),
             'submitted': grouped_data[CardGroup.BASIC_INFO].get('submitted', ''),
-            
+
             'performance_ratings': grouped_data[CardGroup.PERFORMANCE_RATINGS],
             'performance_comments': grouped_data[CardGroup.PERFORMANCE_COMMENTS],
             'software_proficiency': grouped_data[CardGroup.SOFTWARE_TOOLS],
@@ -211,11 +213,12 @@ class ExcelEmployeeParser:
                 employee_data = self.extract_employee_data(row)
                 
                 # Only add if we have essential data
-                if employee_data.get('name') and employee_data.get('name').strip():
+                if employee_data.get('employee_name') and employee_data.get('employee_name').strip():
                     # Create Employee object from data
                     employee = Employee.from_excel_data(employee_data)
                     employees.append(employee)
-                    print(f"✅ Parsed employee: {employee.name}")
+                    emp_name = getattr(employee, 'employee_name', 'Unknown')
+                    print(f"✅ Parsed employee: {emp_name}")
                 else:
                     print(f"⚠️  Skipped row {index}: Missing employee name")
                     
@@ -340,17 +343,21 @@ def parse_excel_to_json(excel_path: str, output_path: str = None,
             
             # Update employee objects with image information
             for employee in employees:
-                if employee.name in image_mappings:
-                    image_info = image_mappings[employee.name]
+                emp_name = getattr(employee, 'employee_name', '')
+                if emp_name in image_mappings:
+                    image_info = image_mappings[emp_name]
                     if image_info['filename'] and image_info['copied']:
-                        employee.set_profile_image(
-                            image_info['filename'], 
-                            image_info['confidence']
-                        )
+                        setattr(employee, 'profile_image_filename', image_info['filename'])
+                        setattr(employee, 'profile_image_path', f"{Config.IMAGE_TARGET_DIR}/{image_info['filename']}")
+                        setattr(employee, 'image_match_confidence', image_info['confidence'])
                     else:
-                        employee.set_profile_image(None)
+                        setattr(employee, 'profile_image_filename', None)
+                        setattr(employee, 'profile_image_path', None)
+                        setattr(employee, 'image_match_confidence', None)
                 else:
-                    employee.set_profile_image(None)
+                    setattr(employee, 'profile_image_filename', None)
+                    setattr(employee, 'profile_image_path', None)
+                    setattr(employee, 'image_match_confidence', None)
                     
             # Save image mappings for reference
             image_manager.save_image_mappings(Config.get_image_mappings_path())
@@ -364,7 +371,9 @@ def parse_excel_to_json(excel_path: str, output_path: str = None,
         except Exception as e:
             print(f"⚠️  Warning: Could not process images: {e}")
             for employee in employees:
-                employee.set_profile_image(None)
+                setattr(employee, 'profile_image_filename', None)
+                setattr(employee, 'profile_image_path', None)
+                setattr(employee, 'image_match_confidence', None)
     
     # Create employee manager and save to JSON
     employee_manager = EmployeeManager()
@@ -377,11 +386,23 @@ def parse_excel_to_json(excel_path: str, output_path: str = None,
     # Print summary
     print("\n📈 Parsing Summary:")
     print(f"   Total employees: {len(employees)}")
-    print(f"   Employees with ratings: {sum(1 for emp in employees if emp.performance_ratings.communication)}")
-    print(f"   Employees with comments: {sum(1 for emp in employees if emp.performance_comments.communication_comments)}")
-    print(f"   Employees with software data: {sum(1 for emp in employees if emp.software_proficiency.word)}")
+    # Count employees with ratings (any non-empty rating)
+    ratings_count = sum(1 for emp in employees
+                       if getattr(emp, 'performance_ratings', {}).get('communication'))
+    print(f"   Employees with ratings: {ratings_count}")
+
+    # Count employees with comments (any non-empty comment)
+    comments_count = sum(1 for emp in employees
+                        if getattr(emp, 'performance_comments', {}).get('communication_comments'))
+    print(f"   Employees with comments: {comments_count}")
+
+    # Count employees with software data (any non-empty software rating)
+    software_count = sum(1 for emp in employees
+                        if getattr(emp, 'software_proficiency', {}).get('word'))
+    print(f"   Employees with software data: {software_count}")
     
-    unique_roles = list(set(emp.role for emp in employees if emp.role))
+    unique_roles = list(set(getattr(emp, 'employee_role', '') for emp in employees
+                           if getattr(emp, 'employee_role', '')))
     print(f"   Unique roles: {len(unique_roles)}")
     
     if copy_images:

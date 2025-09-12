@@ -1,41 +1,46 @@
 [
   {
-    "id": "16",
-    "name": "Brett Fabrikant",
-    "title": "Security Architect",
-    "role": "M365 Architect, M365 Security Administration",
-    "email": "brett.fabrikant@ennead.com",
-    "start_time": "2025-09-09 13:30:24",
-    "completion_time": "2025-09-09 13:44:11",
-    "date": "2025-09-09 00:00:00",
-    "profile_image": {
-      "filename": null,
-      "path": null,
-      "has_image": false,
-      "display_path": "assets/images/default-avatar.png",
-      "match_confidence": null
+    "additional_data": {
+      "software_tools_feedback": "Due to the constantly changing IT landscape and the quick adoption of AI, it would be helpful to acquire more official AI training, perhaps professional certification in a specific AI platform could be beneficial to Ennead.",
+      "studio_culture_feedback": "Ennead is a really wonderful company with technology growing pains like many organizations. It would be helpful if we had better communication when challenges arise with the studio so I can better serve the needs of the business."
     },
-    "performance_ratings": {
-      "communication": "4",
-      "collaboration": "4",
-      "professionalism": "5",
-      "technical_knowledge_expertise": "4",
-      "workflow_implementation_management_execution": "4",
-      "overall_performance": null
+    "completion_time": "2025-09-09 13:44:11",
+    "data_sources": [
+      "excel_parser"
+    ],
+    "date_of_evaluation": "2025-09-09 00:00:00",
+    "email": "brett.fabrikant@ennead.com",
+    "employee_development": {
+      "employee_strengths": "1. Reliability 2. Trustworthy 3. Effectiveness in tasks",
+      "areas_for_growth": "Acquire certifications in AI and or AI security"
+    },
+    "employee_name": "Brett Fabrikant",
+    "employee_role": "M365 Architect, M365 Security Administration",
+    "id": "16",
+    "image_match_confidence": null,
+    "last_updated": null,
+    "overall_assessment": {
+      "overall_performance": "4",
+      "additional_resources": "It could be helpful to have more interaction with the project teams to better understand their daily, weekly and monthly flow of tasks. This could give insightful information on how I can better facilitate their workloads.",
+      "performance_examples": "I'd like to bring awareness to some of my most proud accomplishments at Ennead Architects:\n\n1. Provisioned the following security solutions:\nDefender for Endpoint (many integrations across azure and devices)\nDefender for Cloud Apps (integrated)\nSIEM - Sentinel (single pane of glass view of all processes with automations)\nDefender for Identity (critical risk protection integrated with Conditional access)\nDefender for Office 365 \nMobile app protection (personal device access to Ennead resources)\nPurview (DLP, AIP) (ongoing))\nThreat Intelligence integrations (SIEM, MDE, MDCA, SIEM)\nConditional access (MFA, Risk blocking and Data loss prevention integrations and more)\nRansomware protections with OneDrive for Business rollout (company-wide)\nCustom alerting and automations around risky users\nWeb content and AI rule mitigations\nDaily, weekly and monthly security reviews and responses to many events including malware, content blocking and MITRE attack mitigations\nEnterprise app and app registration reviews and support\n\n2. Infrastructure:\nMigrated Newforma from on-premises into Azure hosted IAAS platform\nDeployed fusion connect IP Telephony integrations with Teams (handled all Azure and M365 integrations in collaboration with a team member)\nOneDrive for Business implementation company wide\nRepaired hundreds of broken tokens across all company workstations (mandatory to manage devices and to secure devices into the cloud)\nRolled out MECM and integrated MECM with Intune (remote control, device repair and detailed asset reporting funneled into Intune)\nWindows 11 upgrades (ongoing)\nArgos migrations (ongoing)\nPrinter server migration to the cloud (ongoing)\nDesktop support\nApplication packaging including custom built application such as Drive Mapper and others\n\n3. Other\nDaily 3rd level support for business teams fielding many requests to resolve issues, provide access to users, repair items\nDaily administration of Email, calendars, guest users (partner access)\nResolved many issues with internal systems emailing and alerting such as Newforma and NetApp monitoring\nSupport ticket troubleshooting and resolution\nCustom solutions such as EPM (users can elevate specific apps to administrator for specific use cases ) (ongoing))\nShanghai migration project (Ongoing)\nCustom requests such as eDiscovery or assisting partners to access systems"
     },
     "performance_comments": {
-      "communication_comments": "My role is highly dependent on effective use of time, and I leverage tools and automation as much as possible to assist in the internal communications of our IT support needs.",
-      "collaboration_comments": null,
-      "professionalism_comments": null,
-      "technical_knowledge_expertise_comments": null,
-      "workflow_implementation_management_execution_comments": null
+      "communication_comments": "My role is highly dependent on effective use of time, and I leverage tools and automation as much as possible to assist in the internal communications of our IT support needs."
     },
+    "performance_ratings": {
+      "communication_rating": "4",
+      "collaboration_rating": "4",
+      "professionalism_rating": "5",
+      "technical_knowledge_expertise_rating": "4",
+      "workflow_implementation_management_execution_rating": "4"
+    },
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "software_proficiency": {
       "revit": "0 (Not Applicable)",
       "rhino": "0 (Not Applicable)",
       "enscape": "0 (Not Applicable)",
       "d5": "0 (Not Applicable)",
-      "vantage_point": "0 (Not Applicable)",
       "deltek_adp": "0 (Not Applicable)",
       "newforma": "2 (Needs to Improve)",
       "bluebeam": "0 (Not Applicable)",
@@ -43,60 +48,57 @@
       "word": "4 (Exceeds Expectations)",
       "powerpoint": "4 (Exceeds Expectations)",
       "excel": "4 (Exceeds Expectations)",
-      "illustrator": "0 (Not Applicable)",
       "photoshop": "0 (Not Applicable)",
-      "indesign": "0 (Not Applicable)"
+      "indesign": "0 (Not Applicable)",
+      "vantage_point": "0 (Not Applicable)",
+      "illustrator": "0 (Not Applicable)"
     },
-    "additional_evaluation_data": {
-      "performance_examples": null,
-      "additional_resources": null,
-      "employee_strengths": null,
-      "areas_for_growth": null,
-      "studio_culture_feedback": null,
-      "software_tools_feedback": null
+    "start_time": "2025-09-09 13:30:24",
+    "submitted": "",
+    "title": ""
+  },
+  {
+    "additional_data": {
+      "software_tools_feedback": "More about the AI , maybe.",
+      "studio_culture_feedback": "What I really enjoy about the Shanghai office is the strong team spirit. People here take responsibility, work independently, and at the same time are always supportive and great to collaborate with."
     },
+    "completion_time": "2025-09-09 22:56:15",
     "data_sources": [
       "excel_parser"
     ],
-    "last_updated": null
-  },
-  {
-    "id": "17",
-    "name": "Xinya Li",
-    "title": "Associate",
-    "role": "Architectural & Interior Designer, Interior Project Manager",
+    "date_of_evaluation": "2025-09-10 00:00:00",
     "email": "xli@ennead.com",
-    "start_time": "2025-09-09 21:58:17",
-    "completion_time": "2025-09-09 22:56:15",
-    "date": "2025-09-10 00:00:00",
-    "profile_image": {
-      "filename": null,
-      "path": null,
-      "has_image": false,
-      "display_path": "assets/images/default-avatar.png",
-      "match_confidence": null
+    "employee_development": {
+      "employee_strengths": "1. Clear and practical communication\n\n2. Steady and reliable under pressure\n\n3. Supportive team player",
+      "areas_for_growth": "Learn and apply more AI tools in daily work....."
     },
-    "performance_ratings": {
-      "communication": "5",
-      "collaboration": "5",
-      "professionalism": "5",
-      "technical_knowledge_expertise": "4",
-      "workflow_implementation_management_execution": "4",
-      "overall_performance": null
+    "employee_name": "Xinya Li",
+    "employee_role": "Architectural & Interior Designer, Interior Project Manager",
+    "id": "17",
+    "image_match_confidence": null,
+    "last_updated": null,
+    "overall_assessment": {
+      "overall_performance": "5",
+      "additional_resources": "Additional training on AI software would be very helpful, as it could improve efficiency and bring new ideas to my work.",
+      "performance_examples": "I want to highlight my ability to adapt quickly when project priorities change. For example, during the SH Concordia School design project, I managed sudden timeline and requirement changes while keeping the work on track. I also supported colleagues by sharing knowledge and helping with tasks outside my main role, which strengthened teamwork and improved results."
     },
     "performance_comments": {
-      "communication_comments": "Communicate clearly and adapt my style to different audiences. \nMake sure to listen carefully, confirm understanding, and follow up in writing when needed. \nThis helps avoid confusion, build trust, and keep projects moving smoothly.",
-      "collaboration_comments": null,
-      "professionalism_comments": null,
-      "technical_knowledge_expertise_comments": null,
-      "workflow_implementation_management_execution_comments": null
+      "communication_comments": "Communicate clearly and adapt my style to different audiences. \nMake sure to listen carefully, confirm understanding, and follow up in writing when needed. \nThis helps avoid confusion, build trust, and keep projects moving smoothly."
     },
+    "performance_ratings": {
+      "communication_rating": "5",
+      "collaboration_rating": "5",
+      "professionalism_rating": "5",
+      "technical_knowledge_expertise_rating": "4",
+      "workflow_implementation_management_execution_rating": "4"
+    },
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "software_proficiency": {
       "revit": "3 (Meets Expectations)",
       "rhino": "3 (Meets Expectations)",
       "enscape": "3 (Meets Expectations)",
       "d5": "4 (Exceeds Expectations)",
-      "vantage_point": "3 (Meets Expectations)",
       "deltek_adp": "3 (Meets Expectations)",
       "newforma": "2 (Needs to Improve)",
       "bluebeam": "4 (Exceeds Expectations)",
@@ -104,60 +106,57 @@
       "word": "4 (Exceeds Expectations)",
       "powerpoint": "4 (Exceeds Expectations)",
       "excel": "4 (Exceeds Expectations)",
-      "illustrator": "4 (Exceeds Expectations)",
       "photoshop": "4 (Exceeds Expectations)",
-      "indesign": "4 (Exceeds Expectations)"
+      "indesign": "4 (Exceeds Expectations)",
+      "vantage_point": "3 (Meets Expectations)",
+      "illustrator": "4 (Exceeds Expectations)"
     },
-    "additional_evaluation_data": {
-      "performance_examples": null,
-      "additional_resources": null,
-      "employee_strengths": null,
-      "areas_for_growth": null,
-      "studio_culture_feedback": null,
-      "software_tools_feedback": null
+    "start_time": "2025-09-09 21:58:17",
+    "submitted": "",
+    "title": ""
+  },
+  {
+    "additional_data": {
+      "software_tools_feedback": "We need non-tech employee forms for software and tools",
+      "studio_culture_feedback": "Frame reorganization ; cost control"
     },
+    "completion_time": "2025-09-09 23:26:45",
     "data_sources": [
       "excel_parser"
     ],
-    "last_updated": null
-  },
-  {
-    "id": "18",
-    "name": "Leah Li",
-    "title": "Office Manager (Shanghai)",
-    "role": "Office admin and HR",
+    "date_of_evaluation": "2025-09-10 00:00:00",
     "email": "lli@ennead.com",
-    "start_time": "2025-09-09 21:46:46",
-    "completion_time": "2025-09-09 23:26:45",
-    "date": "2025-09-10 00:00:00",
-    "profile_image": {
-      "filename": null,
-      "path": null,
-      "has_image": false,
-      "display_path": "assets/images/default-avatar.png",
-      "match_confidence": null
+    "employee_development": {
+      "employee_strengths": "communication; find our the key reason and key problem of office operation; keep learning new knowledge",
+      "areas_for_growth": "Work more closely with NY team of Admin, HR, IT and Finance, to understand more of each other"
     },
-    "performance_ratings": {
-      "communication": "5",
-      "collaboration": "5",
-      "professionalism": "4",
-      "technical_knowledge_expertise": "4",
-      "workflow_implementation_management_execution": "5",
-      "overall_performance": null
+    "employee_name": "Leah Li",
+    "employee_role": "Office admin and HR",
+    "id": "18",
+    "image_match_confidence": null,
+    "last_updated": null,
+    "overall_assessment": {
+      "overall_performance": "4",
+      "additional_resources": "Improve the NY and SH office communication, I need travel to NY office and work with the department of Admin, finance and IT team to understand more and improve office operation.",
+      "performance_examples": "cost control for office operation"
     },
     "performance_comments": {
-      "communication_comments": "communication clearly in both verbal and written forms.",
-      "collaboration_comments": null,
-      "professionalism_comments": null,
-      "technical_knowledge_expertise_comments": null,
-      "workflow_implementation_management_execution_comments": null
+      "communication_comments": "communication clearly in both verbal and written forms."
     },
+    "performance_ratings": {
+      "communication_rating": "5",
+      "collaboration_rating": "5",
+      "professionalism_rating": "4",
+      "technical_knowledge_expertise_rating": "4",
+      "workflow_implementation_management_execution_rating": "5"
+    },
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "software_proficiency": {
       "revit": "3 (Meets Expectations)",
       "rhino": "3 (Meets Expectations)",
       "enscape": "3 (Meets Expectations)",
       "d5": "3 (Meets Expectations)",
-      "vantage_point": "3 (Meets Expectations)",
       "deltek_adp": "3 (Meets Expectations)",
       "newforma": "3 (Meets Expectations)",
       "bluebeam": "3 (Meets Expectations)",
@@ -165,60 +164,57 @@
       "word": "3 (Meets Expectations)",
       "powerpoint": "3 (Meets Expectations)",
       "excel": "3 (Meets Expectations)",
-      "illustrator": "3 (Meets Expectations)",
       "photoshop": "3 (Meets Expectations)",
-      "indesign": "3 (Meets Expectations)"
+      "indesign": "3 (Meets Expectations)",
+      "vantage_point": "3 (Meets Expectations)",
+      "illustrator": "3 (Meets Expectations)"
     },
-    "additional_evaluation_data": {
-      "performance_examples": null,
-      "additional_resources": null,
-      "employee_strengths": null,
-      "areas_for_growth": null,
-      "studio_culture_feedback": null,
-      "software_tools_feedback": null
+    "start_time": "2025-09-09 21:46:46",
+    "submitted": "",
+    "title": ""
+  },
+  {
+    "additional_data": {
+      "software_tools_feedback": "I am comfortable with the core software and tools required for my role and use them effectively in daily work. Additional training in advanced features or integrations would help me increase efficiency and streamline workflows. I am open to learning new tools that can further support team collaboration and project delivery.",
+      "studio_culture_feedback": "The studio fosters a supportive and collaborative culture where teamwork and creativity are encouraged. I appreciate the open exchange of ideas and the commitment to high-quality work."
     },
+    "completion_time": "2025-09-10 08:49:35",
     "data_sources": [
       "excel_parser"
     ],
-    "last_updated": null
-  },
-  {
-    "id": "19",
-    "name": "Vivian Zhan",
-    "title": "",
-    "role": "Architecture Designer",
+    "date_of_evaluation": "2025-09-10 00:00:00",
     "email": "Vivian.Zhan@ennead.com",
-    "start_time": "2025-09-10 08:43:14",
-    "completion_time": "2025-09-10 08:49:35",
-    "date": "2025-09-10 00:00:00",
-    "profile_image": {
-      "filename": null,
-      "path": null,
-      "has_image": false,
-      "display_path": "assets/images/default-avatar.png",
-      "match_confidence": null
+    "employee_development": {
+      "employee_strengths": "Strong communication skills, ensuring clarity and collaboration in both verbal and written interactions.\n\nDependable and professional, consistently meeting deadlines and maintaining accountability.\n\nAdaptability and willingness to learn, quickly adjusting to new tools, workflows, and team needs.",
+      "areas_for_growth": "Strengthen project management and coordination skills to improve workflow execution.\n\nExpand technical expertise by deepening knowledge of advanced software features.\n\nDevelop leadership abilities to take on greater responsibility in guiding projects and supporting team members."
     },
-    "performance_ratings": {
-      "communication": "4",
-      "collaboration": "4",
-      "professionalism": "4",
-      "technical_knowledge_expertise": "4",
-      "workflow_implementation_management_execution": "3",
-      "overall_performance": null
+    "employee_name": "Vivian Zhan",
+    "employee_role": "Architecture Designer",
+    "id": "19",
+    "image_match_confidence": null,
+    "last_updated": null,
+    "overall_assessment": {
+      "overall_performance": "4",
+      "additional_resources": "Access to more structured training sessions, mentorship opportunities, and updated learning materials would help me build stronger skills and work more efficiently. Additional project management tools or streamlined internal processes would also support better collaboration and delivery.",
+      "performance_examples": "I successfully contributed to several key projects by meeting deadlines and delivering high-quality work. I also supported team members by sharing knowledge and helping resolve challenges, which improved overall workflow efficiency."
     },
     "performance_comments": {
-      "communication_comments": "I communicate clearly and professionally in both verbal and written formats. I adapt my style depending on the audience, ensuring clarity and conciseness. I also make an effort to actively listen and respond thoughtfully, which helps avoid misunderstandings and keeps collaboration efficient.",
-      "collaboration_comments": null,
-      "professionalism_comments": null,
-      "technical_knowledge_expertise_comments": null,
-      "workflow_implementation_management_execution_comments": null
+      "communication_comments": "I communicate clearly and professionally in both verbal and written formats. I adapt my style depending on the audience, ensuring clarity and conciseness. I also make an effort to actively listen and respond thoughtfully, which helps avoid misunderstandings and keeps collaboration efficient."
     },
+    "performance_ratings": {
+      "communication_rating": "4",
+      "collaboration_rating": "4",
+      "professionalism_rating": "4",
+      "technical_knowledge_expertise_rating": "4",
+      "workflow_implementation_management_execution_rating": "3"
+    },
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "software_proficiency": {
       "revit": "3 (Meets Expectations)",
       "rhino": "4 (Exceeds Expectations)",
       "enscape": "3 (Meets Expectations)",
       "d5": "4 (Exceeds Expectations)",
-      "vantage_point": "3 (Meets Expectations)",
       "deltek_adp": "3 (Meets Expectations)",
       "newforma": "3 (Meets Expectations)",
       "bluebeam": "3 (Meets Expectations)",
@@ -226,60 +222,57 @@
       "word": "3 (Meets Expectations)",
       "powerpoint": "3 (Meets Expectations)",
       "excel": "3 (Meets Expectations)",
-      "illustrator": "4 (Exceeds Expectations)",
       "photoshop": "4 (Exceeds Expectations)",
-      "indesign": "4 (Exceeds Expectations)"
+      "indesign": "4 (Exceeds Expectations)",
+      "vantage_point": "3 (Meets Expectations)",
+      "illustrator": "4 (Exceeds Expectations)"
     },
-    "additional_evaluation_data": {
-      "performance_examples": null,
-      "additional_resources": null,
-      "employee_strengths": null,
-      "areas_for_growth": null,
-      "studio_culture_feedback": null,
-      "software_tools_feedback": null
+    "start_time": "2025-09-10 08:43:14",
+    "submitted": "",
+    "title": ""
+  },
+  {
+    "additional_data": {
+      "software_tools_feedback": "Yes. Grasshopper.",
+      "studio_culture_feedback": "I'm sure that if I wrote anything here it would be nothing more than a proper display of phlegm. We move forward and shine brightly."
     },
+    "completion_time": "2025-09-10 13:14:04",
     "data_sources": [
       "excel_parser"
     ],
-    "last_updated": null
-  },
-  {
-    "id": "20",
-    "name": "Matt Hitscherich",
-    "title": "",
-    "role": "Draftsman",
+    "date_of_evaluation": "2025-09-10 00:00:00",
     "email": "mhitscherich@ennead.com",
-    "start_time": "2025-09-10 13:04:34",
-    "completion_time": "2025-09-10 13:14:04",
-    "date": "2025-09-10 00:00:00",
-    "profile_image": {
-      "filename": null,
-      "path": null,
-      "has_image": false,
-      "display_path": "assets/images/default-avatar.png",
-      "match_confidence": null
+    "employee_development": {
+      "employee_strengths": "Willing to crawl through barbed wire on a daily basis.",
+      "areas_for_growth": "I have 1 more ARE I want to finish. I keep failing it."
     },
-    "performance_ratings": {
-      "communication": "3",
-      "collaboration": "3",
-      "professionalism": "3",
-      "technical_knowledge_expertise": "3",
-      "workflow_implementation_management_execution": "3",
-      "overall_performance": null
+    "employee_name": "Matt Hitscherich",
+    "employee_role": "Draftsman",
+    "id": "20",
+    "image_match_confidence": null,
+    "last_updated": null,
+    "overall_assessment": {
+      "overall_performance": "2",
+      "additional_resources": "A time machine.",
+      "performance_examples": "I have had to learn all of the Inova project, and needed to perform, immediately. I did not have the same 5 years head start that Gary, Clayton, and Charlie have had..."
     },
     "performance_comments": {
-      "communication_comments": "I have a lot to say...",
-      "collaboration_comments": null,
-      "professionalism_comments": null,
-      "technical_knowledge_expertise_comments": null,
-      "workflow_implementation_management_execution_comments": null
+      "communication_comments": "I have a lot to say..."
     },
+    "performance_ratings": {
+      "communication_rating": "3",
+      "collaboration_rating": "3",
+      "professionalism_rating": "3",
+      "technical_knowledge_expertise_rating": "3",
+      "workflow_implementation_management_execution_rating": "3"
+    },
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "software_proficiency": {
       "revit": "1 (Unsatisfactory)",
       "rhino": "3 (Meets Expectations)",
       "enscape": "0 (Not Applicable)",
       "d5": "3 (Meets Expectations)",
-      "vantage_point": "0 (Not Applicable)",
       "deltek_adp": "0 (Not Applicable)",
       "newforma": "0 (Not Applicable)",
       "bluebeam": "3 (Meets Expectations)",
@@ -287,60 +280,57 @@
       "word": "0 (Not Applicable)",
       "powerpoint": "0 (Not Applicable)",
       "excel": "0 (Not Applicable)",
-      "illustrator": "0 (Not Applicable)",
       "photoshop": "3 (Meets Expectations)",
-      "indesign": "3 (Meets Expectations)"
+      "indesign": "3 (Meets Expectations)",
+      "vantage_point": "0 (Not Applicable)",
+      "illustrator": "0 (Not Applicable)"
     },
-    "additional_evaluation_data": {
-      "performance_examples": null,
-      "additional_resources": null,
-      "employee_strengths": null,
-      "areas_for_growth": null,
-      "studio_culture_feedback": null,
-      "software_tools_feedback": null
+    "start_time": "2025-09-10 13:04:34",
+    "submitted": "",
+    "title": ""
+  },
+  {
+    "additional_data": {
+      "software_tools_feedback": "Integration of smarter tools within Revit.",
+      "studio_culture_feedback": "I think that the office is doing its best to keep up with the changing demands for architects.   We need to be more facile in the ability to make jobs and the office profitable.  How do we setup teams, studios,  in a manner to expediate expertise and minimize the learning curve and new details while maintaing the essence of what Ennead (polshek) was founded on.   Design is meant to engage the public and the people in meaningful ways and we want to push the envelope of how we do that."
     },
+    "completion_time": "2025-09-10 17:22:05",
     "data_sources": [
       "excel_parser"
     ],
-    "last_updated": null
-  },
-  {
-    "id": "21",
-    "name": "Clayton Kaul",
-    "title": "Senior Associate",
-    "role": "Project Architect / Project Manager",
+    "date_of_evaluation": "2025-09-09 00:00:00",
     "email": "ckaul@ennead.com",
-    "start_time": "2025-09-10 17:21:53",
-    "completion_time": "2025-09-10 17:22:05",
-    "date": "2025-09-09 00:00:00",
-    "profile_image": {
-      "filename": null,
-      "path": null,
-      "has_image": false,
-      "display_path": "assets/images/default-avatar.png",
-      "match_confidence": null
+    "employee_development": {
+      "employee_strengths": "Focused and Determined.",
+      "areas_for_growth": "Ability to multi-task with other projects more efficiently and delegate more work to other team-members during CA."
     },
-    "performance_ratings": {
-      "communication": "4",
-      "collaboration": "5",
-      "professionalism": "5",
-      "technical_knowledge_expertise": "4",
-      "workflow_implementation_management_execution": "4",
-      "overall_performance": null
+    "employee_name": "Clayton Kaul",
+    "employee_role": "Project Architect / Project Manager",
+    "id": "21",
+    "image_match_confidence": null,
+    "last_updated": null,
+    "overall_assessment": {
+      "overall_performance": "4",
+      "additional_resources": "At times, additional staff is helpful, but have managed the work load accordingly with staff given to manage fee.",
+      "performance_examples": "Additional involvement with Healthcare BD front."
     },
     "performance_comments": {
-      "communication_comments": "The past year has been a different role for me than typical given the full year in CA with a much smaller team.    believe I effectively communicate through e-mail, teams and meetings where required to ensure everyone is on the same page.   I like to directly address as soon as possible any thing that seems inconsistent with my understanding of what should be happening or how to improve on workflow.",
-      "collaboration_comments": null,
-      "professionalism_comments": null,
-      "technical_knowledge_expertise_comments": null,
-      "workflow_implementation_management_execution_comments": null
+      "communication_comments": "The past year has been a different role for me than typical given the full year in CA with a much smaller team.    believe I effectively communicate through e-mail, teams and meetings where required to ensure everyone is on the same page.   I like to directly address as soon as possible any thing that seems inconsistent with my understanding of what should be happening or how to improve on workflow."
     },
+    "performance_ratings": {
+      "communication_rating": "4",
+      "collaboration_rating": "5",
+      "professionalism_rating": "5",
+      "technical_knowledge_expertise_rating": "4",
+      "workflow_implementation_management_execution_rating": "4"
+    },
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "software_proficiency": {
       "revit": "5 (Exceptional)",
       "rhino": "3 (Meets Expectations)",
       "enscape": "3 (Meets Expectations)",
       "d5": "1 (Unsatisfactory)",
-      "vantage_point": "1 (Unsatisfactory)",
       "deltek_adp": "3 (Meets Expectations)",
       "newforma": "3 (Meets Expectations)",
       "bluebeam": "4 (Exceeds Expectations)",
@@ -348,60 +338,57 @@
       "word": "5 (Exceptional)",
       "powerpoint": "5 (Exceptional)",
       "excel": "4 (Exceeds Expectations)",
-      "illustrator": "4 (Exceeds Expectations)",
       "photoshop": "4 (Exceeds Expectations)",
-      "indesign": "4 (Exceeds Expectations)"
+      "indesign": "4 (Exceeds Expectations)",
+      "vantage_point": "1 (Unsatisfactory)",
+      "illustrator": "4 (Exceeds Expectations)"
     },
-    "additional_evaluation_data": {
-      "performance_examples": null,
-      "additional_resources": null,
-      "employee_strengths": null,
-      "areas_for_growth": null,
-      "studio_culture_feedback": null,
-      "software_tools_feedback": null
+    "start_time": "2025-09-10 17:21:53",
+    "submitted": "",
+    "title": ""
+  },
+  {
+    "additional_data": {
+      "software_tools_feedback": "AI for graphic generation, both images and videos.",
+      "studio_culture_feedback": "We are collaborative and innovative. We learn from the environments and respond with positive solutions.\nWe need to continue growing the design strengths that could adapt with the current technical environment and design industry. Not only applying the use of AI, but also expand our design realm to interior, visual arts, landscape if possible."
     },
+    "completion_time": "2025-09-11 04:30:38",
     "data_sources": [
       "excel_parser"
     ],
-    "last_updated": null
-  },
-  {
-    "id": "22",
-    "name": "Regina Jiang",
-    "title": "Associate Principal",
-    "role": "Project Manager",
+    "date_of_evaluation": "2025-09-11 00:00:00",
     "email": "rjiang@ennead.com",
-    "start_time": "2025-09-11 04:30:02",
-    "completion_time": "2025-09-11 04:30:38",
-    "date": "2025-09-11 00:00:00",
-    "profile_image": {
-      "filename": null,
-      "path": null,
-      "has_image": false,
-      "display_path": "assets/images/default-avatar.png",
-      "match_confidence": null
+    "employee_development": {
+      "employee_strengths": "Communication skills.\nPresentation skills.\nComprehensive skills on competitions, for concepts, visualizations, as well as business connections.",
+      "areas_for_growth": "Learn more about healthcare and laboratory knowledge and integrate them into BD scenarios."
     },
-    "performance_ratings": {
-      "communication": "4",
-      "collaboration": "5",
-      "professionalism": "4",
-      "technical_knowledge_expertise": "4",
-      "workflow_implementation_management_execution": "5",
-      "overall_performance": null
+    "employee_name": "Regina Jiang",
+    "employee_role": "Project Manager",
+    "id": "22",
+    "image_match_confidence": null,
+    "last_updated": null,
+    "overall_assessment": {
+      "overall_performance": "5",
+      "additional_resources": "We have three offices now. By implementing structured channels for knowledge exchange and strategic alignment, we can better leverage our collective intelligence. This will allow each market to actively learn from the others' experiences, provide cross-regional support, and efficiently share resources, ultimately strengthening our firm's global position and driving unified growth.",
+      "performance_examples": "Continued building up the connections with the clients, this year, I've brought three ByteDance competitions, one JD competition (a new client), one lab project in Shenzhen and one cultural project in Shaoxing."
     },
     "performance_comments": {
-      "communication_comments": "I strive to ensure my communication is clear and effective, whether in verbal discussions or written correspondence. I make a conscious effort to listen actively to clients, our design teams, and local partners, aiming to fully understand their perspectives and ensure we are aligned. I try to tailor my communication style to the audience, whether explaining a complex design intent to a client or coordinating technical details with our consultants. There is always room to improve, and I welcome feedback to ensure my communication remains as effective as possible.",
-      "collaboration_comments": null,
-      "professionalism_comments": null,
-      "technical_knowledge_expertise_comments": null,
-      "workflow_implementation_management_execution_comments": null
+      "communication_comments": "I strive to ensure my communication is clear and effective, whether in verbal discussions or written correspondence. I make a conscious effort to listen actively to clients, our design teams, and local partners, aiming to fully understand their perspectives and ensure we are aligned. I try to tailor my communication style to the audience, whether explaining a complex design intent to a client or coordinating technical details with our consultants. There is always room to improve, and I welcome feedback to ensure my communication remains as effective as possible."
     },
+    "performance_ratings": {
+      "communication_rating": "4",
+      "collaboration_rating": "5",
+      "professionalism_rating": "4",
+      "technical_knowledge_expertise_rating": "4",
+      "workflow_implementation_management_execution_rating": "5"
+    },
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "software_proficiency": {
       "revit": "3 (Meets Expectations)",
       "rhino": "3 (Meets Expectations)",
       "enscape": "2 (Needs to Improve)",
       "d5": "2 (Needs to Improve)",
-      "vantage_point": "0 (Not Applicable)",
       "deltek_adp": "3 (Meets Expectations)",
       "newforma": "3 (Meets Expectations)",
       "bluebeam": "3 (Meets Expectations)",
@@ -409,60 +396,57 @@
       "word": "3 (Meets Expectations)",
       "powerpoint": "3 (Meets Expectations)",
       "excel": "3 (Meets Expectations)",
-      "illustrator": "3 (Meets Expectations)",
       "photoshop": "3 (Meets Expectations)",
-      "indesign": "3 (Meets Expectations)"
+      "indesign": "3 (Meets Expectations)",
+      "vantage_point": "0 (Not Applicable)",
+      "illustrator": "3 (Meets Expectations)"
     },
-    "additional_evaluation_data": {
-      "performance_examples": null,
-      "additional_resources": null,
-      "employee_strengths": null,
-      "areas_for_growth": null,
-      "studio_culture_feedback": null,
-      "software_tools_feedback": null
+    "start_time": "2025-09-11 04:30:02",
+    "submitted": "",
+    "title": ""
+  },
+  {
+    "additional_data": {
+      "software_tools_feedback": "I do not use all of the software listed above. For visualization, I rely on junior help. I would like to learn more about grasshopper and D5",
+      "studio_culture_feedback": "Our office has the ability to target a wide variety of typologies, but I feel that a lot of the 'centers' within the office seem to operate independently from one another. It would be good to see more knowledge overlap and visual consistency within our portfolio. I think that our interior work could help bridge that gap in some regard."
     },
+    "completion_time": "2025-09-11 11:27:42",
     "data_sources": [
       "excel_parser"
     ],
-    "last_updated": null
-  },
-  {
-    "id": "23",
-    "name": "Kevin Hamlett",
-    "title": "Senior Associate",
-    "role": "Senior Designer",
+    "date_of_evaluation": "2025-09-11 00:00:00",
     "email": "khamlett@ennead.com",
-    "start_time": "2025-09-11 10:42:25",
-    "completion_time": "2025-09-11 11:27:42",
-    "date": "2025-09-11 00:00:00",
-    "profile_image": {
-      "filename": null,
-      "path": null,
-      "has_image": false,
-      "display_path": "assets/images/default-avatar.png",
-      "match_confidence": null
+    "employee_development": {
+      "employee_strengths": "30+ years of professional experience backed up w/ my portfolio of completed projects in multiple typologies, overall design insight, precedent knowledge and vision, technical skill w/ detailing and documentation.",
+      "areas_for_growth": "The profession is changing rapidly and I would like to learn new types of software that would make my workflow more productive and easier. I would like to implement more sustainable design strategies in my design process."
     },
-    "performance_ratings": {
-      "communication": "4",
-      "collaboration": "4",
-      "professionalism": "5",
-      "technical_knowledge_expertise": "5",
-      "workflow_implementation_management_execution": "4",
-      "overall_performance": null
+    "employee_name": "Kevin Hamlett",
+    "employee_role": "Senior Designer",
+    "id": "23",
+    "image_match_confidence": null,
+    "last_updated": null,
+    "overall_assessment": {
+      "overall_performance": "4",
+      "additional_resources": "I could use more software training. Prior to joining the office, I worked for companies that have a distinct design and production process using a limited number of programs, so I am unfamiliar w/ the full assortment that we have available. The international projects that I have been leading run at a very quick pace, and it has been difficult to find time to learn new programs. If the office could provide instruction, that would be helpful.",
+      "performance_examples": "I feel like everyone in the office could learn and improve on some level and I am no exception. I will continue to try to improve my abilities."
     },
     "performance_comments": {
-      "communication_comments": "I'm naturally an introverted person; however, I have no problem voicing my opinion on design-related issues. I feel that this is very important in maintaining a high level of quality for our projects. I am happy to be leading a lot of our international exterior & interior work.",
-      "collaboration_comments": null,
-      "professionalism_comments": null,
-      "technical_knowledge_expertise_comments": null,
-      "workflow_implementation_management_execution_comments": null
+      "communication_comments": "I'm naturally an introverted person; however, I have no problem voicing my opinion on design-related issues. I feel that this is very important in maintaining a high level of quality for our projects. I am happy to be leading a lot of our international exterior & interior work."
     },
+    "performance_ratings": {
+      "communication_rating": "4",
+      "collaboration_rating": "4",
+      "professionalism_rating": "5",
+      "technical_knowledge_expertise_rating": "5",
+      "workflow_implementation_management_execution_rating": "4"
+    },
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "software_proficiency": {
       "revit": "3 (Meets Expectations)",
       "rhino": "3 (Meets Expectations)",
       "enscape": "2 (Needs to Improve)",
       "d5": "2 (Needs to Improve)",
-      "vantage_point": "0 (Not Applicable)",
       "deltek_adp": "5 (Exceptional)",
       "newforma": "3 (Meets Expectations)",
       "bluebeam": "5 (Exceptional)",
@@ -470,21 +454,13 @@
       "word": "5 (Exceptional)",
       "powerpoint": "0 (Not Applicable)",
       "excel": "3 (Meets Expectations)",
-      "illustrator": "2 (Needs to Improve)",
       "photoshop": "2 (Needs to Improve)",
-      "indesign": "5 (Exceptional)"
+      "indesign": "5 (Exceptional)",
+      "vantage_point": "0 (Not Applicable)",
+      "illustrator": "2 (Needs to Improve)"
     },
-    "additional_evaluation_data": {
-      "performance_examples": null,
-      "additional_resources": null,
-      "employee_strengths": null,
-      "areas_for_growth": null,
-      "studio_culture_feedback": null,
-      "software_tools_feedback": null
-    },
-    "data_sources": [
-      "excel_parser"
-    ],
-    "last_updated": null
+    "start_time": "2025-09-11 10:42:25",
+    "submitted": "",
+    "title": ""
   }
 ]
