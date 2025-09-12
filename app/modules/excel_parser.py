@@ -171,29 +171,22 @@ class ExcelEmployeeParser:
             grouped_data[group][mapping.mapped_header] = clean_value
         
         
-        # Create the employee data dict with all grouped data
-        # The Employee class will handle the dynamic attributes
+        # Create a flat employee data dict without grouping subdicts
+        # All mapped headers are at the top level
         employee = {}
+
+        # Flatten all grouped data into a single level
         for group in CardGroup:
-            group_name = group.value  # e.g., 'basic_info', 'performance_ratings', etc.
-            employee[group_name] = grouped_data[group]
+            employee.update(grouped_data[group])
 
-        # For backward compatibility, also add some common fields at the top level
-        # These will be dynamically available based on the actual mapped headers
-        basic_info = grouped_data[CardGroup.BASIC_INFO]
-
-        # Add common fields that might be expected by other code
-        employee.update({
-            'performance_ratings': grouped_data[CardGroup.PERFORMANCE_RATINGS],
-            'performance_comments': grouped_data[CardGroup.PERFORMANCE_COMMENTS],
-            'software_proficiency': grouped_data[CardGroup.SOFTWARE_TOOLS],
-            'employee_development': grouped_data[CardGroup.EMPLOYEE_DEVELOPMENT],
-            'overall_assessment': grouped_data[CardGroup.OVERALL_ASSESSMENT],
-            'additional_data': grouped_data[CardGroup.ADDITIONAL_DATA]
-        })
-
-        # Add all basic_info fields at the top level too (for easier access)
-        employee.update(basic_info)
+        # Also add the grouped data for backward compatibility (optional)
+        # Comment out or remove these lines to make it completely flat
+        # employee['performance_ratings'] = grouped_data[CardGroup.PERFORMANCE_RATINGS]
+        # employee['performance_comments'] = grouped_data[CardGroup.PERFORMANCE_COMMENTS]
+        # employee['software_proficiency'] = grouped_data[CardGroup.SOFTWARE_TOOLS]
+        # employee['employee_development'] = grouped_data[CardGroup.EMPLOYEE_DEVELOPMENT]
+        # employee['overall_assessment'] = grouped_data[CardGroup.OVERALL_ASSESSMENT]
+        # employee['additional_data'] = grouped_data[CardGroup.ADDITIONAL_DATA]
         
         return employee
     

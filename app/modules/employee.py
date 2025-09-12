@@ -75,17 +75,24 @@ class Employee:
     
     def __str__(self) -> str:
         """String representation of employee."""
-        name = getattr(self, 'employee_name', 'Unknown')
-        role = getattr(self, 'employee_role', 'Unknown')
+        for key, value in self.__dict__.items():
+            if "name" in key.lower():
+                name = value
+            if "role" in key.lower():
+                role = value
         return f"Employee(name='{name}', role='{role}', has_image={self.has_profile_image()})"
 
     def __repr__(self) -> str:
         """Detailed string representation."""
-        employee_id = getattr(self, 'id', 'Unknown')
-        name = getattr(self, 'employee_name', 'Unknown')
-        title = getattr(self, 'title_FOR_EXAMPLE', 'Unknown')
-        role = getattr(self, 'employee_role', 'Unknown')
-        return f"Employee(id='{employee_id}', name='{name}', title='{title}', role='{role}')"
+        for key, value in self.__dict__.items():
+            if "name" in key.lower():
+                name = value
+            if "title" in key.lower():
+                title = value
+            if "role" in key.lower():
+                role = value
+        
+        return f"Employee(name='{name}', title='{title}', role='{role}')"
 
 
 class EmployeeManager:
@@ -101,7 +108,9 @@ class EmployeeManager:
     def get_employee_by_name(self, name: str) -> Optional[Employee]:
         """Get employee by name (case-insensitive)."""
         for emp in self.employees:
-            emp_name = getattr(emp, 'employee_name', '')
+            for key, value in emp.__dict__.items():
+                if "name" in key.lower():
+                    emp_name = value
             if emp_name and emp_name.lower() == name.lower():
                 return emp
         return None
