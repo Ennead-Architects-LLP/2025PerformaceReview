@@ -46,14 +46,8 @@ def create_html_output_from_employees(employees: List[Employee], output_dir: str
 
         print(f"✅ Using {len(employees)} employee records from Employee objects")
 
-        # Convert Employee objects to flat dicts for chart processing
-        flat_employees = [emp.to_dict() for emp in employees]
-
-        # Extract all fields from the flat structure
-        all_fields = extract_all_fields_from_flat(flat_employees)
-
-        chart_data = prepare_chart_data_from_flat(flat_employees)
-        html_content = generate_html_template_from_employees(employees, all_fields, chart_data)
+        # Generate HTML directly from Employee objects
+        html_content = generate_html_template_from_employees(employees)
 
         # Create output directory
         output_path = Path(output_dir)
@@ -73,9 +67,7 @@ def create_html_output_from_employees(employees: List[Employee], output_dir: str
         with open(output_path / "css" / "styles.css", 'w', encoding='utf-8') as f:
             f.write(get_css_styles())
 
-        # Write JavaScript file
-        with open(output_path / "js" / "script.js", 'w', encoding='utf-8') as f:
-            f.write(generate_javascript_content(flat_employees, chart_data))
+        # Note: JavaScript generation removed for simplified Employee object pipeline
 
         # Copy images to website assets
         copy_images_to_website(output_path)
@@ -91,11 +83,32 @@ def create_html_output_from_employees(employees: List[Employee], output_dir: str
         return ""
 
 
-def generate_html_template_from_employees(employees: List[Employee], all_fields: List[str], chart_data: Dict[str, Dict[str, int]]) -> str:
+def generate_html_template_from_employees(employees: List[Employee]) -> str:
     """Generate HTML template from Employee objects, using mapped headers for grouping."""
-    # Convert Employee objects to dicts for the existing template function
-    flat_employees = [emp.to_dict() for emp in employees]
-    return generate_html_template(flat_employees, all_fields, chart_data)
+    # Generate employee cards
+    cards_html = generate_employee_cards(employees)
+
+    # HTML template with external CSS link
+    html_template = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Evaluation Report</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="background-container"></div>
+    <div class="container">
+        <h1 class="main-title">Employee Evaluation Report</h1>
+        <div id="employee-list">
+''' + cards_html + '''
+        </div>
+    </div>
+</body>
+</html>'''
+
+    return html_template
 
 
 def convert_to_flat_structure(employees: List[Dict[str, Any]]) -> List[Dict[str, str]]:
@@ -905,48 +918,67 @@ def generate_employee_cards(employees) -> str:
     cards_html = ""
 
     for employee in employees:
+        # Check if employee is a dict or an Employee object
+        is_dict = isinstance(employee, dict)
+
         # Get basic info dynamically by finding mapped header attributes
         employee_name = 'Unknown'
         date_of_evaluation = ''
 
-        # Find employee name from any field containing "name"
-        print(f"DEBUG: Employee __dict__: {employee.__dict__}")
-        print(f"DEBUG: Employee dir: {[attr for attr in dir(employee) if not attr.startswith('_')]}")
-        for attr_name in employee.__dict__.keys():
-            attr_value = employee.__dict__[attr_name]
-            if attr_value and "name" in attr_name.lower():
-                employee_name = str(attr_value)
-                print(f"DEBUG: Found employee name '{employee_name}' in attribute '{attr_name}'")
-                break
-
-        # Find date of evaluation
-        for attr_name in dir(employee):
-            if not attr_name.startswith('_'):
-                attr_value = getattr(employee, attr_name)
-                if not callable(attr_value) and attr_value:
-                    if "date" in attr_name.lower() and "evaluation" in attr_name.lower():
-                        date_of_evaluation = str(attr_value)
+        if is_dict:
+            # Handle dict objects
+            for key, value in employee.items():
+                if value:
+                    if "name" in key.lower():
+                        employee_name = str(value)
                         break
 
-        # Profile Image - check if employee has profile image
-        profile_image_html = ""
-        profile_image_filename = None
-        profile_image_path = None
+            for key, value in employee.items():
+                if value and "date" in key.lower() and "evaluation" in key.lower():
+                    date_of_evaluation = str(value)
+                    break
 
-        # Look for profile image attributes
-        for attr_name in dir(employee):
-            if not attr_name.startswith('_'):
-                attr_value = getattr(employee, attr_name)
-                if not callable(attr_value):
-                    if "profile_image_filename" in attr_name:
-                        profile_image_filename = attr_value
-                    elif "profile_image_path" in attr_name:
-                        profile_image_path = attr_value
-
-        if profile_image_filename and profile_image_path:
-            profile_image_html = f'<img src="{profile_image_path}" alt="{employee_name}" class="profile-image">'
-        else:
+            # Default profile image for dict objects
             profile_image_html = f'<img src="assets/images/DEFAULT_PROFILE.jpg" alt="{employee_name}" class="profile-image">'
+        else:
+            # Handle Employee objects
+            # Find employee name from any field containing "name"
+            for attr_name in dir(employee):
+                if not attr_name.startswith('_'):
+                    attr_value = getattr(employee, attr_name)
+                    if not callable(attr_value) and attr_value:
+                        if "name" in attr_name.lower():
+                            employee_name = str(attr_value)
+                            break
+
+            # Find date of evaluation
+            for attr_name in dir(employee):
+                if not attr_name.startswith('_'):
+                    attr_value = getattr(employee, attr_name)
+                    if not callable(attr_value) and attr_value:
+                        if "date" in attr_name.lower() and "evaluation" in attr_name.lower():
+                            date_of_evaluation = str(attr_value)
+                            break
+
+            # Profile Image - check if employee has profile image
+            profile_image_html = ""
+            profile_image_filename = None
+            profile_image_path = None
+
+            # Look for profile image attributes
+            for attr_name in dir(employee):
+                if not attr_name.startswith('_'):
+                    attr_value = getattr(employee, attr_name)
+                    if not callable(attr_value):
+                        if "profile_image_filename" in attr_name:
+                            profile_image_filename = attr_value
+                        elif "profile_image_path" in attr_name:
+                            profile_image_path = attr_value
+
+            if profile_image_filename and profile_image_path:
+                profile_image_html = f'<img src="{profile_image_path}" alt="{employee_name}" class="profile-image">'
+            else:
+                profile_image_html = f'<img src="assets/images/DEFAULT_PROFILE.jpg" alt="{employee_name}" class="profile-image">'
 
         # Group fields by their card group dynamically
         grouped_fields = {}
@@ -958,23 +990,71 @@ def generate_employee_cards(employees) -> str:
                 reverse_mapping[mapping.mapped_header] = mapping
 
         # Process all employee attributes dynamically
-        for attr_name in dir(employee):
-            if not attr_name.startswith('_'):  # Skip private attributes
-                attr_value = getattr(employee, attr_name)
-                if not callable(attr_value):  # Skip methods
+        if is_dict:
+            # Handle dict objects
+            for key, value in employee.items():
+                if key in reverse_mapping:
+                    mapping = reverse_mapping[key]
+                    if mapping.data_type_in_card != CardType.NOSHOW:
+                        group = mapping.group_under
+                        if group not in grouped_fields:
+                            grouped_fields[group] = []
+                        # Format date fields to YYYY-MM-DD
+                        formatted_value = str(value) if value else ''
+                        if mapping.data_type == 'date' and value:
+                            try:
+                                from datetime import datetime
+                                if isinstance(value, str):
+                                    # Try parsing common date formats
+                                    for fmt in ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d', '%m/%d/%Y', '%d/%m/%Y']:
+                                        try:
+                                            dt = datetime.strptime(value, fmt)
+                                            formatted_value = dt.strftime('%Y-%m-%d')
+                                            break
+                                        except ValueError:
+                                            continue
+                                elif hasattr(value, 'strftime'):
+                                    formatted_value = value.strftime('%Y-%m-%d')
+                            except:
+                                formatted_value = str(value)
+                        grouped_fields[group].append((mapping, formatted_value))
+        else:
+            # Handle Employee objects
+            for attr_name in dir(employee):
+                if not attr_name.startswith('_'):  # Skip private attributes
+                    attr_value = getattr(employee, attr_name)
+                    if not callable(attr_value):  # Skip methods
 
-                    # Check if this attribute has a header mapping using reverse mapping
-                    if attr_name in reverse_mapping:
-                        mapping = reverse_mapping[attr_name]
+                        # Check if this attribute has a header mapping using reverse mapping
+                        if attr_name in reverse_mapping:
+                            mapping = reverse_mapping[attr_name]
 
-                        # Only include fields that should be shown in cards
-                        if mapping.data_type_in_card != CardType.NOSHOW:
-                            group = mapping.group_under
-                            if group not in grouped_fields:
-                                grouped_fields[group] = []
-                            grouped_fields[group].append((mapping, str(attr_value) if attr_value else ''))
-                        # Skip NOSHOW fields
-                    # Skip attributes without mappings
+                            # Only include fields that should be shown in cards
+                            if mapping.data_type_in_card != CardType.NOSHOW:
+                                group = mapping.group_under
+                                if group not in grouped_fields:
+                                    grouped_fields[group] = []
+                                # Format date fields to YYYY-MM-DD
+                                formatted_value = str(attr_value) if attr_value else ''
+                                if mapping.data_type == 'date' and attr_value:
+                                    try:
+                                        from datetime import datetime
+                                        if isinstance(attr_value, str):
+                                            # Try parsing common date formats
+                                            for fmt in ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d', '%m/%d/%Y', '%d/%m/%Y']:
+                                                try:
+                                                    dt = datetime.strptime(attr_value, fmt)
+                                                    formatted_value = dt.strftime('%Y-%m-%d')
+                                                    break
+                                                except ValueError:
+                                                    continue
+                                        elif hasattr(attr_value, 'strftime'):
+                                            formatted_value = attr_value.strftime('%Y-%m-%d')
+                                    except:
+                                        formatted_value = str(attr_value)
+                                grouped_fields[group].append((mapping, formatted_value))
+                            # Skip NOSHOW fields
+                        # Skip attributes without mappings
 
         # Generate HTML for each group in order
         grouped_fields_html = ""

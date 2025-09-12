@@ -86,69 +86,69 @@ class HeaderMapper:
             (0, "ID", "id", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 1),
             (1, "Start time", "start_time", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 6),
             (2, "Completion time", "completion_time", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 7),
-            (3, "Email", "Email_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 5),
-            (4, "Name", "Employee Name_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 2),
+            (3, "Email", "Email_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 5),
+            (4, "Name", "Employee Name_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 2),
             (5, "Last modified time", "last_modified", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 10),
-            (6, "Employee Name", "Employee Name Alt_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 11),  # Alternative name field
-            (7, "Title", "Title_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 3),
-            (8, "Role", "Employee Role_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 4),
-            (9, "Date", "Date of Evaluation_FOR_EXAMPLE", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.PROGRESSION, 8),
+            (6, "Employee Name", "Employee Name Alt_FOR_TEST", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 11),  # Alternative name field
+            (7, "Title", "Title_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 3),
+            (8, "Role", "Employee Role_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 4),
+            (9, "Date", "Date of Evaluation_FOR_TEST", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.PROGRESSION, 8),
         ]
         
         # Performance Ratings Group
         rating_mappings = [
-            (10, "Communication", "Communication Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 1),
-            (12, "Collaboration\xa0\n", "Collaboration Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 2),
-            (14, "Professionalism\n", "Professionalism Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 3),
-            (16, "Technical Knowledge & Expertise\xa0\n", "Technical Knowledge & Expertise Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 4),
-            (18, "Workflow Implementation, Management, Execution (Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)\xa0", "Workflow Implementation, Management, Execution Rating_FOR_EXAMPLE", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 5),
+            (10, "Communication", "Communication Rating_FOR_TEST", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 1),
+            (12, "Collaboration\xa0\n", "Collaboration Rating_FOR_TEST", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 2),
+            (14, "Professionalism\n", "Professionalism Rating_FOR_TEST", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 3),
+            (16, "Technical Knowledge & Expertise\xa0\n", "Technical Knowledge & Expertise Rating_FOR_TEST", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 4),
+            (18, "Workflow Implementation, Management, Execution (Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)\xa0", "Workflow Implementation, Management, Execution Rating_FOR_TEST", CardGroup.PERFORMANCE_RATINGS, CardType.RATING_NUM, ChartType.DONUT, 5),
         ]
 
         # Performance Comments Group
         comment_mappings = [
-            (11, "Communication2", "Communication Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
-            (13, "Collaboration", "Collaboration Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
-            (15, "Professionalism", "Professionalism Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 3),
-            (17, "Technical Knowledge & Expertise\xa0", "Technical Knowledge & Expertise Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 4),
-            (19, "Workflow Implementation, Management, Execution\xa0(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)\xa0", "Workflow Implementation, Management, Execution Comments_FOR_EXAMPLE", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 5),
+            (11, "Communication2", "Communication Comments_FOR_TEST", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
+            (13, "Collaboration", "Collaboration Comments_FOR_TEST", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
+            (15, "Professionalism", "Professionalism Comments_FOR_TEST", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 3),
+            (17, "Technical Knowledge & Expertise\xa0", "Technical Knowledge & Expertise Comments_FOR_TEST", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 4),
+            (19, "Workflow Implementation, Management, Execution\xa0(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)\xa0", "Workflow Implementation, Management, Execution Comments_FOR_TEST", CardGroup.PERFORMANCE_COMMENTS, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 5),
         ]
         
         # Software Tools Group (columns 19-33)
         software_mappings = [
-            (19, "Revit", "Revit_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 1),
-            (20, "Rhino", "Rhino_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 2),
-            (21, "Enscape", "Enscape_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 3),
-            (22, "D5", "D5_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 4),
-            (23, "Vantage Point", "Vantage Point_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 5),
-            (24, "Deltek/ADP", "Deltek/ADP_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 6),
-            (25, "Newforma", "Newforma_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 7),
-            (26, "Bluebeam", "Bluebeam_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 8),
-            (27, "Grasshopper", "Grasshopper_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 9),
-            (28, "Word", "Word_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 10),
-            (29, "Powerpoint", "Powerpoint_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 11),
+            (19, "Revit", "Revit_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 1),
+            (20, "Rhino", "Rhino_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 2),
+            (21, "Enscape", "Enscape_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 3),
+            (22, "D5", "D5_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 4),
+            (23, "Vantage Point", "Vantage Point_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 5),
+            (24, "Deltek/ADP", "Deltek/ADP_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 6),
+            (25, "Newforma", "Newforma_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 7),
+            (26, "Bluebeam", "Bluebeam_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 8),
+            (27, "Grasshopper", "Grasshopper_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 9),
+            (28, "Word", "Word_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 10),
+            (29, "Powerpoint", "Powerpoint_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 11),
             (30, "Excel", "excel", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 12),
-            (31, "Illustrator", "Illustrator_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 13),
-            (32, "Photoshop", "Photoshop_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 14),
-            (33, "Indesign", "Indesign_FOR_EXAMPLE", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 15),
+            (31, "Illustrator", "Illustrator_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 13),
+            (32, "Photoshop", "Photoshop_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 14),
+            (33, "Indesign", "Indesign_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 15),
         ]
         
         # Employee Development Group (columns 34-35)
         development_mappings = [
-            (34, "Employee Strengths", "Employee Strengths_FOR_EXAMPLE", CardGroup.EMPLOYEE_DEVELOPMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
-            (35, "Areas for Growth / Development Goals", "Areas for Growth / Development Goals_FOR_EXAMPLE", CardGroup.EMPLOYEE_DEVELOPMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
+            (34, "Employee Strengths", "Employee Strengths_FOR_TEST", CardGroup.EMPLOYEE_DEVELOPMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
+            (35, "Areas for Growth / Development Goals", "Areas for Growth / Development Goals_FOR_TEST", CardGroup.EMPLOYEE_DEVELOPMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
         ]
         
         # Overall Assessment Group (columns 36-38)
         assessment_mappings = [
-            (36, "Rate Your Overall Performance This Year", "Overall Performance Rating_FOR_EXAMPLE", CardGroup.OVERALL_ASSESSMENT, CardType.RATING_NUM, ChartType.DONUT, 1),
-            (37, "Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?", "Performance Examples_FOR_EXAMPLE", CardGroup.OVERALL_ASSESSMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
-            (38, "What additional resources would help you do your job more effectively?", "Additional Resources_FOR_EXAMPLE", CardGroup.OVERALL_ASSESSMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 3),
+            (36, "Rate Your Overall Performance This Year", "Overall Performance Rating_FOR_TEST", CardGroup.OVERALL_ASSESSMENT, CardType.RATING_NUM, ChartType.DONUT, 1),
+            (37, "Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?", "Performance Examples_FOR_TEST", CardGroup.OVERALL_ASSESSMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
+            (38, "What additional resources would help you do your job more effectively?", "Additional Resources_FOR_TEST", CardGroup.OVERALL_ASSESSMENT, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 3),
         ]
         
         # Additional Data Group (columns 39-40)
         additional_mappings = [
-            (39, "Please share your thoughts about the character and culture of our studio and practice.", "Studio Culture Feedback_FOR_EXAMPLE", CardGroup.ADDITIONAL_DATA, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
-            (40, "Software & Tools2", "Software & Tools Feedback_FOR_EXAMPLE", CardGroup.ADDITIONAL_DATA, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
+            (39, "Please share your thoughts about the character and culture of our studio and practice.", "Studio Culture Feedback_FOR_TEST", CardGroup.ADDITIONAL_DATA, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 1),
+            (40, "Software & Tools2", "Software & Tools Feedback_FOR_TEST", CardGroup.ADDITIONAL_DATA, CardType.MULTILINE_TEXT, ChartType.NOSHOW, 2),
         ]
         
         # Combine all mappings
