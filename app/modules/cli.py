@@ -11,7 +11,7 @@ from .orchestrator import (
     validate_system
 )
 from .excel_parser import parse_excel_to_json
-from .html_generator import create_html_output_from_json
+from .html_generator import create_html_output_from_employees
 from .config import Config
 from .utils import log_info, log_error
 

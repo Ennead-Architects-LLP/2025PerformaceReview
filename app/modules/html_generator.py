@@ -13,6 +13,7 @@ from pathlib import Path
 # Removed parser import - functions moved to this module
 from .config import Config
 from .header_mapper import CardGroup, CardType, header_mapper, ChartType
+from .employee import Employee
 
 
 
@@ -31,47 +32,33 @@ def get_excluded_chart_fields() -> set:
             if mapping.data_type_in_chart == ChartType.NOSHOW:
                 excluded_fields.add(mapping.mapped_header.lower())
 
-    # Also exclude some system fields that are never charted
-    system_exclusions = {
-        'responder',
-        'submitted',
-        'employee name',
-        'employee_name',
-        'name'
-    }
-    excluded_fields.update(system_exclusions)
+
 
     return excluded_fields
 
 
-def create_html_output_from_json(data_file: str = None, output_dir: str = None) -> str:
-    """Create HTML output from JSON employee data file."""
+def create_html_output_from_employees(employees: List[Employee], output_dir: str = None) -> str:
+    """Create HTML output from Employee objects directly."""
     try:
         # Use config defaults if not provided
-        if data_file is None:
-            data_file = Config.get_json_output_path()
         if output_dir is None:
             output_dir = Config.get_website_output_path()
-        
-        # Load employee data from JSON
-        with open(data_file, 'r', encoding='utf-8') as f:
-            employees = json.load(f)
-        
-        print(f"✅ Loaded {len(employees)} employee records from JSON")
-        
-        # Convert to flat structure for the new format
-        flat_employees = convert_to_flat_structure(employees)
-        
+
+        print(f"✅ Using {len(employees)} employee records from Employee objects")
+
+        # Convert Employee objects to flat dicts for chart processing
+        flat_employees = [emp.to_dict() for emp in employees]
+
         # Extract all fields from the flat structure
         all_fields = extract_all_fields_from_flat(flat_employees)
-        
+
         chart_data = prepare_chart_data_from_flat(flat_employees)
-        html_content = generate_html_template(flat_employees, all_fields, chart_data)
+        html_content = generate_html_template_from_employees(employees, all_fields, chart_data)
 
         # Create output directory
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
-        
+
         # Create subdirectories
         (output_path / "css").mkdir(exist_ok=True)
         (output_path / "js").mkdir(exist_ok=True)
@@ -81,27 +68,34 @@ def create_html_output_from_json(data_file: str = None, output_dir: str = None) 
         # Write main HTML file
         with open(output_path / "index.html", 'w', encoding='utf-8') as f:
             f.write(html_content)
-        
+
         # Write CSS file
         with open(output_path / "css" / "styles.css", 'w', encoding='utf-8') as f:
             f.write(get_css_styles())
-        
+
         # Write JavaScript file
         with open(output_path / "js" / "script.js", 'w', encoding='utf-8') as f:
             f.write(generate_javascript_content(flat_employees, chart_data))
-        
+
         # Copy images to website assets
         copy_images_to_website(output_path)
 
         print(f"🌐 Website generated successfully!")
         print(f"   📁 Output directory: {output_path}")
         print(f"   📄 Main page: {output_path / 'index.html'}")
-        
+
         return str(output_path / "index.html")
 
     except Exception as e:
         print(f"❌ Error creating HTML output: {e}")
         return ""
+
+
+def generate_html_template_from_employees(employees: List[Employee], all_fields: List[str], chart_data: Dict[str, Dict[str, int]]) -> str:
+    """Generate HTML template from Employee objects, using mapped headers for grouping."""
+    # Convert Employee objects to dicts for the existing template function
+    flat_employees = [emp.to_dict() for emp in employees]
+    return generate_html_template(flat_employees, all_fields, chart_data)
 
 
 def convert_to_flat_structure(employees: List[Dict[str, Any]]) -> List[Dict[str, str]]:
@@ -269,6 +263,7 @@ def generate_html_template(employees: List[Dict[str, str]], all_fields: List[str
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Evaluation Report</title>
+    <subtitle>Questions designed and handedout by Wilmarie Morales. Data visualization by DesignTechnology.</subtitle>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     {get_css_styles()}
@@ -905,56 +900,98 @@ def generate_footer() -> str:
 
 
 
-def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
-    """Generate HTML for employee cards using header mapping system."""
+def generate_employee_cards(employees) -> str:
+    """Generate HTML for employee cards from Employee objects, using mapped headers dynamically."""
     cards_html = ""
 
-    # Get header mappings to determine what should be displayed
-    header_mappings = header_mapper.header_mappings
-
     for employee in employees:
-        name = employee.get('employee_name', 'Unknown')
-        date = employee.get('date_of_evaluation', '')
+        # Get basic info dynamically by finding mapped header attributes
+        employee_name = 'Unknown'
+        date_of_evaluation = ''
 
-        # Profile Image
+        # Find employee name from any field containing "name"
+        print(f"DEBUG: Employee __dict__: {employee.__dict__}")
+        print(f"DEBUG: Employee dir: {[attr for attr in dir(employee) if not attr.startswith('_')]}")
+        for attr_name in employee.__dict__.keys():
+            attr_value = employee.__dict__[attr_name]
+            if attr_value and "name" in attr_name.lower():
+                employee_name = str(attr_value)
+                print(f"DEBUG: Found employee name '{employee_name}' in attribute '{attr_name}'")
+                break
+
+        # Find date of evaluation
+        for attr_name in dir(employee):
+            if not attr_name.startswith('_'):
+                attr_value = getattr(employee, attr_name)
+                if not callable(attr_value) and attr_value:
+                    if "date" in attr_name.lower() and "evaluation" in attr_name.lower():
+                        date_of_evaluation = str(attr_value)
+                        break
+
+        # Profile Image - check if employee has profile image
         profile_image_html = ""
-        profile_image = employee.get('profile_image', {})
-        if isinstance(profile_image, dict) and profile_image.get('has_image'):
-            image_path = profile_image.get('display_path', 'assets/images/DEFAULT_PROFILE.jpg')
-            profile_image_html = f'<img src="{image_path}" alt="{name}" class="profile-image">'
+        profile_image_filename = None
+        profile_image_path = None
+
+        # Look for profile image attributes
+        for attr_name in dir(employee):
+            if not attr_name.startswith('_'):
+                attr_value = getattr(employee, attr_name)
+                if not callable(attr_value):
+                    if "profile_image_filename" in attr_name:
+                        profile_image_filename = attr_value
+                    elif "profile_image_path" in attr_name:
+                        profile_image_path = attr_value
+
+        if profile_image_filename and profile_image_path:
+            profile_image_html = f'<img src="{profile_image_path}" alt="{employee_name}" class="profile-image">'
         else:
-            # Use default profile image
-            profile_image_html = f'<img src="assets/images/DEFAULT_PROFILE.jpg" alt="{name}" class="profile-image">'
+            profile_image_html = f'<img src="assets/images/DEFAULT_PROFILE.jpg" alt="{employee_name}" class="profile-image">'
 
-        # Group fields by their card group for ordered display
-        grouped_fields_html = ""
-
-        # Get all visible fields in proper order
-        visible_fields = header_mapper.get_visible_fields(header_mappings)
-
-        # Group visible fields by their card group
+        # Group fields by their card group dynamically
         grouped_fields = {}
-        for mapping in visible_fields:
-            group = mapping.group_under
-            if group not in grouped_fields:
-                grouped_fields[group] = []
-            grouped_fields[group].append(mapping)
 
-        # Sort groups by display order and generate HTML for each group
+        # Create reverse mapping from mapped_header to HeaderMapping
+        reverse_mapping = {}
+        for original_header, mapping_list in header_mapper.header_mappings_by_name.items():
+            for mapping in mapping_list:
+                reverse_mapping[mapping.mapped_header] = mapping
+
+        # Process all employee attributes dynamically
+        for attr_name in dir(employee):
+            if not attr_name.startswith('_'):  # Skip private attributes
+                attr_value = getattr(employee, attr_name)
+                if not callable(attr_value):  # Skip methods
+
+                    # Check if this attribute has a header mapping using reverse mapping
+                    if attr_name in reverse_mapping:
+                        mapping = reverse_mapping[attr_name]
+
+                        # Only include fields that should be shown in cards
+                        if mapping.data_type_in_card != CardType.NOSHOW:
+                            group = mapping.group_under
+                            if group not in grouped_fields:
+                                grouped_fields[group] = []
+                            grouped_fields[group].append((mapping, str(attr_value) if attr_value else ''))
+                        # Skip NOSHOW fields
+                    # Skip attributes without mappings
+
+        # Generate HTML for each group in order
+        grouped_fields_html = ""
         for group in header_mapper.card_group_order:
             if group in grouped_fields and grouped_fields[group]:
-                group_fields = sorted(grouped_fields[group], key=lambda x: x.display_order)
-                group_html = generate_field_group_html(employee, group, group_fields)
-                if group_html:
-                    grouped_fields_html += group_html
+                # Sort by display order
+                group_fields = sorted(grouped_fields[group], key=lambda x: x[0].display_order)
+                group_html = generate_field_group_html_from_employee_data(group, group_fields)
+                grouped_fields_html += group_html
 
         card_html = f"""
         <div class="employee-card">
             <div class="employee-header">
                 {profile_image_html}
                 <div class="employee-info">
-                    <div class="employee-name">{name}</div>
-                    <div class="employee-time">{date}</div>
+                    <div class="employee-name">{employee_name}</div>
+                    <div class="employee-time">{date_of_evaluation}</div>
                 </div>
             </div>
             <div class="fields-container">
@@ -962,22 +999,16 @@ def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
             </div>
         </div>
         """
-
         cards_html += card_html
 
     return cards_html
 
 
-def generate_field_group_html(employee: Dict[str, str], group: CardGroup, field_mappings: List) -> str:
-    """Generate HTML for a field group using header mappings."""
+def generate_field_group_html_from_employee_data(group: CardGroup, field_data: List) -> str:
+    """Generate HTML for a field group from employee data."""
     fields_html = ""
 
-    for mapping in field_mappings:
-        # Only process fields that should be shown in cards
-        if mapping.data_type_in_card == CardType.NOSHOW:
-            continue
-
-        field_value = employee.get(mapping.mapped_header, '')
+    for mapping, field_value in field_data:
         field_html = generate_field_html(mapping, field_value)
         fields_html += field_html
 

@@ -210,19 +210,20 @@ class ExcelEmployeeParser:
                 employee_data = self.extract_employee_data(row)
                 
                 # Only add if we have essential data - check for any employee name field
+                # Look for employee name using mapped headers
                 employee_name = None
-                # Check common employee name field names
-                for possible_name in ['employee_name', 'Employee Name_FOR_EXAMPLE', 'Employee Name Alt_FOR_EXAMPLE', 'name']:
-                    if employee_data.get(possible_name):
-                        employee_name = employee_data[possible_name].strip()
-                        break
+                
+                for field in employee_data.keys():
+                    if "name" in field.lower():
+                        if employee_data[field]:
+                            employee_name = employee_data[field]
+                            break
 
                 if employee_name:
                     # Create Employee object from data
                     employee = Employee.from_excel_data(employee_data)
                     employees.append(employee)
-                    emp_name = getattr(employee, 'employee_name', 'Unknown')
-                    print(f"✅ Parsed employee: {emp_name}")
+                    print(f"✅ Parsed employee: {employee}")
                 else:
                     print(f"⚠️  Skipped row {index}: Missing employee name")
                     
@@ -309,6 +310,16 @@ class ExcelEmployeeParser:
     def show_field(self, original_header: str):
         """Show a field in display."""
         self.header_mapper.show_field(original_header)
+
+
+def parse_excel_to_employees(excel_path: str) -> List[Employee]:
+    """Parse Excel file and return Employee objects directly."""
+    parser = ExcelEmployeeParser(excel_path)
+    if not parser.load_excel():
+        return []
+
+    employees = parser.parse_all_employees()
+    return employees
 
 
 def parse_excel_to_json(excel_path: str, output_path: str = None, 

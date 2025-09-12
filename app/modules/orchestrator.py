@@ -10,8 +10,8 @@ import sys
 from typing import List, Dict, Tuple
 
 # Import from modules package
-from .html_generator import create_html_output_from_json
-from .excel_parser import parse_excel_to_json
+from .html_generator import create_html_output_from_employees
+from .excel_parser import parse_excel_to_employees
 from .utils import log_info, log_error, log_warning, ensure_output_directory
 from .config import Config
 
@@ -66,31 +66,46 @@ class EmployeeEvaluationOrchestrator:
         log_info(f"Output directory: {output_dir}")
     
     def _parse_data(self) -> None:
-        """Parse Excel data and convert to JSON."""
+        """Parse Excel data to Employee objects."""
         log_info("Parsing Excel data...")
-        
-        # Parse Excel to JSON
+
+        # Parse Excel to Employee objects
         excel_path = Config.get_excel_input_path()
-        json_path = Config.get_json_output_path()
-        
-        # Ensure data directory exists
-        data_dir = Config.get_data_dir_path()
-        Config.ensure_directory_exists(data_dir)
-        
-        success = parse_excel_to_json(excel_path, json_path, copy_images=True)
-        if not success:
+
+        self.employees = parse_excel_to_employees(excel_path)
+        if not self.employees:
             raise ValueError("Failed to parse Excel data!")
-        
-        log_info(f"Successfully parsed Excel data and saved to: {json_path}")
-    
+
+        log_info(f"Successfully parsed {len(self.employees)} employee records from Excel")
+
+        # Optionally save to JSON for debugging/reference
+        self._save_employee_data_json()
+
+    def _save_employee_data_json(self) -> None:
+        """Save employee data to JSON for reference (optional)."""
+        try:
+            json_path = Config.get_json_output_path()
+            data_dir = Config.get_data_dir_path()
+            Config.ensure_directory_exists(data_dir)
+
+            # Convert employees to dicts and save
+            employee_dicts = [emp.to_dict() for emp in self.employees]
+
+            import json
+            with open(json_path, 'w', encoding='utf-8') as f:
+                json.dump(employee_dicts, f, indent=2, ensure_ascii=False)
+
+            log_info(f"Saved employee data to: {json_path}")
+        except Exception as e:
+            log_warning(f"Failed to save employee data JSON: {e}")
+
     def _generate_reports(self) -> None:
-        """Generate HTML website from JSON data."""
+        """Generate HTML website from Employee objects."""
         log_info("Generating HTML website...")
-        
-        json_path = Config.get_json_output_path()
+
         website_path = Config.get_website_output_path()
-        
-        success = create_html_output_from_json(json_path, website_path)
+
+        success = create_html_output_from_employees(self.employees, website_path)
         if success:
             self.output_files.append(website_path)
             log_info(f"Successfully generated website at: {website_path}")

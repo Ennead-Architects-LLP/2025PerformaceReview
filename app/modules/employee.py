@@ -77,10 +77,8 @@ class Employee:
         """String representation of employee."""
         for key, value in self.__dict__.items():
             if "name" in key.lower():
-                name = value
-            if "role" in key.lower():
-                role = value
-        return f"Employee(name='{name}', role='{role}', has_image={self.has_profile_image()})"
+                return f"Employee(name='{value}')"
+        return f"Employee(name='Unknown')"
 
     def __repr__(self) -> str:
         """Detailed string representation."""
