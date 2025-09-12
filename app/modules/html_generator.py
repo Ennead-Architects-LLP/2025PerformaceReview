@@ -289,16 +289,29 @@ def prepare_progression_chart_data(employees: List[Dict[str, str]]) -> Dict[str,
 
 
 def copy_images_to_website(output_path: Path):
-    """Copy images to website assets directory."""
+    """Copy images and icons to website assets directory."""
+    import shutil
+    
+    # Copy profile images
     source_images_dir = Path(Config.get_image_target_path())
     target_images_dir = output_path / "assets" / "images"
     
     if source_images_dir.exists():
-        import shutil
         for image_file in source_images_dir.iterdir():
             if image_file.is_file():
                 shutil.copy2(image_file, target_images_dir / image_file.name)
         print(f"📸 Copied images to {target_images_dir}")
+    
+    # Copy rating icons
+    source_icons_dir = Path("assets/icons")
+    target_icons_dir = output_path / "assets" / "icons"
+    target_icons_dir.mkdir(parents=True, exist_ok=True)
+    
+    if source_icons_dir.exists():
+        for icon_file in source_icons_dir.iterdir():
+            if icon_file.is_file():
+                shutil.copy2(icon_file, target_icons_dir / icon_file.name)
+        print(f"🎯 Copied rating icons to {target_icons_dir}")
 
 
 
@@ -1182,17 +1195,35 @@ def generate_field_html(mapping, field_value: str) -> str:
 
 
 def generate_rating_field_html(display_label: str, field_value: str) -> str:
-    """Generate HTML for rating fields based on CardType.RATING_NUM."""
+    """Generate HTML for rating fields based on CardType.RATING_NUM using shape-based ratings."""
     if not field_value:
         return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value empty-rating">Not rated</div></div>'
 
-    # Parse rating format: "4 (Exceeds Expectations)" -> number and description
-    if '(' in field_value and ')' in field_value:
-        rating_num = field_value.split('(')[0].strip()
-        rating_desc = '(' + field_value.split('(')[1]
-        return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value"><span class="rating-number">{rating_num}</span><span class="rating-description">{rating_desc}</span></div></div>'
-    else:
+    # Parse rating number (1-5 scale)
+    try:
+        if '(' in field_value and ')' in field_value:
+            rating_num = int(field_value.split('(')[0].strip())
+            rating_desc = '(' + field_value.split('(')[1]
+        else:
+            rating_num = int(field_value.strip())
+            rating_desc = ""
+    except (ValueError, IndexError):
+        # Fallback if parsing fails
         return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value">{field_value}</div></div>'
+
+    # Generate shape-based rating (1-5 scale)
+    rating_shapes = ""
+    for i in range(1, 6):
+        if i <= rating_num:
+            rating_shapes += f'<img src="assets/icons/rating_checked.png" alt="Checked" class="rating-icon checked">'
+        else:
+            rating_shapes += f'<img src="assets/icons/rating_unchecked.png" alt="Unchecked" class="rating-icon unchecked">'
+
+    # Combine rating shapes with description if available
+    if rating_desc:
+        return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value"><div class="rating-shapes">{rating_shapes}</div><span class="rating-description">{rating_desc}</span></div></div>'
+    else:
+        return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value"><div class="rating-shapes">{rating_shapes}</div></div></div>'
 
 
 def generate_multiline_field_html(display_label: str, field_value: str) -> str:

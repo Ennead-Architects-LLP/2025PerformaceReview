@@ -1,6 +1,6 @@
 import json
 
-with open('assets/data/header_mappings.json', 'r') as f:
+with open('../../assets/data/header_mappings.json', 'r') as f:
     mappings = json.load(f)
 
 print('Current mappings by index:')

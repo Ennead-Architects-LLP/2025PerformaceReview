@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 def examine_html():
-    with open('docs/index.html', 'r', encoding='utf-8') as f:
+    with open('../../docs/index.html', 'r', encoding='utf-8') as f:
         content = f.read()
 
     print(f'File length: {len(content)}')

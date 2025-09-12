@@ -1,8 +1,11 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 from app.modules.header_mapper import HeaderMapper
 import pandas as pd
 
 # Load Excel and check header mapping
-df = pd.read_excel('assets/data/Employee Self-Evaluation Data Export From MS Form.xlsx')
+df = pd.read_excel('../../assets/data/Employee Self-Evaluation Data Export From MS Form.xlsx')
 header_mapper = HeaderMapper()
 mappings = header_mapper.map_excel_headers(df)
 

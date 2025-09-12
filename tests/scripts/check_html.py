@@ -7,7 +7,7 @@ import re
 
 def check_html_cards():
     # Read HTML file
-    with open('docs/index.html', 'r', encoding='utf-8') as f:
+    with open('../../docs/index.html', 'r', encoding='utf-8') as f:
         content = f.read()
 
     # Look for employee cards

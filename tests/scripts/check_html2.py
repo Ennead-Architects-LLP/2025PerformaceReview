@@ -6,7 +6,7 @@ Check HTML structure more thoroughly
 import re
 
 def check_html_structure():
-    with open('docs/index.html', 'r', encoding='utf-8') as f:
+    with open('../../docs/index.html', 'r', encoding='utf-8') as f:
         content = f.read()
 
     # Find employee cards

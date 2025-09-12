@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 def check_html_content():
-    with open('docs/index.html', 'r', encoding='utf-8') as f:
+    with open('../../docs/index.html', 'r', encoding='utf-8') as f:
         content = f.read()
 
     # Find the position of the first employee card
