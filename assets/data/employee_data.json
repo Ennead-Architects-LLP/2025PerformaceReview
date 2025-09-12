@@ -1,0 +1,490 @@
+[
+  {
+    "id": "16",
+    "name": "Brett Fabrikant",
+    "title": "Security Architect",
+    "role": "M365 Architect, M365 Security Administration",
+    "email": "brett.fabrikant@ennead.com",
+    "start_time": "2025-09-09 13:30:24",
+    "completion_time": "2025-09-09 13:44:11",
+    "date": "2025-09-09 00:00:00",
+    "profile_image": {
+      "filename": null,
+      "path": null,
+      "has_image": false,
+      "display_path": "assets/images/default-avatar.png",
+      "match_confidence": null
+    },
+    "performance_ratings": {
+      "communication": null,
+      "collaboration": null,
+      "professionalism": null,
+      "technical_knowledge_expertise": null,
+      "workflow_implementation_management_execution": null,
+      "overall_performance": null
+    },
+    "performance_comments": {
+      "communication_comments": "My role is highly dependent on effective use of time, and I leverage tools and automation as much as possible to assist in the internal communications of our IT support needs.",
+      "collaboration_comments": null,
+      "professionalism_comments": null,
+      "technical_knowledge_expertise_comments": null,
+      "workflow_implementation_management_execution_comments": null
+    },
+    "software_proficiency": {
+      "revit": "0 (Not Applicable)",
+      "rhino": "0 (Not Applicable)",
+      "enscape": "0 (Not Applicable)",
+      "d5": "0 (Not Applicable)",
+      "vantage_point": "0 (Not Applicable)",
+      "deltek_adp": "0 (Not Applicable)",
+      "newforma": "2 (Needs to Improve)",
+      "bluebeam": "0 (Not Applicable)",
+      "grasshopper": "0 (Not Applicable)",
+      "word": "4 (Exceeds Expectations)",
+      "powerpoint": "4 (Exceeds Expectations)",
+      "excel": "4 (Exceeds Expectations)",
+      "illustrator": "0 (Not Applicable)",
+      "photoshop": "0 (Not Applicable)",
+      "indesign": "0 (Not Applicable)"
+    },
+    "additional_evaluation_data": {
+      "performance_examples": null,
+      "additional_resources": null,
+      "employee_strengths": null,
+      "areas_for_growth": null,
+      "studio_culture_feedback": null,
+      "software_tools_feedback": null
+    },
+    "data_sources": [
+      "excel_parser"
+    ],
+    "last_updated": null
+  },
+  {
+    "id": "17",
+    "name": "Xinya Li",
+    "title": "Associate",
+    "role": "Architectural & Interior Designer, Interior Project Manager",
+    "email": "xli@ennead.com",
+    "start_time": "2025-09-09 21:58:17",
+    "completion_time": "2025-09-09 22:56:15",
+    "date": "2025-09-10 00:00:00",
+    "profile_image": {
+      "filename": null,
+      "path": null,
+      "has_image": false,
+      "display_path": "assets/images/default-avatar.png",
+      "match_confidence": null
+    },
+    "performance_ratings": {
+      "communication": null,
+      "collaboration": null,
+      "professionalism": null,
+      "technical_knowledge_expertise": null,
+      "workflow_implementation_management_execution": null,
+      "overall_performance": null
+    },
+    "performance_comments": {
+      "communication_comments": "Communicate clearly and adapt my style to different audiences. \nMake sure to listen carefully, confirm understanding, and follow up in writing when needed. \nThis helps avoid confusion, build trust, and keep projects moving smoothly.",
+      "collaboration_comments": null,
+      "professionalism_comments": null,
+      "technical_knowledge_expertise_comments": null,
+      "workflow_implementation_management_execution_comments": null
+    },
+    "software_proficiency": {
+      "revit": "3 (Meets Expectations)",
+      "rhino": "3 (Meets Expectations)",
+      "enscape": "3 (Meets Expectations)",
+      "d5": "4 (Exceeds Expectations)",
+      "vantage_point": "3 (Meets Expectations)",
+      "deltek_adp": "3 (Meets Expectations)",
+      "newforma": "2 (Needs to Improve)",
+      "bluebeam": "4 (Exceeds Expectations)",
+      "grasshopper": "0 (Not Applicable)",
+      "word": "4 (Exceeds Expectations)",
+      "powerpoint": "4 (Exceeds Expectations)",
+      "excel": "4 (Exceeds Expectations)",
+      "illustrator": "4 (Exceeds Expectations)",
+      "photoshop": "4 (Exceeds Expectations)",
+      "indesign": "4 (Exceeds Expectations)"
+    },
+    "additional_evaluation_data": {
+      "performance_examples": null,
+      "additional_resources": null,
+      "employee_strengths": null,
+      "areas_for_growth": null,
+      "studio_culture_feedback": null,
+      "software_tools_feedback": null
+    },
+    "data_sources": [
+      "excel_parser"
+    ],
+    "last_updated": null
+  },
+  {
+    "id": "18",
+    "name": "Leah Li",
+    "title": "Office Manager (Shanghai)",
+    "role": "Office admin and HR",
+    "email": "lli@ennead.com",
+    "start_time": "2025-09-09 21:46:46",
+    "completion_time": "2025-09-09 23:26:45",
+    "date": "2025-09-10 00:00:00",
+    "profile_image": {
+      "filename": "Leah Li_profile.jpg",
+      "path": "assets/images/Leah Li_profile.jpg",
+      "has_image": true,
+      "display_path": "assets/images/Leah Li_profile.jpg",
+      "match_confidence": 100
+    },
+    "performance_ratings": {
+      "communication": null,
+      "collaboration": null,
+      "professionalism": null,
+      "technical_knowledge_expertise": null,
+      "workflow_implementation_management_execution": null,
+      "overall_performance": null
+    },
+    "performance_comments": {
+      "communication_comments": "communication clearly in both verbal and written forms.",
+      "collaboration_comments": null,
+      "professionalism_comments": null,
+      "technical_knowledge_expertise_comments": null,
+      "workflow_implementation_management_execution_comments": null
+    },
+    "software_proficiency": {
+      "revit": "3 (Meets Expectations)",
+      "rhino": "3 (Meets Expectations)",
+      "enscape": "3 (Meets Expectations)",
+      "d5": "3 (Meets Expectations)",
+      "vantage_point": "3 (Meets Expectations)",
+      "deltek_adp": "3 (Meets Expectations)",
+      "newforma": "3 (Meets Expectations)",
+      "bluebeam": "3 (Meets Expectations)",
+      "grasshopper": "3 (Meets Expectations)",
+      "word": "3 (Meets Expectations)",
+      "powerpoint": "3 (Meets Expectations)",
+      "excel": "3 (Meets Expectations)",
+      "illustrator": "3 (Meets Expectations)",
+      "photoshop": "3 (Meets Expectations)",
+      "indesign": "3 (Meets Expectations)"
+    },
+    "additional_evaluation_data": {
+      "performance_examples": null,
+      "additional_resources": null,
+      "employee_strengths": null,
+      "areas_for_growth": null,
+      "studio_culture_feedback": null,
+      "software_tools_feedback": null
+    },
+    "data_sources": [
+      "excel_parser"
+    ],
+    "last_updated": null
+  },
+  {
+    "id": "19",
+    "name": "Vivian Zhan",
+    "title": "",
+    "role": "Architecture Designer",
+    "email": "Vivian.Zhan@ennead.com",
+    "start_time": "2025-09-10 08:43:14",
+    "completion_time": "2025-09-10 08:49:35",
+    "date": "2025-09-10 00:00:00",
+    "profile_image": {
+      "filename": null,
+      "path": null,
+      "has_image": false,
+      "display_path": "assets/images/default-avatar.png",
+      "match_confidence": null
+    },
+    "performance_ratings": {
+      "communication": null,
+      "collaboration": null,
+      "professionalism": null,
+      "technical_knowledge_expertise": null,
+      "workflow_implementation_management_execution": null,
+      "overall_performance": null
+    },
+    "performance_comments": {
+      "communication_comments": "I communicate clearly and professionally in both verbal and written formats. I adapt my style depending on the audience, ensuring clarity and conciseness. I also make an effort to actively listen and respond thoughtfully, which helps avoid misunderstandings and keeps collaboration efficient.",
+      "collaboration_comments": null,
+      "professionalism_comments": null,
+      "technical_knowledge_expertise_comments": null,
+      "workflow_implementation_management_execution_comments": null
+    },
+    "software_proficiency": {
+      "revit": "3 (Meets Expectations)",
+      "rhino": "4 (Exceeds Expectations)",
+      "enscape": "3 (Meets Expectations)",
+      "d5": "4 (Exceeds Expectations)",
+      "vantage_point": "3 (Meets Expectations)",
+      "deltek_adp": "3 (Meets Expectations)",
+      "newforma": "3 (Meets Expectations)",
+      "bluebeam": "3 (Meets Expectations)",
+      "grasshopper": "3 (Meets Expectations)",
+      "word": "3 (Meets Expectations)",
+      "powerpoint": "3 (Meets Expectations)",
+      "excel": "3 (Meets Expectations)",
+      "illustrator": "4 (Exceeds Expectations)",
+      "photoshop": "4 (Exceeds Expectations)",
+      "indesign": "4 (Exceeds Expectations)"
+    },
+    "additional_evaluation_data": {
+      "performance_examples": null,
+      "additional_resources": null,
+      "employee_strengths": null,
+      "areas_for_growth": null,
+      "studio_culture_feedback": null,
+      "software_tools_feedback": null
+    },
+    "data_sources": [
+      "excel_parser"
+    ],
+    "last_updated": null
+  },
+  {
+    "id": "20",
+    "name": "Matt Hitscherich",
+    "title": "",
+    "role": "Draftsman",
+    "email": "mhitscherich@ennead.com",
+    "start_time": "2025-09-10 13:04:34",
+    "completion_time": "2025-09-10 13:14:04",
+    "date": "2025-09-10 00:00:00",
+    "profile_image": {
+      "filename": "Matt Hitscherich_profile.jpg",
+      "path": "assets/images/Matt Hitscherich_profile.jpg",
+      "has_image": true,
+      "display_path": "assets/images/Matt Hitscherich_profile.jpg",
+      "match_confidence": 100
+    },
+    "performance_ratings": {
+      "communication": null,
+      "collaboration": null,
+      "professionalism": null,
+      "technical_knowledge_expertise": null,
+      "workflow_implementation_management_execution": null,
+      "overall_performance": null
+    },
+    "performance_comments": {
+      "communication_comments": "I have a lot to say...",
+      "collaboration_comments": null,
+      "professionalism_comments": null,
+      "technical_knowledge_expertise_comments": null,
+      "workflow_implementation_management_execution_comments": null
+    },
+    "software_proficiency": {
+      "revit": "1 (Unsatisfactory)",
+      "rhino": "3 (Meets Expectations)",
+      "enscape": "0 (Not Applicable)",
+      "d5": "3 (Meets Expectations)",
+      "vantage_point": "0 (Not Applicable)",
+      "deltek_adp": "0 (Not Applicable)",
+      "newforma": "0 (Not Applicable)",
+      "bluebeam": "3 (Meets Expectations)",
+      "grasshopper": "1 (Unsatisfactory)",
+      "word": "0 (Not Applicable)",
+      "powerpoint": "0 (Not Applicable)",
+      "excel": "0 (Not Applicable)",
+      "illustrator": "0 (Not Applicable)",
+      "photoshop": "3 (Meets Expectations)",
+      "indesign": "3 (Meets Expectations)"
+    },
+    "additional_evaluation_data": {
+      "performance_examples": null,
+      "additional_resources": null,
+      "employee_strengths": null,
+      "areas_for_growth": null,
+      "studio_culture_feedback": null,
+      "software_tools_feedback": null
+    },
+    "data_sources": [
+      "excel_parser"
+    ],
+    "last_updated": null
+  },
+  {
+    "id": "21",
+    "name": "Clayton Kaul",
+    "title": "Senior Associate",
+    "role": "Project Architect / Project Manager",
+    "email": "ckaul@ennead.com",
+    "start_time": "2025-09-10 17:21:53",
+    "completion_time": "2025-09-10 17:22:05",
+    "date": "2025-09-09 00:00:00",
+    "profile_image": {
+      "filename": "Clayton Kaul_profile.jpg",
+      "path": "assets/images/Clayton Kaul_profile.jpg",
+      "has_image": true,
+      "display_path": "assets/images/Clayton Kaul_profile.jpg",
+      "match_confidence": 100
+    },
+    "performance_ratings": {
+      "communication": null,
+      "collaboration": null,
+      "professionalism": null,
+      "technical_knowledge_expertise": null,
+      "workflow_implementation_management_execution": null,
+      "overall_performance": null
+    },
+    "performance_comments": {
+      "communication_comments": "The past year has been a different role for me than typical given the full year in CA with a much smaller team.    believe I effectively communicate through e-mail, teams and meetings where required to ensure everyone is on the same page.   I like to directly address as soon as possible any thing that seems inconsistent with my understanding of what should be happening or how to improve on workflow.",
+      "collaboration_comments": null,
+      "professionalism_comments": null,
+      "technical_knowledge_expertise_comments": null,
+      "workflow_implementation_management_execution_comments": null
+    },
+    "software_proficiency": {
+      "revit": "5 (Exceptional)",
+      "rhino": "3 (Meets Expectations)",
+      "enscape": "3 (Meets Expectations)",
+      "d5": "1 (Unsatisfactory)",
+      "vantage_point": "1 (Unsatisfactory)",
+      "deltek_adp": "3 (Meets Expectations)",
+      "newforma": "3 (Meets Expectations)",
+      "bluebeam": "4 (Exceeds Expectations)",
+      "grasshopper": "1 (Unsatisfactory)",
+      "word": "5 (Exceptional)",
+      "powerpoint": "5 (Exceptional)",
+      "excel": "4 (Exceeds Expectations)",
+      "illustrator": "4 (Exceeds Expectations)",
+      "photoshop": "4 (Exceeds Expectations)",
+      "indesign": "4 (Exceeds Expectations)"
+    },
+    "additional_evaluation_data": {
+      "performance_examples": null,
+      "additional_resources": null,
+      "employee_strengths": null,
+      "areas_for_growth": null,
+      "studio_culture_feedback": null,
+      "software_tools_feedback": null
+    },
+    "data_sources": [
+      "excel_parser"
+    ],
+    "last_updated": null
+  },
+  {
+    "id": "22",
+    "name": "Regina Jiang",
+    "title": "Associate Principal",
+    "role": "Project Manager",
+    "email": "rjiang@ennead.com",
+    "start_time": "2025-09-11 04:30:02",
+    "completion_time": "2025-09-11 04:30:38",
+    "date": "2025-09-11 00:00:00",
+    "profile_image": {
+      "filename": "Regina Jiang_profile.jpg",
+      "path": "assets/images/Regina Jiang_profile.jpg",
+      "has_image": true,
+      "display_path": "assets/images/Regina Jiang_profile.jpg",
+      "match_confidence": 100
+    },
+    "performance_ratings": {
+      "communication": null,
+      "collaboration": null,
+      "professionalism": null,
+      "technical_knowledge_expertise": null,
+      "workflow_implementation_management_execution": null,
+      "overall_performance": null
+    },
+    "performance_comments": {
+      "communication_comments": "I strive to ensure my communication is clear and effective, whether in verbal discussions or written correspondence. I make a conscious effort to listen actively to clients, our design teams, and local partners, aiming to fully understand their perspectives and ensure we are aligned. I try to tailor my communication style to the audience, whether explaining a complex design intent to a client or coordinating technical details with our consultants. There is always room to improve, and I welcome feedback to ensure my communication remains as effective as possible.",
+      "collaboration_comments": null,
+      "professionalism_comments": null,
+      "technical_knowledge_expertise_comments": null,
+      "workflow_implementation_management_execution_comments": null
+    },
+    "software_proficiency": {
+      "revit": "3 (Meets Expectations)",
+      "rhino": "3 (Meets Expectations)",
+      "enscape": "2 (Needs to Improve)",
+      "d5": "2 (Needs to Improve)",
+      "vantage_point": "0 (Not Applicable)",
+      "deltek_adp": "3 (Meets Expectations)",
+      "newforma": "3 (Meets Expectations)",
+      "bluebeam": "3 (Meets Expectations)",
+      "grasshopper": "2 (Needs to Improve)",
+      "word": "3 (Meets Expectations)",
+      "powerpoint": "3 (Meets Expectations)",
+      "excel": "3 (Meets Expectations)",
+      "illustrator": "3 (Meets Expectations)",
+      "photoshop": "3 (Meets Expectations)",
+      "indesign": "3 (Meets Expectations)"
+    },
+    "additional_evaluation_data": {
+      "performance_examples": null,
+      "additional_resources": null,
+      "employee_strengths": null,
+      "areas_for_growth": null,
+      "studio_culture_feedback": null,
+      "software_tools_feedback": null
+    },
+    "data_sources": [
+      "excel_parser"
+    ],
+    "last_updated": null
+  },
+  {
+    "id": "23",
+    "name": "Kevin Hamlett",
+    "title": "Senior Associate",
+    "role": "Senior Designer",
+    "email": "khamlett@ennead.com",
+    "start_time": "2025-09-11 10:42:25",
+    "completion_time": "2025-09-11 11:27:42",
+    "date": "2025-09-11 00:00:00",
+    "profile_image": {
+      "filename": "Kevin Hamlett_profile.jpg",
+      "path": "assets/images/Kevin Hamlett_profile.jpg",
+      "has_image": true,
+      "display_path": "assets/images/Kevin Hamlett_profile.jpg",
+      "match_confidence": 100
+    },
+    "performance_ratings": {
+      "communication": null,
+      "collaboration": null,
+      "professionalism": null,
+      "technical_knowledge_expertise": null,
+      "workflow_implementation_management_execution": null,
+      "overall_performance": null
+    },
+    "performance_comments": {
+      "communication_comments": "I'm naturally an introverted person; however, I have no problem voicing my opinion on design-related issues. I feel that this is very important in maintaining a high level of quality for our projects. I am happy to be leading a lot of our international exterior & interior work.",
+      "collaboration_comments": null,
+      "professionalism_comments": null,
+      "technical_knowledge_expertise_comments": null,
+      "workflow_implementation_management_execution_comments": null
+    },
+    "software_proficiency": {
+      "revit": "3 (Meets Expectations)",
+      "rhino": "3 (Meets Expectations)",
+      "enscape": "2 (Needs to Improve)",
+      "d5": "2 (Needs to Improve)",
+      "vantage_point": "0 (Not Applicable)",
+      "deltek_adp": "5 (Exceptional)",
+      "newforma": "3 (Meets Expectations)",
+      "bluebeam": "5 (Exceptional)",
+      "grasshopper": "2 (Needs to Improve)",
+      "word": "5 (Exceptional)",
+      "powerpoint": "0 (Not Applicable)",
+      "excel": "3 (Meets Expectations)",
+      "illustrator": "2 (Needs to Improve)",
+      "photoshop": "2 (Needs to Improve)",
+      "indesign": "5 (Exceptional)"
+    },
+    "additional_evaluation_data": {
+      "performance_examples": null,
+      "additional_resources": null,
+      "employee_strengths": null,
+      "areas_for_growth": null,
+      "studio_culture_feedback": null,
+      "software_tools_feedback": null
+    },
+    "data_sources": [
+      "excel_parser"
+    ],
+    "last_updated": null
+  }
+]
