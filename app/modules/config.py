@@ -26,8 +26,8 @@ class Config:
     JSON_OUTPUT_FILE = "assets/data/employee_data.json"
     IMAGE_MAPPINGS_FILE = "assets/data/image_mappings.json"
     
-    # Image processing paths
-    IMAGE_SOURCE_DIR = "C:/Users/szhang/github/EmployeeData/assets/images"
+    # Image processing paths - cross-platform compatible
+    IMAGE_SOURCE_DIR = os.path.join(os.path.expanduser("~"), "github", "EmployeeData", "assets", "images")
     IMAGE_TARGET_DIR = "assets/images"
     
     # Website generation paths
