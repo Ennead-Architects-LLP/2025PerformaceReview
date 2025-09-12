@@ -1,1 +1,50 @@
-{}
+{
+  "Brett Fabrikant": {
+    "filename": null,
+    "confidence": null,
+    "copied": false,
+    "error": null
+  },
+  "Xinya Li": {
+    "filename": null,
+    "confidence": null,
+    "copied": false,
+    "error": null
+  },
+  "Leah Li": {
+    "filename": "Leah Li_profile.jpg",
+    "confidence": 100,
+    "copied": true,
+    "error": null
+  },
+  "Vivian Zhan": {
+    "filename": null,
+    "confidence": null,
+    "copied": false,
+    "error": null
+  },
+  "Matthew Hitscherich": {
+    "filename": "Matt Hitscherich_profile.jpg",
+    "confidence": 91,
+    "copied": true,
+    "error": null
+  },
+  "Clayton Kaul": {
+    "filename": "Clayton Kaul_profile.jpg",
+    "confidence": 100,
+    "copied": true,
+    "error": null
+  },
+  "Regina Jiang": {
+    "filename": "Regina Jiang_profile.jpg",
+    "confidence": 100,
+    "copied": true,
+    "error": null
+  },
+  "R. Kevin Hamlett": {
+    "filename": "Kevin Hamlett_profile.jpg",
+    "confidence": 93,
+    "copied": true,
+    "error": null
+  }
+}

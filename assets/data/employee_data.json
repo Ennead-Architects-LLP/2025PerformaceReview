@@ -43,7 +43,10 @@
     ],
     "excel": "4 (Exceeds Expectations)",
     "id": "16",
+    "image_match_confidence": null,
     "last_updated": null,
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "start_time": "2025-09-09 13:30:24"
   },
   {
@@ -90,7 +93,10 @@
     ],
     "excel": "4 (Exceeds Expectations)",
     "id": "17",
+    "image_match_confidence": null,
     "last_updated": null,
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "start_time": "2025-09-09 21:58:17"
   },
   {
@@ -137,7 +143,10 @@
     ],
     "excel": "3 (Meets Expectations)",
     "id": "18",
+    "image_match_confidence": 100,
     "last_updated": null,
+    "profile_image_filename": "Leah Li_profile.jpg",
+    "profile_image_path": "assets/images/Leah Li_profile.jpg",
     "start_time": "2025-09-09 21:46:46"
   },
   {
@@ -183,7 +192,10 @@
     ],
     "excel": "3 (Meets Expectations)",
     "id": "19",
+    "image_match_confidence": null,
     "last_updated": null,
+    "profile_image_filename": null,
+    "profile_image_path": null,
     "start_time": "2025-09-10 08:43:14"
   },
   {
@@ -229,7 +241,10 @@
     ],
     "excel": "0 (Not Applicable)",
     "id": "20",
+    "image_match_confidence": 91,
     "last_updated": null,
+    "profile_image_filename": "Matt Hitscherich_profile.jpg",
+    "profile_image_path": "assets/images/Matt Hitscherich_profile.jpg",
     "start_time": "2025-09-10 13:04:34"
   },
   {
@@ -276,7 +291,10 @@
     ],
     "excel": "4 (Exceeds Expectations)",
     "id": "21",
+    "image_match_confidence": 100,
     "last_updated": null,
+    "profile_image_filename": "Clayton Kaul_profile.jpg",
+    "profile_image_path": "assets/images/Clayton Kaul_profile.jpg",
     "start_time": "2025-09-10 17:21:53"
   },
   {
@@ -323,7 +341,10 @@
     ],
     "excel": "3 (Meets Expectations)",
     "id": "22",
+    "image_match_confidence": 100,
     "last_updated": null,
+    "profile_image_filename": "Regina Jiang_profile.jpg",
+    "profile_image_path": "assets/images/Regina Jiang_profile.jpg",
     "start_time": "2025-09-11 04:30:02"
   },
   {
@@ -370,7 +391,10 @@
     ],
     "excel": "3 (Meets Expectations)",
     "id": "23",
+    "image_match_confidence": 93,
     "last_updated": null,
+    "profile_image_filename": "Kevin Hamlett_profile.jpg",
+    "profile_image_path": "assets/images/Kevin Hamlett_profile.jpg",
     "start_time": "2025-09-11 10:42:25"
   }
 ]

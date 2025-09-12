@@ -238,13 +238,15 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
             });
         }
         
-        // Show/hide button based on scroll position
+        // Show/hide button based on scroll position with smooth transitions
         window.addEventListener('scroll', function() {
             const returnToTopButton = document.getElementById('returnToTop');
-            if (window.pageYOffset > 300) {
-                returnToTopButton.style.display = 'block';
+            const scrollThreshold = 150; // Reduced threshold for earlier appearance
+            
+            if (window.pageYOffset > scrollThreshold) {
+                returnToTopButton.classList.add('show');
             } else {
-                returnToTopButton.style.display = 'none';
+                returnToTopButton.classList.remove('show');
             }
         });
     </script>
@@ -255,43 +257,11 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
 
 
 def generate_analytics_content(employees: List[Employee]) -> str:
-    """Generate analytics content with charts and statistics."""
-    # Calculate performance statistics
-    performance_stats = calculate_performance_stats(employees)
-    
+    """Generate analytics content with charts."""
     # Generate charts HTML
     charts_html = generate_charts_for_employees(employees)
     
-    return f"""
-        <div class="analytics-section">
-            <h2>Performance Analytics</h2>
-            
-            <!-- Performance Statistics -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Total Employees</h3>
-                    <div class="stat-value">{len(employees)}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Average Rating</h3>
-                    <div class="stat-value">{performance_stats['average_rating']:.1f}/5</div>
-                </div>
-                <div class="stat-card">
-                    <h3>High Performers</h3>
-                    <div class="stat-value">{performance_stats['high_performers']}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Needs Improvement</h3>
-                    <div class="stat-value">{performance_stats['needs_improvement']}</div>
-                </div>
-            </div>
-            
-            <!-- Charts -->
-            <div class="charts-container">
-                {charts_html}
-            </div>
-        </div>
-    """
+    return charts_html
 
 
 def calculate_performance_stats(employees: List[Employee]) -> Dict[str, Any]:
@@ -350,150 +320,109 @@ def calculate_performance_stats(employees: List[Employee]) -> Dict[str, Any]:
 
 
 def generate_charts_for_employees(employees: List[Employee]) -> str:
-    """Generate Chart.js charts for employee analytics using actual data."""
+    """Generate Chart.js charts for employee analytics using ChartType data."""
     # Calculate chart data from employee data
     chart_data = calculate_chart_data(employees)
     
-    return f"""
-        <div class="chart-container">
-            <div class="chart">
-                <h3>Performance Rating Distribution</h3>
-                <div style="position: relative; height: 300px;">
-                    <canvas id="performanceChart"></canvas>
-                </div>
-            </div>
-        </div>
+    # Generate individual chart HTML for each field
+    charts_html = ""
+    for field_name, field_data in chart_data.items():
+        # Create a clean chart title
+        chart_title = field_name.replace('_FOR_TEST', '').replace('_', ' ').title()
+        # Create consistent chart ID that matches the JavaScript transformation
+        chart_id = f"chart-{field_name.lower().replace(' ', '_').replace('&', '').replace(',', '').replace('__', '_')}"
         
-        <div class="chart-container">
-            <div class="chart">
-                <h3>Software Proficiency</h3>
-                <div style="position: relative; height: 300px;">
-                    <canvas id="softwareChart"></canvas>
-                </div>
+        charts_html += f"""
+        <div class="chart">
+            <h3>{chart_title}</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="{chart_id}"></canvas>
             </div>
         </div>
+        """
+    
+    return f"""
+        {charts_html}
         
         <script>
             // Chart data from actual employee data
             const chartData = {json.dumps(chart_data)};
             
-            // Performance Rating Distribution Chart
-            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
-            new Chart(performanceCtx, {{
-                type: 'doughnut',
-                data: {{
-                    labels: Object.keys(chartData.performance_ratings),
-                    datasets: [{{
-                        data: Object.values(chartData.performance_ratings),
-                        backgroundColor: [
-                            'rgba(43, 122, 120, 0.8)',
-                            'rgba(26, 90, 88, 0.8)',
-                            'rgba(15, 20, 25, 0.8)',
-                            'rgba(58, 175, 169, 0.8)',
-                            'rgba(74, 74, 74, 0.8)'
-                        ],
-                        borderColor: [
-                            'rgba(43, 122, 120, 1)',
-                            'rgba(26, 90, 88, 1)',
-                            'rgba(15, 20, 25, 1)',
-                            'rgba(58, 175, 169, 1)',
-                            'rgba(74, 74, 74, 1)'
-                        ],
-                        borderWidth: 2,
-                        hoverOffset: 10
-                    }}]
-                }},
-                options: {{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {{
-                        legend: {{
-                            position: 'bottom',
-                            labels: {{
-                                padding: 20,
-                                usePointStyle: true
+            // Initialize all charts
+            function initializeCharts() {{
+                Object.keys(chartData).forEach(field => {{
+                    const canvas = document.getElementById(`chart-${{field.toLowerCase().replace(/\\s+/g, '_').replace(/&/g, '').replace(/,/g, '').replace(/__/g, '_')}}`);
+                    if (canvas) {{
+                        const ctx = canvas.getContext('2d');
+                        const data = chartData[field];
+                        
+                        new Chart(ctx, {{
+                            type: 'doughnut',
+                            data: {{
+                                labels: Object.keys(data),
+                                datasets: [{{
+                                    data: Object.values(data),
+                                    backgroundColor: [
+                                        'rgba(43, 122, 120, 0.8)',
+                                        'rgba(26, 90, 88, 0.8)',
+                                        'rgba(15, 20, 25, 0.8)',
+                                        'rgba(58, 175, 169, 0.8)',
+                                        'rgba(74, 74, 74, 0.8)',
+                                        'rgba(240, 248, 247, 0.8)',
+                                        'rgba(224, 232, 231, 0.8)',
+                                        'rgba(43, 122, 120, 0.6)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(43, 122, 120, 1)',
+                                        'rgba(26, 90, 88, 1)',
+                                        'rgba(15, 20, 25, 1)',
+                                        'rgba(58, 175, 169, 1)',
+                                        'rgba(74, 74, 74, 1)',
+                                        'rgba(240, 248, 247, 1)',
+                                        'rgba(224, 232, 231, 1)',
+                                        'rgba(43, 122, 120, 1)'
+                                    ],
+                                    borderWidth: 2,
+                                    hoverOffset: 10
+                                }}]
+                            }},
+                            options: {{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {{
+                                    legend: {{
+                                        position: 'bottom',
+                                        labels: {{
+                                            padding: 20,
+                                            usePointStyle: true,
+                                            font: {{
+                                                family: 'Inter',
+                                                size: 12
+                                            }}
+                                        }}
+                                    }},
+                                    tooltip: {{
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                        titleColor: 'white',
+                                        bodyColor: 'white',
+                                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                                        borderWidth: 1,
+                                        cornerRadius: 8,
+                                        displayColors: true
+                                    }}
+                                }},
+                                cutout: '60%',
+                                animation: {{
+                                    animateRotate: true,
+                                    animateScale: true,
+                                    duration: 1000,
+                                    easing: 'easeOutQuart'
+                                }}
                             }}
-                        }},
-                        tooltip: {{
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: 'white',
-                            bodyColor: 'white',
-                            borderColor: 'rgba(255, 255, 255, 0.1)',
-                            borderWidth: 1,
-                            cornerRadius: 8
-                        }}
-                    }},
-                    cutout: '60%',
-                    animation: {{
-                        animateRotate: true,
-                        animateScale: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
+                        }});
                     }}
-                }}
-            }});
-            
-            // Software Proficiency Chart
-            const softwareCtx = document.getElementById('softwareChart').getContext('2d');
-            new Chart(softwareCtx, {{
-                type: 'doughnut',
-                data: {{
-                    labels: Object.keys(chartData.software_tools),
-                    datasets: [{{
-                        data: Object.values(chartData.software_tools),
-                        backgroundColor: [
-                            'rgba(43, 122, 120, 0.8)',
-                            'rgba(26, 90, 88, 0.8)',
-                            'rgba(15, 20, 25, 0.8)',
-                            'rgba(58, 175, 169, 0.8)',
-                            'rgba(74, 74, 74, 0.8)',
-                            'rgba(240, 248, 247, 0.8)',
-                            'rgba(224, 232, 231, 0.8)',
-                            'rgba(43, 122, 120, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(43, 122, 120, 1)',
-                            'rgba(26, 90, 88, 1)',
-                            'rgba(15, 20, 25, 1)',
-                            'rgba(58, 175, 169, 1)',
-                            'rgba(74, 74, 74, 1)',
-                            'rgba(240, 248, 247, 1)',
-                            'rgba(224, 232, 231, 1)',
-                            'rgba(43, 122, 120, 1)'
-                        ],
-                        borderWidth: 2,
-                        hoverOffset: 10
-                    }}]
-                }},
-                options: {{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {{
-                        legend: {{
-                            position: 'bottom',
-                            labels: {{
-                                padding: 20,
-                                usePointStyle: true
-                            }}
-                        }},
-                        tooltip: {{
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: 'white',
-                            bodyColor: 'white',
-                            borderColor: 'rgba(255, 255, 255, 0.1)',
-                            borderWidth: 1,
-                            cornerRadius: 8
-                        }}
-                    }},
-                    cutout: '60%',
-                    animation: {{
-                        animateRotate: true,
-                        animateScale: true,
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    }}
-                }}
-            }});
+                }});
+            }}
         </script>
     """
 
@@ -1103,8 +1032,8 @@ def get_css_styles() -> str:
             position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 50px;
-            height: 50px;
+            width: 56px;
+            height: 56px;
             background: linear-gradient(135deg, #3AAFA9, #2B7A78);
             border: none;
             border-radius: 50%;
@@ -1112,25 +1041,40 @@ def get_css_styles() -> str:
             font-size: 20px;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(45, 122, 120, 0.3);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.8);
         }
         
         .return-to-top:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(45, 122, 120, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(45, 122, 120, 0.4);
             background: linear-gradient(135deg, #2B7A78, #1A5A58);
         }
         
         .return-to-top:active {
-            transform: translateY(0);
+            transform: translateY(-1px) scale(1.02);
         }
         
         .return-to-top.show {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+        
+        @media (max-width: 768px) {
+            .return-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
         }
         
         .field-label {
@@ -1174,6 +1118,24 @@ def get_css_styles() -> str:
         .rating-field .field-value {
             font-weight: 600;
             color: #1A5A58;
+        }
+
+        .rating-complex-field .field-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rating-complex-field .rating-number {
+            font-weight: 700;
+            color: #1A1A1A;
+            font-size: 1.1rem;
+        }
+
+        .rating-complex-field .rating-description {
+            font-size: 0.9rem;
+            color: #6B7280;
+            font-weight: 400;
         }
 
         .multiline-field .field-value {
@@ -1587,6 +1549,8 @@ def generate_field_html(mapping, field_value: str) -> str:
     # Generate HTML based solely on CardType
     if mapping.data_type_in_card == CardType.RATING_NUM:
         return generate_rating_field_html(display_label, field_value)
+    elif mapping.data_type_in_card == CardType.RATING_COMPLEX:
+        return generate_rating_complex_field_html(display_label, field_value)
     elif mapping.data_type_in_card == CardType.MULTILINE_TEXT:
         return generate_multiline_field_html(display_label, field_value)
     elif mapping.data_type_in_card == CardType.TEXT:
@@ -1626,6 +1590,30 @@ def generate_rating_field_html(display_label: str, field_value: str) -> str:
         return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value"><div class="rating-shapes">{rating_shapes}</div><span class="rating-description">{rating_desc}</span></div></div>'
     else:
         return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value"><div class="rating-shapes">{rating_shapes}</div></div></div>'
+
+
+def generate_rating_complex_field_html(display_label: str, field_value: str) -> str:
+    """Generate HTML for complex rating fields using bold number + grey description method."""
+    if not field_value:
+        return f'<div class="field rating-complex-field"><div class="field-label">{display_label}</div><div class="field-value empty-rating">Not rated</div></div>'
+
+    # Parse rating number and description (1-5 scale)
+    try:
+        if '(' in field_value and ')' in field_value:
+            rating_num = int(field_value.split('(')[0].strip())
+            rating_desc = '(' + field_value.split('(')[1]
+        else:
+            rating_num = int(field_value.strip())
+            rating_desc = ""
+    except (ValueError, IndexError):
+        # Fallback if parsing fails
+        return f'<div class="field rating-complex-field"><div class="field-label">{display_label}</div><div class="field-value">{field_value}</div></div>'
+
+    # Generate bold number + grey description format
+    if rating_desc:
+        return f'<div class="field rating-complex-field"><div class="field-label">{display_label}</div><div class="field-value"><span class="rating-number">{rating_num}</span><span class="rating-description">{rating_desc}</span></div></div>'
+    else:
+        return f'<div class="field rating-complex-field"><div class="field-label">{display_label}</div><div class="field-value"><span class="rating-number">{rating_num}</span></div></div>'
 
 
 def generate_multiline_field_html(display_label: str, field_value: str) -> str:
@@ -2012,7 +2000,7 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
             const progressionFields = ['date_of_evaluation'];
 
             Object.keys(chartData).forEach(field => {{
-                const canvas = document.getElementById(`chart-${{field}}`);
+                const canvas = document.getElementById(`chart-${{field.toLowerCase().replace(/\\s+/g, '_').replace(/&/g, '').replace(/,/g, '').replace(/__/g, '_')}}`);
                 if (canvas) {{
                     const ctx = canvas.getContext('2d');
                     const data = chartData[field];
@@ -2193,10 +2181,12 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
             }});
         }}
         
-        // Show/hide return to top button based on scroll position
+        // Show/hide return to top button based on scroll position with smooth transitions
         window.addEventListener('scroll', function() {{
             const returnToTop = document.querySelector('.return-to-top');
-            if (window.pageYOffset > 300) {{
+            const scrollThreshold = 150; // Reduced threshold for earlier appearance
+            
+            if (window.pageYOffset > scrollThreshold) {{
                 returnToTop.classList.add('show');
             }} else {{
                 returnToTop.classList.remove('show');

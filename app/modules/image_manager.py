@@ -197,10 +197,19 @@ class ImageManager:
         
         for employee in employees:
             # Handle both Employee objects and dictionaries
-            if hasattr(employee, 'name'):
-                employee_name = employee.name
-            else:
+            employee_name = None
+            
+            if hasattr(employee, 'get'):
+                # Dictionary object
                 employee_name = employee.get('name', '')
+            else:
+                # Employee object - look for name attributes
+                for attr_name in dir(employee):
+                    if not attr_name.startswith('_') and 'name' in attr_name.lower():
+                        attr_value = getattr(employee, attr_name)
+                        if attr_value and not callable(attr_value):
+                            employee_name = str(attr_value)
+                            break
             
             if not employee_name:
                 continue

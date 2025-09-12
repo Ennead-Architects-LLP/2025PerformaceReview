@@ -14,6 +14,7 @@ from .html_generator import create_html_output_from_employees
 from .excel_parser import parse_excel_to_employees
 from .utils import log_info, log_error, log_warning, ensure_output_directory
 from .config import Config
+from .employee import Employee
 
 
 class EmployeeEvaluationOrchestrator:
@@ -66,20 +67,48 @@ class EmployeeEvaluationOrchestrator:
         log_info(f"Output directory: {output_dir}")
     
     def _parse_data(self) -> None:
-        """Parse Excel data to Employee objects."""
+        """Parse Excel data to Employee objects with image processing."""
         log_info("Parsing Excel data...")
 
-        # Parse Excel to Employee objects
+        # Parse Excel to Employee objects with image processing
         excel_path = Config.get_excel_input_path()
-
-        self.employees = parse_excel_to_employees(excel_path)
-        if not self.employees:
+        json_path = Config.get_json_output_path()
+        
+        # Use the full pipeline that includes image processing
+        from .excel_parser import parse_excel_to_json
+        success = parse_excel_to_json(excel_path, json_path, copy_images=True)
+        
+        if not success:
             raise ValueError("Failed to parse Excel data!")
+        
+        # Load the employees from the JSON file (which now includes image data)
+        self.employees = self._load_employees_from_json(json_path)
+        if not self.employees:
+            raise ValueError("Failed to load employee data!")
 
-        log_info(f"Successfully parsed {len(self.employees)} employee records from Excel")
+        log_info(f"Successfully parsed {len(self.employees)} employee records from Excel with image processing")
 
-        # Optionally save to JSON for debugging/reference
-        self._save_employee_data_json()
+        # JSON is already saved by parse_excel_to_json, so no need to save again
+
+    def _load_employees_from_json(self, json_path: str) -> List[Employee]:
+        """Load Employee objects from JSON file."""
+        try:
+            import json
+            from .employee import Employee
+            
+            with open(json_path, 'r', encoding='utf-8') as f:
+                employee_data_list = json.load(f)
+            
+            employees = []
+            for emp_data in employee_data_list:
+                employee = Employee(emp_data)
+                employees.append(employee)
+            
+            return employees
+            
+        except Exception as e:
+            log_error(f"Failed to load employees from JSON: {e}")
+            return []
 
     def _save_employee_data_json(self) -> None:
         """Save employee data to JSON for reference (optional)."""

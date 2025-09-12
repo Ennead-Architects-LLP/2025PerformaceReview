@@ -352,8 +352,8 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 50px;
-            height: 50px;
+            width: 56px;
+            height: 56px;
             background: linear-gradient(135deg, #3AAFA9, #2B7A78);
             border: none;
             border-radius: 50%;
@@ -361,25 +361,40 @@
             font-size: 20px;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(45, 122, 120, 0.3);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.8);
         }
         
         .return-to-top:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(45, 122, 120, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(45, 122, 120, 0.4);
             background: linear-gradient(135deg, #2B7A78, #1A5A58);
         }
         
         .return-to-top:active {
-            transform: translateY(0);
+            transform: translateY(-1px) scale(1.02);
         }
         
         .return-to-top.show {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+        
+        @media (max-width: 768px) {
+            .return-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
         }
         
         .field-label {
@@ -423,6 +438,24 @@
         .rating-field .field-value {
             font-weight: 600;
             color: #1A5A58;
+        }
+
+        .rating-complex-field .field-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rating-complex-field .rating-number {
+            font-weight: 700;
+            color: #1A1A1A;
+            font-size: 1.1rem;
+        }
+
+        .rating-complex-field .rating-description {
+            font-size: 0.9rem;
+            color: #6B7280;
+            font-weight: 400;
         }
 
         .multiline-field .field-value {

@@ -115,21 +115,21 @@ class HeaderMapper:
         
         # Software Tools Group (columns 19-33)
         software_mappings = [
-            (19, "Revit", "Revit_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 1),
-            (20, "Rhino", "Rhino_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 2),
-            (21, "Enscape", "Enscape_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 3),
-            (22, "D5", "D5_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 4),
-            (23, "Vantage Point", "Vantage Point_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 5),
-            (24, "Deltek/ADP", "Deltek/ADP_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 6),
-            (25, "Newforma", "Newforma_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 7),
-            (26, "Bluebeam", "Bluebeam_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 8),
-            (27, "Grasshopper", "Grasshopper_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 9),
-            (28, "Word", "Word_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 10),
-            (29, "Powerpoint", "Powerpoint_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 11),
-            (30, "Excel", "excel", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 12),
-            (31, "Illustrator", "Illustrator_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 13),
-            (32, "Photoshop", "Photoshop_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 14),
-            (33, "Indesign", "Indesign_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_NUM, ChartType.DONUT, 15),
+            (19, "Revit", "Revit_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 1),
+            (20, "Rhino", "Rhino_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 2),
+            (21, "Enscape", "Enscape_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 3),
+            (22, "D5", "D5_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 4),
+            (23, "Vantage Point", "Vantage Point_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 5),
+            (24, "Deltek/ADP", "Deltek/ADP_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 6),
+            (25, "Newforma", "Newforma_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 7),
+            (26, "Bluebeam", "Bluebeam_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 8),
+            (27, "Grasshopper", "Grasshopper_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 9),
+            (28, "Word", "Word_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 10),
+            (29, "Powerpoint", "Powerpoint_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 11),
+            (30, "Excel", "excel", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 12),
+            (31, "Illustrator", "Illustrator_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 13),
+            (32, "Photoshop", "Photoshop_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 14),
+            (33, "Indesign", "Indesign_FOR_TEST", CardGroup.SOFTWARE_TOOLS, CardType.RATING_COMPLEX, ChartType.DONUT, 15),
         ]
         
         # Employee Development Group (columns 34-35)

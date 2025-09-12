@@ -358,13 +358,22 @@ def parse_excel_to_json(excel_path: str, output_path: str = None,
             
             # Update employee objects with image information
             for employee in employees:
-                emp_name = getattr(employee, 'employee_name', '')
-                if emp_name in image_mappings:
+                # Find the employee name from the available name attributes
+                emp_name = None
+                for attr_name in dir(employee):
+                    if not attr_name.startswith('_') and 'name' in attr_name.lower():
+                        attr_value = getattr(employee, attr_name)
+                        if attr_value and not callable(attr_value):
+                            emp_name = str(attr_value)
+                            break
+                
+                if emp_name and emp_name in image_mappings:
                     image_info = image_mappings[emp_name]
                     if image_info['filename'] and image_info['copied']:
                         setattr(employee, 'profile_image_filename', image_info['filename'])
                         setattr(employee, 'profile_image_path', f"{Config.IMAGE_TARGET_DIR}/{image_info['filename']}")
                         setattr(employee, 'image_match_confidence', image_info['confidence'])
+                        print(f"✅ Set image for {emp_name}: {image_info['filename']}")
                     else:
                         setattr(employee, 'profile_image_filename', None)
                         setattr(employee, 'profile_image_path', None)
@@ -394,6 +403,7 @@ def parse_excel_to_json(excel_path: str, output_path: str = None,
     employee_manager = EmployeeManager()
     for employee in employees:
         employee_manager.add_employee(employee)
+    
     
     if not employee_manager.save_to_json(output_path):
         return False

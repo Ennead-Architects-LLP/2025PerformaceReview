@@ -27,7 +27,7 @@ class Config:
     IMAGE_MAPPINGS_FILE = "assets/data/image_mappings.json"
     
     # Image processing paths
-    IMAGE_SOURCE_DIR = "C:/Users/szhang/github/EmployeeData/assets/images"
+    IMAGE_SOURCE_DIR = "assets/images"
     IMAGE_TARGET_DIR = "assets/images"
     
     # Website generation paths
@@ -161,7 +161,7 @@ class Config:
     @classmethod
     def get_image_source_path(cls) -> str:
         """Get the image source directory path."""
-        return cls.IMAGE_SOURCE_DIR
+        return os.path.join(cls.PROJECT_ROOT, cls.IMAGE_SOURCE_DIR)
     
     @classmethod
     def get_image_target_path(cls) -> str:
