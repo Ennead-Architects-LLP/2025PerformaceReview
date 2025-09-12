@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Evaluation Report</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="background-container"></div>
@@ -13,7 +14,28 @@
             <h1>Employee Evaluation Report</h1>
             <div class="report-description">Questions designed and handed out by Wilmarie Morales. Data visualization by DesignTechnology.</div>
         </div>
-        <div id="employee-list">
+        
+        <!-- Search Container -->
+        <div class="search-container">
+            <input type="text" id="searchBox" class="search-box" placeholder="Search employees by name, role, or email...">
+            <div class="search-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab active" data-tab="employees">Employee Cards</button>
+            <button class="tab" data-tab="analytics">Analytics</button>
+            <button class="tab" data-tab="comments">Comments</button>
+        </div>
+        
+        <!-- Tab Content -->
+        <div class="tab-content active" id="employees-tab">
+            <div id="employee-list">
 
         <div class="employee-card">
             <div class="employee-header">
@@ -173,6 +195,128 @@ We need to continue growing the design strengths that could adapt with the curre
             </div>
         </div>
         
+            </div>
+        </div>
+        
+        <div class="tab-content" id="analytics-tab">
+
+        <div class="analytics-section">
+            <h2>Performance Analytics</h2>
+            
+            <!-- Performance Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Employees</h3>
+                    <div class="stat-value">8</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Average Rating</h3>
+                    <div class="stat-value">0.0/5</div>
+                </div>
+                <div class="stat-card">
+                    <h3>High Performers</h3>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Needs Improvement</h3>
+                    <div class="stat-value">0</div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div class="charts-container">
+                
+        <div class="chart-container">
+            <canvas id="performanceChart" width="400" height="200"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="softwareChart" width="400" height="200"></canvas>
+        </div>
+        
+        <script>
+            // Performance Rating Distribution Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(performanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
+                    datasets: [{
+                        label: 'Number of Employees',
+                        data: [2, 1, 3, 8, 12], // This would be calculated from actual data
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(255, 159, 64, 0.8)',
+                            'rgba(255, 205, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(54, 162, 235, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 205, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Performance Rating Distribution'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Software Proficiency Chart
+            const softwareCtx = document.getElementById('softwareChart').getContext('2d');
+            new Chart(softwareCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Excel', 'Word', 'PowerPoint', 'Revit', 'Rhino'],
+                    datasets: [{
+                        data: [20, 18, 15, 8, 5], // This would be calculated from actual data
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(255, 205, 86, 0.8)',
+                            'rgba(255, 159, 64, 0.8)',
+                            'rgba(255, 99, 132, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Software Proficiency Distribution'
+                        }
+                    }
+                }
+            });
+        </script>
+    
+            </div>
+        </div>
+    
+        </div>
+        
+        <div class="tab-content" id="comments-tab">
+            <div class="comments-section">
+                <h2>Employee Comments & Feedback</h2>
+                <div id="comments-list">
+                    <!-- Comments will be populated by JavaScript -->
+                </div>
+            </div>
         </div>
         
         <!-- Return to Top Button -->
@@ -184,6 +328,58 @@ We need to continue growing the design strengths that could adapt with the curre
     </div>
     
     <script>
+        // Search functionality
+        function filterEmployees() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const employeeCards = document.querySelectorAll('.employee-card');
+            
+            employeeCards.forEach(card => {
+                const name = card.querySelector('.employee-name')?.textContent.toLowerCase() || '';
+                const role = card.querySelector('.field-value')?.textContent.toLowerCase() || '';
+                const email = card.querySelector('.field-value')?.textContent.toLowerCase() || '';
+                
+                if (name.includes(searchTerm) || role.includes(searchTerm) || email.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        // Initialize tab event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    showTab(tabName);
+                });
+            });
+            
+            // Initialize search
+            document.getElementById('searchBox').addEventListener('input', filterEmployees);
+            
+            // Initialize return to top button as hidden
+            document.getElementById('returnToTop').style.display = 'none';
+        });
+        
         // Return to Top functionality
         function scrollToTop() {
             window.scrollTo({
@@ -200,11 +396,6 @@ We need to continue growing the design strengths that could adapt with the curre
             } else {
                 returnToTopButton.style.display = 'none';
             }
-        });
-        
-        // Initialize button as hidden
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('returnToTop').style.display = 'none';
         });
     </script>
 </body>

@@ -87,6 +87,9 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
     """Generate HTML template from Employee objects, using mapped headers for grouping."""
     # Generate employee cards
     cards_html = generate_employee_cards(employees)
+    
+    # Generate analytics data
+    analytics_html = generate_analytics_content(employees)
 
     # HTML template with external CSS link
     html_template = '''<!DOCTYPE html>
@@ -96,6 +99,7 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Evaluation Report</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="background-container"></div>
@@ -104,8 +108,32 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
             <h1>Employee Evaluation Report</h1>
             <div class="report-description">Questions designed and handed out by Wilmarie Morales. Data visualization by DesignTechnology.</div>
         </div>
-        <div id="employee-list">
+        
+        <!-- Search Container -->
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Search by employee name..." onkeyup="filterEmployees()">
+            <div class="search-icon">
+                <img src="https://img.icons8.com/?size=100&id=e4NkZ7kWAD7f&format=png&color=000000" alt="Search" style="width: 20px; height: 20px;">
+            </div>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('detailed')">Detailed View</button>
+            <button class="tab" onclick="showTab('summary')">Summary Charts</button>
+        </div>
+        
+        <!-- Tab Content -->
+        <div id="detailed" class="tab-content active">
+            <div id="employee-list" class="employee-grid">
 ''' + cards_html + '''
+            </div>
+        </div>
+        
+        <div id="summary" class="tab-content">
+            <div class="chart-container">
+''' + analytics_html + '''
+            </div>
         </div>
         
         <!-- Return to Top Button -->
@@ -117,6 +145,91 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
     </div>
     
     <script>
+        // Employee data for charts and search
+        const employees = ''' + json.dumps([employee.__dict__ for employee in employees]) + ''';
+        
+        // Search functionality
+        function filterEmployees() {
+            const searchBox = document.querySelector('.search-box');
+            const searchIcon = document.querySelector('.search-icon');
+            const searchTerm = searchBox.value.toLowerCase();
+            const employeeCards = document.querySelectorAll('.employee-card');
+            
+            // Show/hide search icon based on input content
+            const searchIconImg = searchIcon.querySelector('img');
+            if (searchTerm.length > 0) {
+                searchIcon.style.opacity = '0.3';
+                searchIcon.style.animation = 'none';
+                if (searchIconImg) {
+                    searchIconImg.style.filter = 'opacity(0.5)';
+                }
+            } else {
+                searchIcon.style.opacity = '0.5';
+                searchIcon.style.animation = 'searchPulse 2s ease-in-out infinite';
+                if (searchIconImg) {
+                    searchIconImg.style.filter = 'opacity(0.7)';
+                }
+            }
+            
+            employeeCards.forEach(card => {
+                const name = card.querySelector('.employee-name').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show no results message if no cards are visible
+            const visibleCards = Array.from(employeeCards).filter(card => card.style.display !== 'none');
+            let noResults = document.getElementById('no-results');
+            if (visibleCards.length === 0 && searchTerm) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.id = 'no-results';
+                    noResults.className = 'no-results';
+                    noResults.innerHTML = `
+                        <div class="no-results-message">
+                            <div>No employees found matching "` + searchTerm + `"</div>
+                            <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.7;">Try adjusting your search terms</div>
+                        </div>
+                    `;
+                    document.getElementById('employee-list').appendChild(noResults);
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
+        }
+        
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Initialize charts if summary tab is selected
+            if (tabName === 'summary') {
+                setTimeout(initializeCharts, 100);
+            }
+        }
+        
+        // Initialize charts function
+        function initializeCharts() {
+            // Charts will be initialized by the embedded chart scripts
+        }
+        
         // Return to Top functionality
         function scrollToTop() {
             window.scrollTo({
@@ -134,16 +247,305 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
                 returnToTopButton.style.display = 'none';
             }
         });
-        
-        // Initialize button as hidden
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('returnToTop').style.display = 'none';
-        });
     </script>
 </body>
 </html>'''
 
     return html_template
+
+
+def generate_analytics_content(employees: List[Employee]) -> str:
+    """Generate analytics content with charts and statistics."""
+    # Calculate performance statistics
+    performance_stats = calculate_performance_stats(employees)
+    
+    # Generate charts HTML
+    charts_html = generate_charts_for_employees(employees)
+    
+    return f"""
+        <div class="analytics-section">
+            <h2>Performance Analytics</h2>
+            
+            <!-- Performance Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Employees</h3>
+                    <div class="stat-value">{len(employees)}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Average Rating</h3>
+                    <div class="stat-value">{performance_stats['average_rating']:.1f}/5</div>
+                </div>
+                <div class="stat-card">
+                    <h3>High Performers</h3>
+                    <div class="stat-value">{performance_stats['high_performers']}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Needs Improvement</h3>
+                    <div class="stat-value">{performance_stats['needs_improvement']}</div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div class="charts-container">
+                {charts_html}
+            </div>
+        </div>
+    """
+
+
+def calculate_performance_stats(employees: List[Employee]) -> Dict[str, Any]:
+    """Calculate performance statistics from employee data."""
+    total_employees = len(employees)
+    high_performers = 0
+    needs_improvement = 0
+    total_rating = 0
+    rating_count = 0
+    
+    for employee in employees:
+        # Get overall performance rating from employee attributes
+        overall_rating = None
+        
+        # Look for overall performance rating attribute
+        for attr_name in dir(employee):
+            if 'overall' in attr_name.lower() and 'performance' in attr_name.lower() and 'rating' in attr_name.lower():
+                rating_value = getattr(employee, attr_name, None)
+                if rating_value and isinstance(rating_value, (int, float)):
+                    overall_rating = int(rating_value)
+                    break
+        
+        # If not found, try to calculate from individual ratings
+        if overall_rating is None:
+            rating_sum = 0
+            rating_count_individual = 0
+            
+            # Look for rating attributes
+            for attr_name in dir(employee):
+                if 'rating' in attr_name.lower() and not 'comment' in attr_name.lower():
+                    rating_value = getattr(employee, attr_name, None)
+                    if rating_value and isinstance(rating_value, (int, float)):
+                        rating_sum += int(rating_value)
+                        rating_count_individual += 1
+            
+            if rating_count_individual > 0:
+                overall_rating = round(rating_sum / rating_count_individual)
+        
+        if overall_rating:
+            total_rating += overall_rating
+            rating_count += 1
+            
+            if overall_rating >= 4:
+                high_performers += 1
+            elif overall_rating <= 2:
+                needs_improvement += 1
+    
+    average_rating = total_rating / rating_count if rating_count > 0 else 0
+    
+    return {
+        'total_employees': total_employees,
+        'average_rating': average_rating,
+        'high_performers': high_performers,
+        'needs_improvement': needs_improvement
+    }
+
+
+def generate_charts_for_employees(employees: List[Employee]) -> str:
+    """Generate Chart.js charts for employee analytics using actual data."""
+    # Calculate chart data from employee data
+    chart_data = calculate_chart_data(employees)
+    
+    return f"""
+        <div class="chart-container">
+            <div class="chart">
+                <h3>Performance Rating Distribution</h3>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart">
+                <h3>Software Proficiency</h3>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="softwareChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            // Chart data from actual employee data
+            const chartData = {json.dumps(chart_data)};
+            
+            // Performance Rating Distribution Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(performanceCtx, {{
+                type: 'doughnut',
+                data: {{
+                    labels: Object.keys(chartData.performance_ratings),
+                    datasets: [{{
+                        data: Object.values(chartData.performance_ratings),
+                        backgroundColor: [
+                            'rgba(43, 122, 120, 0.8)',
+                            'rgba(26, 90, 88, 0.8)',
+                            'rgba(15, 20, 25, 0.8)',
+                            'rgba(58, 175, 169, 0.8)',
+                            'rgba(74, 74, 74, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(43, 122, 120, 1)',
+                            'rgba(26, 90, 88, 1)',
+                            'rgba(15, 20, 25, 1)',
+                            'rgba(58, 175, 169, 1)',
+                            'rgba(74, 74, 74, 1)'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 10
+                    }}]
+                }},
+                options: {{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {{
+                        legend: {{
+                            position: 'bottom',
+                            labels: {{
+                                padding: 20,
+                                usePointStyle: true
+                            }}
+                        }},
+                        tooltip: {{
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            cornerRadius: 8
+                        }}
+                    }},
+                    cutout: '60%',
+                    animation: {{
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }}
+                }}
+            }});
+            
+            // Software Proficiency Chart
+            const softwareCtx = document.getElementById('softwareChart').getContext('2d');
+            new Chart(softwareCtx, {{
+                type: 'doughnut',
+                data: {{
+                    labels: Object.keys(chartData.software_tools),
+                    datasets: [{{
+                        data: Object.values(chartData.software_tools),
+                        backgroundColor: [
+                            'rgba(43, 122, 120, 0.8)',
+                            'rgba(26, 90, 88, 0.8)',
+                            'rgba(15, 20, 25, 0.8)',
+                            'rgba(58, 175, 169, 0.8)',
+                            'rgba(74, 74, 74, 0.8)',
+                            'rgba(240, 248, 247, 0.8)',
+                            'rgba(224, 232, 231, 0.8)',
+                            'rgba(43, 122, 120, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(43, 122, 120, 1)',
+                            'rgba(26, 90, 88, 1)',
+                            'rgba(15, 20, 25, 1)',
+                            'rgba(58, 175, 169, 1)',
+                            'rgba(74, 74, 74, 1)',
+                            'rgba(240, 248, 247, 1)',
+                            'rgba(224, 232, 231, 1)',
+                            'rgba(43, 122, 120, 1)'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 10
+                    }}]
+                }},
+                options: {{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {{
+                        legend: {{
+                            position: 'bottom',
+                            labels: {{
+                                padding: 20,
+                                usePointStyle: true
+                            }}
+                        }},
+                        tooltip: {{
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            cornerRadius: 8
+                        }}
+                    }},
+                    cutout: '60%',
+                    animation: {{
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }}
+                }}
+            }});
+        </script>
+    """
+
+
+def calculate_chart_data(employees: List[Employee]) -> Dict[str, Any]:
+    """Calculate chart data from employee data using ChartType information."""
+    from .header_mapper import header_mapper, ChartType
+    
+    chart_data = {}
+    
+    # Get all header mappings that should be shown in charts
+    chart_fields = []
+    for mapping_list in header_mapper.header_mappings_by_name.values():
+        for mapping in mapping_list:
+            if mapping.data_type_in_chart == ChartType.DONUT:
+                chart_fields.append(mapping)
+    
+    # Calculate data for each chart field
+    for mapping in chart_fields:
+        field_name = mapping.mapped_header
+        field_data = {}
+        
+        for employee in employees:
+            # Get the value for this field from the employee
+            field_value = getattr(employee, field_name, None)
+            
+            if field_value is not None:
+                # Convert to string for consistent grouping
+                if isinstance(field_value, (int, float)):
+                    if field_value == 0:
+                        value_key = "0 (Not Applicable)"
+                    elif field_value == 1:
+                        value_key = "1 (Unsatisfactory)"
+                    elif field_value == 2:
+                        value_key = "2 (Needs to Improve)"
+                    elif field_value == 3:
+                        value_key = "3 (Meets Expectations)"
+                    elif field_value == 4:
+                        value_key = "4 (Exceeds Expectations)"
+                    elif field_value == 5:
+                        value_key = "5 (Exceptional)"
+                    else:
+                        value_key = str(field_value)
+                else:
+                    value_key = str(field_value)
+                
+                field_data[value_key] = field_data.get(value_key, 0) + 1
+        
+        if field_data:  # Only add if there's data
+            chart_data[field_name] = field_data
+    
+    return chart_data
 
 
 def convert_to_flat_structure(employees: List[Dict[str, Any]]) -> List[Dict[str, str]]:
