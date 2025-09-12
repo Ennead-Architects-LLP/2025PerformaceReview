@@ -52,7 +52,10 @@ class ExcelEmployeeParser:
             
             # Print mapping summary for inspection
             self._print_mapping_summary()
-            
+
+            # Save header mappings to JSON
+            self._save_header_mappings_json()
+
             return True
             
         except Exception as e:
@@ -74,7 +77,39 @@ class ExcelEmployeeParser:
                     visibility = "👁️" if field['data_type_in_card'] != 'noshow' else "🙈"
                     chart_type = "📊" if field['data_type_in_chart'] != 'noshow' else "🚫"
                     print(f"      {visibility}{chart_type} {field['column_index']}: {field['original_header']} → {field['mapped_header']} ({field['data_type_in_card']})")
-    
+
+    def _save_header_mappings_json(self):
+        """Save header mappings to a JSON file for debugging and reference."""
+        import json
+        from pathlib import Path
+
+        # Create header mappings list
+        header_data = []
+        for col_index, mapping in self.header_mappings.items():
+            header_entry = {
+                "index_column": mapping.column_index,
+                "index_letter": mapping.column_letter,
+                "header_text": mapping.original_header,
+                "mapped_header": mapping.mapped_header,
+                "group_under": mapping.group_under.value,
+                "data_type_in_card": mapping.data_type_in_card.value,
+                "data_type_in_chart": mapping.data_type_in_chart.value,
+                "display_order": mapping.display_order
+            }
+            header_data.append(header_entry)
+
+        # Sort by column index
+        header_data.sort(key=lambda x: x['index_column'])
+
+        # Save to JSON file
+        output_path = Path("assets/data/header_mappings.json")
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(header_data, f, indent=2, ensure_ascii=False)
+
+        print(f"💾 Saved header mappings to {output_path}")
+
     def clean_column_name(self, col_name: str) -> str:
         """
         Clean and standardize column names.
