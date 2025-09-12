@@ -149,11 +149,146 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
         // Employee data for charts and search
         const employees = ''' + json.dumps([employee.__dict__ for employee in employees]) + ''';
         
+        // Fuzzy search function with scoring
+        function fuzzyMatch(searchTerm, target) {
+            if (!searchTerm) return { match: true, score: 100 };
+            
+            const search = searchTerm.toLowerCase().replace(/\\s+/g, '');
+            const targetLower = target.toLowerCase().replace(/\\s+/g, '');
+            
+            // Direct substring match (highest score)
+            if (targetLower.includes(search)) {
+                return { match: true, score: 100 };
+            }
+            
+            // Fuzzy matching for common misspellings and variations
+            const searchWords = searchTerm.toLowerCase().split(/\\s+/);
+            const targetWords = target.toLowerCase().split(/\\s+/);
+            
+            let totalScore = 0;
+            let matchedWords = 0;
+            
+            // Check if all search words have a fuzzy match in target words
+            const allWordsMatch = searchWords.every(searchWord => {
+                let bestScore = 0;
+                let foundMatch = false;
+                
+                for (const targetWord of targetWords) {
+                    // Direct word match (high score)
+                    if (targetWord.includes(searchWord)) {
+                        bestScore = Math.max(bestScore, 90);
+                        foundMatch = true;
+                    }
+                    
+                    // Partial word match (medium score)
+                    if (searchWord.length > 2 && targetWord.includes(searchWord.substring(0, Math.max(2, searchWord.length - 1)))) {
+                        bestScore = Math.max(bestScore, 70);
+                        foundMatch = true;
+                    }
+                    
+                    // Fuzzy match for common variations (medium score)
+                    const variations = [
+                        searchWord.replace(/y$/, 'i'), // xinys -> xinyi
+                        searchWord.replace(/i$/, 'y'), // xinyi -> xinys
+                        searchWord.replace(/s$/, ''),  // xinys -> xiny
+                        searchWord + 's',             // xiny -> xinys
+                    ];
+                    
+                    for (const variation of variations) {
+                        if (targetWord.includes(variation) || variation.includes(targetWord)) {
+                            bestScore = Math.max(bestScore, 60);
+                            foundMatch = true;
+                        }
+                    }
+                }
+                
+                if (foundMatch) {
+                    totalScore += bestScore;
+                    matchedWords++;
+                }
+                
+                return foundMatch;
+            });
+            
+            if (allWordsMatch && matchedWords > 0) {
+                const finalScore = totalScore / matchedWords;
+                return { match: true, score: finalScore };
+            }
+            
+            return { match: false, score: 0 };
+        }
+        
+        // Get suggestions for partial matches
+        function getSuggestions(searchTerm, employees) {
+            if (!searchTerm || searchTerm.length < 2) return [];
+            
+            const suggestions = [];
+            const searchLower = searchTerm.toLowerCase();
+            
+            employees.forEach(employee => {
+                const name = employee['Employee Name'] || employee['Employee Name Alt'] || 'Unknown';
+                const nameLower = name.toLowerCase();
+                
+                // Direct substring match
+                if (nameLower.includes(searchLower)) {
+                    suggestions.push({ name, score: 100, type: 'exact' });
+                }
+                // Partial match (first few characters)
+                else if (nameLower.startsWith(searchLower)) {
+                    suggestions.push({ name, score: 90, type: 'starts' });
+                }
+                // Word boundary match
+                else if (nameLower.split(/\\s+/).some(word => word.startsWith(searchLower))) {
+                    suggestions.push({ name, score: 80, type: 'word' });
+                }
+                // Partial word match (any part of any word)
+                else if (nameLower.split(/\\s+/).some(word => word.includes(searchLower))) {
+                    suggestions.push({ name, score: 70, type: 'partial' });
+                }
+                // Character sequence match (e.g., "xoie" might match "Xinya" if it has similar characters)
+                else if (searchLower.length >= 3) {
+                    const nameChars = nameLower.replace(/\\s+/g, '');
+                    const searchChars = searchLower.replace(/\\s+/g, '');
+                    
+                    // Check if search characters appear in sequence in the name
+                    let nameIndex = 0;
+                    let matches = 0;
+                    for (let i = 0; i < searchChars.length; i++) {
+                        const char = searchChars[i];
+                        while (nameIndex < nameChars.length && nameChars[nameIndex] !== char) {
+                            nameIndex++;
+                        }
+                        if (nameIndex < nameChars.length) {
+                            matches++;
+                            nameIndex++;
+                        }
+                    }
+                    
+                    // If at least 60% of characters match in sequence
+                    if (matches / searchChars.length >= 0.6) {
+                        suggestions.push({ name, score: 60, type: 'sequence' });
+                    }
+                }
+                // Fuzzy match
+                else {
+                    const fuzzyResult = fuzzyMatch(searchTerm, name);
+                    if (fuzzyResult.match && fuzzyResult.score >= 40) {
+                        suggestions.push({ name, score: fuzzyResult.score, type: 'fuzzy' });
+                    }
+                }
+            });
+            
+            // Sort by score (highest first) and return top 5
+            return suggestions
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 5);
+        }
+
         // Search functionality
         function filterEmployees() {
             const searchBox = document.querySelector('.search-box');
             const searchIcon = document.querySelector('.search-icon');
-            const searchTerm = searchBox.value.toLowerCase();
+            const searchTerm = searchBox.value;
             const employeeCards = document.querySelectorAll('.employee-card');
             
             // Show/hide search icon based on input content
@@ -172,34 +307,93 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
                 }
             }
             
+            let visibleCount = 0;
             employeeCards.forEach(card => {
-                const name = card.querySelector('.employee-name').textContent.toLowerCase();
-                if (name.includes(searchTerm)) {
+                const name = card.querySelector('.employee-name').textContent;
+                const fuzzyResult = fuzzyMatch(searchTerm, name);
+                if (fuzzyResult.match) {
                     card.style.display = 'block';
+                    visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
             
-            // Show no results message if no cards are visible
-            const visibleCards = Array.from(employeeCards).filter(card => card.style.display !== 'none');
+            // Show suggestions or no results message
             let noResults = document.getElementById('no-results');
-            if (visibleCards.length === 0 && searchTerm) {
-                if (!noResults) {
-                    noResults = document.createElement('div');
-                    noResults.id = 'no-results';
-                    noResults.className = 'no-results';
+            let suggestions = document.getElementById('suggestions');
+            
+            if (searchTerm && searchTerm.length >= 2) {
+                // Get suggestions for partial matches
+                const searchSuggestions = getSuggestions(searchTerm, employees);
+                
+                if (searchSuggestions.length > 0) {
+                    // Show suggestions
+                    if (!suggestions) {
+                        suggestions = document.createElement('div');
+                        suggestions.id = 'suggestions';
+                        suggestions.className = 'suggestions-container';
+                        document.getElementById('employee-list').appendChild(suggestions);
+                    }
+                    
+                    suggestions.innerHTML = `
+                        <div class="suggestions-title">Did you mean:</div>
+                        ${searchSuggestions.map(suggestion => 
+                            `<div class="suggestion-item" onclick="selectSuggestion('${suggestion.name}')">
+                                ${suggestion.name}
+                            </div>`
+                        ).join('')}
+                    `;
+                    
+                    // Remove no results message
+                    if (noResults) {
+                        noResults.remove();
+                    }
+                } else {
+                    // Show no results message only if no suggestions
+                    if (!noResults) {
+                        noResults = document.createElement('div');
+                        noResults.id = 'no-results';
+                        noResults.className = 'no-results';
+                        document.getElementById('employee-list').appendChild(noResults);
+                    }
+                    
                     noResults.innerHTML = `
                         <div class="no-results-message">
-                            <div>No employees found matching "` + searchTerm + `"</div>
+                            <div>No employees found matching "${searchTerm}"</div>
                             <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.7;">Try adjusting your search terms</div>
                         </div>
                     `;
-                    document.getElementById('employee-list').appendChild(noResults);
+                    
+                    // Remove suggestions
+                    if (suggestions) {
+                        suggestions.remove();
+                    }
                 }
-            } else if (noResults) {
-                noResults.remove();
+            } else {
+                // Remove both suggestions and no results when search is empty or too short
+                if (noResults) {
+                    noResults.remove();
+                }
+                if (suggestions) {
+                    suggestions.remove();
+                }
             }
+        }
+        
+        // Select suggestion function
+        function selectSuggestion(name) {
+            const searchBox = document.querySelector('.search-box');
+            searchBox.value = name;
+            
+            // Close suggestion window
+            const suggestions = document.getElementById('suggestions');
+            if (suggestions) {
+                suggestions.remove();
+            }
+            
+            // Filter employees with the selected name
+            filterEmployees();
         }
         
         // Tab functionality
@@ -235,18 +429,8 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
             });
         }
         
-        // Show/hide button based on scroll position with smooth transitions
-        window.addEventListener('scroll', function() {
-            const returnToTopButton = document.getElementById('returnToTop');
-            const scrollThreshold = 150; // Reduced threshold for earlier appearance
-            
-            if (window.pageYOffset > scrollThreshold) {
-                returnToTopButton.classList.add('show');
-            } else {
-                returnToTopButton.classList.remove('show');
-            }
-        });
     </script>
+    ''' + generate_footer() + '''
 </body>
 </html>'''
 
@@ -369,8 +553,9 @@ def generate_charts_for_employees(employees: List[Employee]) -> str:
             const fieldTypes = {json.dumps(field_types)};
             
             // Initialize all charts
-            function initializeCharts() {{
-                Object.keys(chartData).forEach(field => {{
+        function initializeCharts() {{
+            const progressionFields = ['date_of_evaluation'];
+            Object.keys(chartData).forEach(field => {{
                     const canvas = document.getElementById(`chart-${{field.toLowerCase().replace(/\\s+/g, '_').replace(/&/g, '').replace(/,/g, '').replace(/\\//g, '_').replace(/__/g, '_')}}`);
                     if (canvas) {{
                         const ctx = canvas.getContext('2d');
@@ -418,36 +603,10 @@ def generate_charts_for_employees(employees: List[Employee]) -> str:
                                         position: 'bottom',
                                         labels: {{
                                             padding: 20,
-                                            usePointStyle: false,
-                                            pointStyle: 'circle',
+                                            usePointStyle: true,
                                             font: {{
                                                 family: 'Inter',
                                                 size: 12
-                                            }},
-                                            generateLabels: function(chart) {{
-                                                const original = Chart.defaults.plugins.legend.labels.generateLabels;
-                                                const labels = original.call(this, chart);
-                                                
-                                                if (isRatingNumField) {{
-                                                    labels.forEach((label, index) => {{
-                                                        const originalLabel = label.text;
-                                                        const rating = parseInt(originalLabel);
-                                                        if (!isNaN(rating) && rating >= 1 && rating <= 5) {{
-                                                            // Create rating display with star-like symbols
-                                                            let ratingDisplay = '';
-                                                            for (let i = 1; i <= 5; i++) {{
-                                                                if (i <= rating) {{
-                                                                    ratingDisplay += '★';
-                                                                }} else {{
-                                                                    ratingDisplay += '☆';
-                                                                }}
-                                                            }}
-                                                            label.text = ratingDisplay + ' (' + originalLabel + ')';
-                                                        }}
-                                                    }});
-                                                }}
-                                                
-                                                return labels;
                                             }}
                                         }}
                                     }},
@@ -556,20 +715,37 @@ def calculate_chart_data(employees: List[Employee]) -> Dict[str, Any]:
             if field_value is not None:
                 # Convert to string for consistent grouping
                 if isinstance(field_value, (int, float)):
-                    if field_value == 0:
-                        value_key = "0 (Not Applicable)"
-                    elif field_value == 1:
-                        value_key = "1 (Unsatisfactory)"
-                    elif field_value == 2:
-                        value_key = "2 (Needs to Improve)"
-                    elif field_value == 3:
-                        value_key = "3 (Meets Expectations)"
-                    elif field_value == 4:
-                        value_key = "4 (Exceeds Expectations)"
-                    elif field_value == 5:
-                        value_key = "5 (Exceptional)"
+                    # Check if this is a rating field (rating_num type)
+                    if mapping.data_type_in_card.value == 'rating_num':
+                        # Map numeric ratings to descriptive labels
+                        if field_value == 1:
+                            value_key = "Very Unsatisfied"
+                        elif field_value == 2:
+                            value_key = "Unsatisfied"
+                        elif field_value == 3:
+                            value_key = "Neutral"
+                        elif field_value == 4:
+                            value_key = "Satisfied"
+                        elif field_value == 5:
+                            value_key = "Very Satisfied"
+                        else:
+                            value_key = str(field_value)
                     else:
-                        value_key = str(field_value)
+                        # For non-rating numeric fields, use descriptive labels
+                        if field_value == 0:
+                            value_key = "0 (Not Applicable)"
+                        elif field_value == 1:
+                            value_key = "1 (Unsatisfactory)"
+                        elif field_value == 2:
+                            value_key = "2 (Needs to Improve)"
+                        elif field_value == 3:
+                            value_key = "3 (Meets Expectations)"
+                        elif field_value == 4:
+                            value_key = "4 (Exceeds Expectations)"
+                        elif field_value == 5:
+                            value_key = "5 (Exceptional)"
+                        else:
+                            value_key = str(field_value)
                 else:
                     value_key = str(field_value)
                 
@@ -1154,9 +1330,9 @@ def get_css_styles() -> str:
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px) scale(0.8);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
         }
         
         .return-to-top:hover {
@@ -1169,11 +1345,6 @@ def get_css_styles() -> str:
             transform: translateY(-1px) scale(1.02);
         }
         
-        .return-to-top.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0) scale(1);
-        }
         
         @media (max-width: 768px) {
             .return-to-top {
@@ -1274,6 +1445,32 @@ def get_css_styles() -> str:
             margin-top: 30px;
         }
         
+        .chart-divider {
+            grid-column: 1 / -1;
+            margin: 60px 0 40px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .divider-line {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #2B7A78, transparent);
+            margin: 20px 0;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1A5A58;
+            margin: 20px 0;
+            padding: 0 20px;
+            background: white;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+        
         .chart {
             background: white;
             border-radius: 12px;
@@ -1293,19 +1490,33 @@ def get_css_styles() -> str:
         .no-results {
             text-align: center;
             color: #4A4A4A;
-            padding: 40px 20px;
+            padding: 60px 20px;
             font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            width: 100%;
+        }
+        
+        .no-results-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
         .suggestion-item {
             cursor: pointer;
-            padding: 8px 16px;
+            padding: 8px 12px;
             background: rgba(43, 122, 120, 0.1);
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid rgba(43, 122, 120, 0.2);
             transition: all 0.2s ease;
-            margin: 4px 0;
+            margin: 3px 0;
             text-align: left;
+            font-size: 0.9rem;
+            color: #1A1A1A;
         }
         
         .suggestion-item:hover {
@@ -1316,17 +1527,23 @@ def get_css_styles() -> str:
         }
         
         .suggestions-container {
-            margin-top: 16px;
+            margin-top: 12px;
             max-width: 300px;
             margin-left: auto;
             margin-right: auto;
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(43, 122, 120, 0.2);
         }
         
         .suggestions-title {
             font-size: 0.9rem;
-            margin-bottom: 12px;
-            font-weight: 500;
+            margin-bottom: 8px;
+            font-weight: 600;
             color: #2B7A78;
+            text-align: center;
         }
         
         
@@ -1372,6 +1589,15 @@ def get_css_styles() -> str:
             
             .chart-container {
                 grid-template-columns: 1fr;
+            }
+            
+            .chart-divider {
+                margin: 40px 0 30px 0;
+            }
+            
+            .section-title {
+                font-size: 1.25rem;
+                padding: 0 15px;
             }
         }
     </style>
@@ -2286,17 +2512,6 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
             }});
         }}
         
-        // Show/hide return to top button based on scroll position with smooth transitions
-        window.addEventListener('scroll', function() {{
-            const returnToTop = document.querySelector('.return-to-top');
-            const scrollThreshold = 150; // Reduced threshold for earlier appearance
-            
-            if (window.pageYOffset > scrollThreshold) {{
-                returnToTop.classList.add('show');
-            }} else {{
-                returnToTop.classList.remove('show');
-            }}
-        }});
         
         // Call the function when the page loads
         document.addEventListener('DOMContentLoaded', hideSubmittedField);

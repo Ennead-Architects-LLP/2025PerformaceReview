@@ -359,8 +359,9 @@ We need to continue growing the design strengths that could adapt with the curre
             const fieldTypes = {"Communication Rating": "rating_num", "Collaboration Rating": "rating_num", "Professionalism Rating": "rating_num", "Technical Knowledge & Expertise Rating": "rating_num", "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)": "rating_num", "Current YearOverall Performance Rating": "rating_num", "Revit": "rating_complex", "Rhino": "rating_complex", "Enscape": "rating_complex", "D5": "rating_complex", "Vantage Point": "rating_complex", "Deltek/ADP": "rating_complex", "Newforma": "rating_complex", "Bluebeam": "rating_complex", "Grasshopper": "rating_complex", "Word": "rating_complex", "Powerpoint": "rating_complex", "excel": "rating_complex", "Illustrator": "rating_complex", "Photoshop": "rating_complex", "Indesign": "rating_complex"};
             
             // Initialize all charts
-            function initializeCharts() {
-                Object.keys(chartData).forEach(field => {
+        function initializeCharts() {
+            const progressionFields = ['date_of_evaluation'];
+            Object.keys(chartData).forEach(field => {
                     const canvas = document.getElementById(`chart-${field.toLowerCase().replace(/\s+/g, '_').replace(/&/g, '').replace(/,/g, '').replace(/\//g, '_').replace(/__/g, '_')}`);
                     if (canvas) {
                         const ctx = canvas.getContext('2d');
@@ -408,36 +409,10 @@ We need to continue growing the design strengths that could adapt with the curre
                                         position: 'bottom',
                                         labels: {
                                             padding: 20,
-                                            usePointStyle: false,
-                                            pointStyle: 'circle',
+                                            usePointStyle: true,
                                             font: {
                                                 family: 'Inter',
                                                 size: 12
-                                            },
-                                            generateLabels: function(chart) {
-                                                const original = Chart.defaults.plugins.legend.labels.generateLabels;
-                                                const labels = original.call(this, chart);
-                                                
-                                                if (isRatingNumField) {
-                                                    labels.forEach((label, index) => {
-                                                        const originalLabel = label.text;
-                                                        const rating = parseInt(originalLabel);
-                                                        if (!isNaN(rating) && rating >= 1 && rating <= 5) {
-                                                            // Create rating display with star-like symbols
-                                                            let ratingDisplay = '';
-                                                            for (let i = 1; i <= 5; i++) {
-                                                                if (i <= rating) {
-                                                                    ratingDisplay += '★';
-                                                                } else {
-                                                                    ratingDisplay += '☆';
-                                                                }
-                                                            }
-                                                            label.text = ratingDisplay + ' (' + originalLabel + ')';
-                                                        }
-                                                    });
-                                                }
-                                                
-                                                return labels;
                                             }
                                         }
                                     },
@@ -496,11 +471,146 @@ We need to continue growing the design strengths that could adapt with the curre
         // Employee data for charts and search
         const employees = [{"Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?": "I'd like to bring awareness to some of my most proud accomplishments at Ennead Architects:\n\n1. Provisioned the following security solutions:\nDefender for Endpoint (many integrations across azure and devices)\nDefender for Cloud Apps (integrated)\nSIEM - Sentinel (single pane of glass view of all processes with automations)\nDefender for Identity (critical risk protection integrated with Conditional access)\nDefender for Office 365 \nMobile app protection (personal device access to Ennead resources)\nPurview (DLP, AIP) (ongoing))\nThreat Intelligence integrations (SIEM, MDE, MDCA, SIEM)\nConditional access (MFA, Risk blocking and Data loss prevention integrations and more)\nRansomware protections with OneDrive for Business rollout (company-wide)\nCustom alerting and automations around risky users\nWeb content and AI rule mitigations\nDaily, weekly and monthly security reviews and responses to many events including malware, content blocking and MITRE attack mitigations\nEnterprise app and app registration reviews and support\n\n2. Infrastructure:\nMigrated Newforma from on-premises into Azure hosted IAAS platform\nDeployed fusion connect IP Telephony integrations with Teams (handled all Azure and M365 integrations in collaboration with a team member)\nOneDrive for Business implementation company wide\nRepaired hundreds of broken tokens across all company workstations (mandatory to manage devices and to secure devices into the cloud)\nRolled out MECM and integrated MECM with Intune (remote control, device repair and detailed asset reporting funneled into Intune)\nWindows 11 upgrades (ongoing)\nArgos migrations (ongoing)\nPrinter server migration to the cloud (ongoing)\nDesktop support\nApplication packaging including custom built application such as Drive Mapper and others\n\n3. Other\nDaily 3rd level support for business teams fielding many requests to resolve issues, provide access to users, repair items\nDaily administration of Email, calendars, guest users (partner access)\nResolved many issues with internal systems emailing and alerting such as Newforma and NetApp monitoring\nSupport ticket troubleshooting and resolution\nCustom solutions such as EPM (users can elevate specific apps to administrator for specific use cases ) (ongoing))\nShanghai migration project (Ongoing)\nCustom requests such as eDiscovery or assisting partners to access systems", "Areas for Growth / Development Goals": "Acquire certifications in AI and or AI security", "Bluebeam": "0 (Not Applicable)", "Collaboration Comments": "I make strong efforts to collaborate with functional verticals within the organization. Many of the infrastructure and security efforts require close collaboration between separate areas of the business. This survey is a good example of how I collaborated with my team, HR and Studio developers to develop an automated solution. I make strong efforts to inform my leadership, peers and users on all my projects and tasks. I often respond to requests off typical business hours if needed and have done so many times in service on Ennead Architects users and project owners.", "Collaboration Rating": "4", "Communication Comments": "My role is highly dependent on effective use of time, and I leverage tools and automation as much as possible to assist in the internal communications of our IT support needs.", "Communication Rating": "4", "Current YearOverall Performance Rating": "4", "D5": "0 (Not Applicable)", "Date of Evaluation": "2025-09-09 00:00:00", "Deltek/ADP": "0 (Not Applicable)", "Email": "brett.fabrikant@ennead.com", "Employee Name": "Brett Fabrikant", "Employee Name Alt": "Brett Fabrikant", "Employee Role": "M365 Architect, M365 Security Administration", "Employee Strengths": "1. Reliability 2. Trustworthy 3. Effectiveness in tasks", "Enscape": "0 (Not Applicable)", "Grasshopper": "0 (Not Applicable)", "Illustrator": "0 (Not Applicable)", "Indesign": "0 (Not Applicable)", "Newforma": "2 (Needs to Improve)", "Photoshop": "0 (Not Applicable)", "Please share your thoughts about the character and culture of our studio and practice.": "Ennead is a really wonderful company with technology growing pains like many organizations. It would be helpful if we had better communication when challenges arise with the studio so I can better serve the needs of the business.", "Powerpoint": "4 (Exceeds Expectations)", "Professionalism Comments": "I pride myself on being very reliable and I have a very strong work ethic with integrity. My team and leadership know how I bring my best attitude and effort in providing good security solutions.", "Professionalism Rating": "5", "Revit": "0 (Not Applicable)", "Rhino": "0 (Not Applicable)", "Software & Tools Feedback": "Due to the constantly changing IT landscape and the quick adoption of AI, it would be helpful to acquire more official AI training, perhaps professional certification in a specific AI platform could be beneficial to Ennead.", "Technical Knowledge & Expertise Comments": "The skills required to perform the array of responsibilities push me to keep my knowledge current and relevant to today and future needs.  I have developed a few different programs that Ennead can grow into as the digital workplace evolves. I often practice my trade independently of my work here at Ennead and maintain test cloud infrastructures for training and testing purposes.", "Technical Knowledge & Expertise Rating": "4", "Title": "Security Architect", "Vantage Point": "0 (Not Applicable)", "What additional resources would help you do your job more effectively?": "It could be helpful to have more interaction with the project teams to better understand their daily, weekly and monthly flow of tasks. This could give insightful information on how I can better facilitate their workloads.", "Word": "4 (Exceeds Expectations)", "Workflow Implementation, Management, Execution Comments": "A good percentage of my workweek is dedicated to IT, technology and office solutions. I proactively monitor threats to Ennead and perform many tasks to maintain the layers of security and Microsoft infrastructure, and I support Office 365 services such as email and sharing platforms under the Microsoft umbrella.", "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)": "4", "completion_time": "2025-09-09 13:44:11", "data_sources": ["excel_parser"], "excel": "4 (Exceeds Expectations)", "id": "16", "image_match_confidence": null, "last_updated": null, "profile_image_filename": null, "profile_image_path": null, "start_time": "2025-09-09 13:30:24"}, {"Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?": "I want to highlight my ability to adapt quickly when project priorities change. For example, during the SH Concordia School design project, I managed sudden timeline and requirement changes while keeping the work on track. I also supported colleagues by sharing knowledge and helping with tasks outside my main role, which strengthened teamwork and improved results.", "Areas for Growth / Development Goals": "Learn and apply more AI tools in daily work.....", "Bluebeam": "4 (Exceeds Expectations)", "Collaboration Comments": "I keep an open attitude in collaboration, listen to different opinions, share progress clearly, and support the team to move forward together.", "Collaboration Rating": "5", "Communication Comments": "Communicate clearly and adapt my style to different audiences. \nMake sure to listen carefully, confirm understanding, and follow up in writing when needed. \nThis helps avoid confusion, build trust, and keep projects moving smoothly.", "Communication Rating": "5", "Current YearOverall Performance Rating": "5", "D5": "4 (Exceeds Expectations)", "Date of Evaluation": "2025-09-10 00:00:00", "Deltek/ADP": "3 (Meets Expectations)", "Email": "xli@ennead.com", "Employee Name": "Xinya Li", "Employee Name Alt": "Xinya Li", "Employee Role": "Architectural & Interior Designer, Interior Project Manager", "Employee Strengths": "1. Clear and practical communication\n\n2. Steady and reliable under pressure\n\n3. Supportive team player", "Enscape": "3 (Meets Expectations)", "Grasshopper": "0 (Not Applicable)", "Illustrator": "4 (Exceeds Expectations)", "Indesign": "4 (Exceeds Expectations)", "Newforma": "2 (Needs to Improve)", "Photoshop": "4 (Exceeds Expectations)", "Please share your thoughts about the character and culture of our studio and practice.": "What I really enjoy about the Shanghai office is the strong team spirit. People here take responsibility, work independently, and at the same time are always supportive and great to collaborate with.", "Powerpoint": "4 (Exceeds Expectations)", "Professionalism Comments": "I stay professional and reliable in my work, and over time my colleagues have come to recognize and trust this.", "Professionalism Rating": "5", "Revit": "3 (Meets Expectations)", "Rhino": "3 (Meets Expectations)", "Software & Tools Feedback": "More about the AI , maybe.", "Technical Knowledge & Expertise Comments": "I have strong technical skills that I use in daily work, and I keep learning new tools and methods to get better.", "Technical Knowledge & Expertise Rating": "4", "Title": "Associate", "Vantage Point": "3 (Meets Expectations)", "What additional resources would help you do your job more effectively?": "Additional training on AI software would be very helpful, as it could improve efficiency and bring new ideas to my work.", "Word": "4 (Exceeds Expectations)", "Workflow Implementation, Management, Execution Comments": "I handle projects based on different needs, stay organized, work well with the team, and make sure tasks are done on time.", "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)": "4", "completion_time": "2025-09-09 22:56:15", "data_sources": ["excel_parser"], "excel": "4 (Exceeds Expectations)", "id": "17", "image_match_confidence": null, "last_updated": null, "profile_image_filename": null, "profile_image_path": null, "start_time": "2025-09-09 21:58:17"}, {"Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?": "cost control for office operation", "Areas for Growth / Development Goals": "Work more closely with NY team of Admin, HR, IT and Finance, to understand more of each other", "Bluebeam": "3 (Meets Expectations)", "Collaboration Comments": "Support team well and figure out the issues priority, which could help the team find our the key reason and solve the problem.", "Collaboration Rating": "5", "Communication Comments": "communication clearly in both verbal and written forms.", "Communication Rating": "5", "Current YearOverall Performance Rating": "4", "D5": "3 (Meets Expectations)", "Date of Evaluation": "2025-09-10 00:00:00", "Deltek/ADP": "3 (Meets Expectations)", "Email": "lli@ennead.com", "Employee Name": "Leah Li", "Employee Name Alt": "Leah Li", "Employee Role": "Office admin and HR", "Employee Strengths": "communication; find our the key reason and key problem of office operation; keep learning new knowledge", "Enscape": "3 (Meets Expectations)", "Grasshopper": "3 (Meets Expectations)", "Illustrator": "3 (Meets Expectations)", "Indesign": "3 (Meets Expectations)", "Newforma": "3 (Meets Expectations)", "Photoshop": "3 (Meets Expectations)", "Please share your thoughts about the character and culture of our studio and practice.": "Frame reorganization ; cost control", "Powerpoint": "3 (Meets Expectations)", "Professionalism Comments": "act reliably with integrity to maintain a professional demeanor in all work situations", "Professionalism Rating": "4", "Revit": "3 (Meets Expectations)", "Rhino": "3 (Meets Expectations)", "Software & Tools Feedback": "We need non-tech employee forms for software and tools", "Technical Knowledge & Expertise Comments": "strong technical knowledge for my role, apply it well to tasks and keep learning new developments.", "Technical Knowledge & Expertise Rating": "4", "Title": "Office Manager (Shanghai)", "Vantage Point": "3 (Meets Expectations)", "What additional resources would help you do your job more effectively?": "Improve the NY and SH office communication, I need travel to NY office and work with the department of Admin, finance and IT team to understand more and improve office operation.", "Word": "3 (Meets Expectations)", "Workflow Implementation, Management, Execution Comments": "effectively manage workflows from start and finish, coordinating tasks and delivering results across projects and various business areas.", "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)": "5", "completion_time": "2025-09-09 23:26:45", "data_sources": ["excel_parser"], "excel": "3 (Meets Expectations)", "id": "18", "image_match_confidence": 100, "last_updated": null, "profile_image_filename": "Leah Li_profile.jpg", "profile_image_path": "assets\\images/Leah Li_profile.jpg", "start_time": "2025-09-09 21:46:46"}, {"Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?": "I successfully contributed to several key projects by meeting deadlines and delivering high-quality work. I also supported team members by sharing knowledge and helping resolve challenges, which improved overall workflow efficiency.", "Areas for Growth / Development Goals": "Strengthen project management and coordination skills to improve workflow execution.\n\nExpand technical expertise by deepening knowledge of advanced software features.\n\nDevelop leadership abilities to take on greater responsibility in guiding projects and supporting team members.", "Bluebeam": "3 (Meets Expectations)", "Collaboration Comments": "I approach collaboration with openness and respect. I value diverse perspectives and work to build trust within the team. I am proactive in sharing ideas, supporting colleagues, and aligning with group goals to ensure successful outcomes.", "Collaboration Rating": "4", "Communication Comments": "I communicate clearly and professionally in both verbal and written formats. I adapt my style depending on the audience, ensuring clarity and conciseness. I also make an effort to actively listen and respond thoughtfully, which helps avoid misunderstandings and keeps collaboration efficient.", "Communication Rating": "4", "Current YearOverall Performance Rating": "4", "D5": "4 (Exceeds Expectations)", "Date of Evaluation": "2025-09-10 00:00:00", "Deltek/ADP": "3 (Meets Expectations)", "Email": "Vivian.Zhan@ennead.com", "Employee Name": "Vivian Zhan", "Employee Name Alt": "Vivian Zhan", "Employee Role": "Architecture Designer", "Employee Strengths": "Strong communication skills, ensuring clarity and collaboration in both verbal and written interactions.\n\nDependable and professional, consistently meeting deadlines and maintaining accountability.\n\nAdaptability and willingness to learn, quickly adjusting to new tools, workflows, and team needs.", "Enscape": "3 (Meets Expectations)", "Grasshopper": "3 (Meets Expectations)", "Illustrator": "4 (Exceeds Expectations)", "Indesign": "4 (Exceeds Expectations)", "Newforma": "3 (Meets Expectations)", "Photoshop": "4 (Exceeds Expectations)", "Please share your thoughts about the character and culture of our studio and practice.": "The studio fosters a supportive and collaborative culture where teamwork and creativity are encouraged. I appreciate the open exchange of ideas and the commitment to high-quality work.", "Powerpoint": "3 (Meets Expectations)", "Professionalism Comments": "I maintain a reliable and accountable work ethic, always meeting deadlines and delivering quality work. I act with integrity and respect in professional settings, and I take responsibility for my contributions while supporting the success of the team.", "Professionalism Rating": "4", "Revit": "3 (Meets Expectations)", "Rhino": "4 (Exceeds Expectations)", "Software & Tools Feedback": "I am comfortable with the core software and tools required for my role and use them effectively in daily work. Additional training in advanced features or integrations would help me increase efficiency and streamline workflows. I am open to learning new tools that can further support team collaboration and project delivery.", "Technical Knowledge & Expertise Comments": "I have a solid understanding of the technical standards and tools required for my role. I apply this knowledge effectively in daily tasks and continuously look for ways to expand my expertise through practice and learning.", "Technical Knowledge & Expertise Rating": "4", "Vantage Point": "3 (Meets Expectations)", "What additional resources would help you do your job more effectively?": "Access to more structured training sessions, mentorship opportunities, and updated learning materials would help me build stronger skills and work more efficiently. Additional project management tools or streamlined internal processes would also support better collaboration and delivery.", "Word": "3 (Meets Expectations)", "Workflow Implementation, Management, Execution Comments": "I manage workflows with attention to planning and detail, ensuring tasks are completed on time. While I see room to strengthen coordination across multiple stakeholders, I make steady progress in organizing priorities and delivering results efficiently.", "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)": "3", "completion_time": "2025-09-10 08:49:35", "data_sources": ["excel_parser"], "excel": "3 (Meets Expectations)", "id": "19", "image_match_confidence": null, "last_updated": null, "profile_image_filename": null, "profile_image_path": null, "start_time": "2025-09-10 08:43:14"}, {"Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?": "I have had to learn all of the Inova project, and needed to perform, immediately. I did not have the same 5 years head start that Gary, Clayton, and Charlie have had...", "Areas for Growth / Development Goals": "I have 1 more ARE I want to finish. I keep failing it.", "Bluebeam": "3 (Meets Expectations)", "Collaboration Comments": "We do what we are told.", "Collaboration Rating": "3", "Communication Comments": "I have a lot to say...", "Communication Rating": "3", "Current YearOverall Performance Rating": "2", "D5": "3 (Meets Expectations)", "Date of Evaluation": "2025-09-10 00:00:00", "Deltek/ADP": "0 (Not Applicable)", "Email": "mhitscherich@ennead.com", "Employee Name": "Matt Hitscherich", "Employee Name Alt": "Matthew Hitscherich", "Employee Role": "Draftsman", "Employee Strengths": "Willing to crawl through barbed wire on a daily basis.", "Enscape": "0 (Not Applicable)", "Grasshopper": "1 (Unsatisfactory)", "Illustrator": "0 (Not Applicable)", "Indesign": "3 (Meets Expectations)", "Newforma": "0 (Not Applicable)", "Photoshop": "3 (Meets Expectations)", "Please share your thoughts about the character and culture of our studio and practice.": "I'm sure that if I wrote anything here it would be nothing more than a proper display of phlegm. We move forward and shine brightly.", "Powerpoint": "0 (Not Applicable)", "Professionalism Comments": "Fritz Lang once said \"when I hear the word culture I get out my wallet\". This question is asking the same thing.", "Professionalism Rating": "3", "Revit": "1 (Unsatisfactory)", "Rhino": "3 (Meets Expectations)", "Software & Tools Feedback": "Yes. Grasshopper.", "Technical Knowledge & Expertise Comments": "Yes, Please. More.", "Technical Knowledge & Expertise Rating": "3", "Vantage Point": "0 (Not Applicable)", "What additional resources would help you do your job more effectively?": "A time machine.", "Word": "0 (Not Applicable)", "Workflow Implementation, Management, Execution Comments": "Yes, Please. More.", "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)": "3", "completion_time": "2025-09-10 13:14:04", "data_sources": ["excel_parser"], "excel": "0 (Not Applicable)", "id": "20", "image_match_confidence": 100, "last_updated": null, "profile_image_filename": "Matt Hitscherich_profile.jpg", "profile_image_path": "assets\\images/Matt Hitscherich_profile.jpg", "start_time": "2025-09-10 13:04:34"}, {"Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?": "Additional involvement with Healthcare BD front.", "Areas for Growth / Development Goals": "Ability to multi-task with other projects more efficiently and delegate more work to other team-members during CA.", "Bluebeam": "4 (Exceeds Expectations)", "Collaboration Comments": "I like to involve everyone on the team and ensure everyone feels values and free to contribute their perspective and ideas.   I try not to be quick to shut down ideas i disagree with but rather consider the potential and hope to modify the path if warranted and improved to do so.", "Collaboration Rating": "5", "Communication Comments": "The past year has been a different role for me than typical given the full year in CA with a much smaller team.    believe I effectively communicate through e-mail, teams and meetings where required to ensure everyone is on the same page.   I like to directly address as soon as possible any thing that seems inconsistent with my understanding of what should be happening or how to improve on workflow.", "Communication Rating": "4", "Current YearOverall Performance Rating": "4", "D5": "1 (Unsatisfactory)", "Date of Evaluation": "2025-09-09 00:00:00", "Deltek/ADP": "3 (Meets Expectations)", "Email": "ckaul@ennead.com", "Employee Name": "Clayton Kaul", "Employee Name Alt": "Clayton Kaul", "Employee Role": "Project Architect / Project Manager", "Employee Strengths": "Focused and Determined.", "Enscape": "3 (Meets Expectations)", "Grasshopper": "1 (Unsatisfactory)", "Illustrator": "4 (Exceeds Expectations)", "Indesign": "4 (Exceeds Expectations)", "Newforma": "3 (Meets Expectations)", "Photoshop": "4 (Exceeds Expectations)", "Please share your thoughts about the character and culture of our studio and practice.": "I think that the office is doing its best to keep up with the changing demands for architects.   We need to be more facile in the ability to make jobs and the office profitable.  How do we setup teams, studios,  in a manner to expediate expertise and minimize the learning curve and new details while maintaing the essence of what Ennead (polshek) was founded on.   Design is meant to engage the public and the people in meaningful ways and we want to push the envelope of how we do that.", "Powerpoint": "5 (Exceptional)", "Professionalism Comments": "I try to bring the utmost professionalism into all conversations, especially with team members from other firms and owner.  Of course, i feel it is also okay, and warranted, to be able to have a familiar relationship with those you work with closely and often in order to 1. gain the trust of the team and create an enjoyable working environment for everyone involved.  Work is done better and more dedicated when those around you enjoy the company of their team mates and / or supervisors.", "Professionalism Rating": "5", "Revit": "5 (Exceptional)", "Rhino": "3 (Meets Expectations)", "Software & Tools Feedback": "Integration of smarter tools within Revit.", "Technical Knowledge & Expertise Comments": "For my level within the firm, I feel i have a solid understanding of technical skills and detailing.   I like to rely on others still with higher levels of specific knowledge regarding technical details though and ensure we are delivering (or at least proposing to deliver) the best possible end product we can.", "Technical Knowledge & Expertise Rating": "4", "Title": "Senior Associate", "Vantage Point": "1 (Unsatisfactory)", "What additional resources would help you do your job more effectively?": "At times, additional staff is helpful, but have managed the work load accordingly with staff given to manage fee.", "Word": "5 (Exceptional)", "Workflow Implementation, Management, Execution Comments": "I am comfortable working in all phases of the project.  Though i don't have much exposure with ennead on the Proposal / Interviewing side, i believe that i am able to contribute in this manner should the opportunity arise.", "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)": "4", "completion_time": "2025-09-10 17:22:05", "data_sources": ["excel_parser"], "excel": "4 (Exceeds Expectations)", "id": "21", "image_match_confidence": 100, "last_updated": null, "profile_image_filename": "Clayton Kaul_profile.jpg", "profile_image_path": "assets\\images/Clayton Kaul_profile.jpg", "start_time": "2025-09-10 17:21:53"}, {"Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?": "Continued building up the connections with the clients, this year, I've brought three ByteDance competitions, one JD competition (a new client), one lab project in Shenzhen and one cultural project in Shaoxing.", "Areas for Growth / Development Goals": "Learn more about healthcare and laboratory knowledge and integrate them into BD scenarios.", "Bluebeam": "3 (Meets Expectations)", "Collaboration Comments": "I believe the best architectural solutions emerge from truly collaborative efforts. My approach is to facilitate and support the team, ensuring everyone\u2014from our visionary designers to our technical staff and external partners\u2014has a voice and feels empowered to contribute. In the China market, I see my role as a bridge, helping to synthesize diverse ideas and cultural nuances into a cohesive project direction. I am grateful for the talented teams I work with and focus on creating an environment of mutual trust and shared purpose.", "Collaboration Rating": "5", "Communication Comments": "I strive to ensure my communication is clear and effective, whether in verbal discussions or written correspondence. I make a conscious effort to listen actively to clients, our design teams, and local partners, aiming to fully understand their perspectives and ensure we are aligned. I try to tailor my communication style to the audience, whether explaining a complex design intent to a client or coordinating technical details with our consultants. There is always room to improve, and I welcome feedback to ensure my communication remains as effective as possible.", "Communication Rating": "4", "Current YearOverall Performance Rating": "5", "D5": "2 (Needs to Improve)", "Date of Evaluation": "2025-09-11 00:00:00", "Deltek/ADP": "3 (Meets Expectations)", "Email": "rjiang@ennead.com", "Employee Name": "Regina Jiang", "Employee Name Alt": "Regina Jiang", "Employee Role": "Project Manager", "Employee Strengths": "Communication skills.\nPresentation skills.\nComprehensive skills on competitions, for concepts, visualizations, as well as business connections.", "Enscape": "2 (Needs to Improve)", "Grasshopper": "2 (Needs to Improve)", "Illustrator": "3 (Meets Expectations)", "Indesign": "3 (Meets Expectations)", "Newforma": "3 (Meets Expectations)", "Photoshop": "3 (Meets Expectations)", "Please share your thoughts about the character and culture of our studio and practice.": "We are collaborative and innovative. We learn from the environments and respond with positive solutions.\nWe need to continue growing the design strengths that could adapt with the current technical environment and design industry. Not only applying the use of AI, but also expand our design realm to interior, visual arts, landscape if possible.", "Powerpoint": "3 (Meets Expectations)", "Professionalism Comments": "I endeavor to uphold the highest standards of professionalism that reflect well on Ennead's reputation. This means taking full accountability for my responsibilities, meeting commitments reliably, and always acting with integrity. I try to maintain a calm and constructive demeanor, especially during challenging phases of a project, focusing on solutions rather than problems. I view professionalism as an ongoing practice and consistently look for ways to better represent our firm's values to our clients and partners.", "Professionalism Rating": "4", "Revit": "3 (Meets Expectations)", "Rhino": "3 (Meets Expectations)", "Software & Tools Feedback": "AI for graphic generation, both images and videos.", "Technical Knowledge & Expertise Comments": "My technical knowledge is built on a strong foundation in architectural design principles, project delivery methodologies, and business development strategies specific to the built environment. I strive to continuously learn from our technical teams and consultants to ensure our proposals and project plans are not only creative but also technically sound and feasible for the China market. This is particularly important when new market opportunities emerge, such as a shift towards sustainable design or a new building typology we will do in China, i.e. Healthcare and Institutional Laboratory.", "Technical Knowledge & Expertise Rating": "4", "Title": "Associate Principal", "Vantage Point": "0 (Not Applicable)", "What additional resources would help you do your job more effectively?": "We have three offices now. By implementing structured channels for knowledge exchange and strategic alignment, we can better leverage our collective intelligence. This will allow each market to actively learn from the others' experiences, provide cross-regional support, and efficiently share resources, ultimately strengthening our firm's global position and driving unified growth.", "Word": "3 (Meets Expectations)", "Workflow Implementation, Management, Execution Comments": "I focus on creating and managing efficient workflows to see projects and strategic initiatives through from conception to completion. This involves coordinating closely with our design, marketing, and finance teams to develop winning proposals, and then managing the project lifecycle to deliver on those promises. I rely on our established firm-wide systems and actively seek to improve local implementation, ensuring our operations in China are seamless, integrated, and effective in supporting our creative and business goals.", "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)": "5", "completion_time": "2025-09-11 04:30:38", "data_sources": ["excel_parser"], "excel": "3 (Meets Expectations)", "id": "22", "image_match_confidence": 100, "last_updated": null, "profile_image_filename": "Regina Jiang_profile.jpg", "profile_image_path": "assets\\images/Regina Jiang_profile.jpg", "start_time": "2025-09-11 04:30:02"}, {"Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?": "I feel like everyone in the office could learn and improve on some level and I am no exception. I will continue to try to improve my abilities.", "Areas for Growth / Development Goals": "The profession is changing rapidly and I would like to learn new types of software that would make my workflow more productive and easier. I would like to implement more sustainable design strategies in my design process.", "Bluebeam": "5 (Exceptional)", "Collaboration Comments": "I think that I collaborate effectively; however, the past few international projects have been unusual since most of the project team is in Shanghai. Direct communication is difficult w/ the time difference.", "Collaboration Rating": "4", "Communication Comments": "I'm naturally an introverted person; however, I have no problem voicing my opinion on design-related issues. I feel that this is very important in maintaining a high level of quality for our projects. I am happy to be leading a lot of our international exterior & interior work.", "Communication Rating": "4", "Current YearOverall Performance Rating": "4", "D5": "2 (Needs to Improve)", "Date of Evaluation": "2025-09-11 00:00:00", "Deltek/ADP": "5 (Exceptional)", "Email": "khamlett@ennead.com", "Employee Name": "Kevin Hamlett", "Employee Name Alt": "R. Kevin Hamlett", "Employee Role": "Senior Designer", "Employee Strengths": "30+ years of professional experience backed up w/ my portfolio of completed projects in multiple typologies, overall design insight, precedent knowledge and vision, technical skill w/ detailing and documentation.", "Enscape": "2 (Needs to Improve)", "Grasshopper": "2 (Needs to Improve)", "Illustrator": "2 (Needs to Improve)", "Indesign": "5 (Exceptional)", "Newforma": "3 (Meets Expectations)", "Photoshop": "2 (Needs to Improve)", "Please share your thoughts about the character and culture of our studio and practice.": "Our office has the ability to target a wide variety of typologies, but I feel that a lot of the 'centers' within the office seem to operate independently from one another. It would be good to see more knowledge overlap and visual consistency within our portfolio. I think that our interior work could help bridge that gap in some regard.", "Powerpoint": "0 (Not Applicable)", "Professionalism Comments": "I try to be as professional as possible in all situations. I understand that my actions represent our company and our reputation. I've done a number of projects for repeat clients that seem very happy w/ my design work.", "Professionalism Rating": "5", "Revit": "3 (Meets Expectations)", "Rhino": "3 (Meets Expectations)", "Software & Tools Feedback": "I do not use all of the software listed above. For visualization, I rely on junior help. I would like to learn more about grasshopper and D5", "Technical Knowledge & Expertise Comments": "I have assembled an interior detail library for our future projects, and I feel that will help speed up our future endeavors. I have also mentored junior designers and have helped them understand the detailing process.", "Technical Knowledge & Expertise Rating": "5", "Title": "Senior Associate", "Vantage Point": "0 (Not Applicable)", "What additional resources would help you do your job more effectively?": "I could use more software training. Prior to joining the office, I worked for companies that have a distinct design and production process using a limited number of programs, so I am unfamiliar w/ the full assortment that we have available. The international projects that I have been leading run at a very quick pace, and it has been difficult to find time to learn new programs. If the office could provide instruction, that would be helpful.", "Word": "5 (Exceptional)", "Workflow Implementation, Management, Execution Comments": "I feel that I am good w/ establishing a consistent project workflow and conveying that w/ the project team. I have also helped develop and refine our commercial marketing presentations for our residential, hospitality and interior pursuits.", "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)": "4", "completion_time": "2025-09-11 11:27:42", "data_sources": ["excel_parser"], "excel": "3 (Meets Expectations)", "id": "23", "image_match_confidence": 100, "last_updated": null, "profile_image_filename": "Kevin Hamlett_profile.jpg", "profile_image_path": "assets\\images/Kevin Hamlett_profile.jpg", "start_time": "2025-09-11 10:42:25"}];
         
+        // Fuzzy search function with scoring
+        function fuzzyMatch(searchTerm, target) {
+            if (!searchTerm) return { match: true, score: 100 };
+            
+            const search = searchTerm.toLowerCase().replace(/\s+/g, '');
+            const targetLower = target.toLowerCase().replace(/\s+/g, '');
+            
+            // Direct substring match (highest score)
+            if (targetLower.includes(search)) {
+                return { match: true, score: 100 };
+            }
+            
+            // Fuzzy matching for common misspellings and variations
+            const searchWords = searchTerm.toLowerCase().split(/\s+/);
+            const targetWords = target.toLowerCase().split(/\s+/);
+            
+            let totalScore = 0;
+            let matchedWords = 0;
+            
+            // Check if all search words have a fuzzy match in target words
+            const allWordsMatch = searchWords.every(searchWord => {
+                let bestScore = 0;
+                let foundMatch = false;
+                
+                for (const targetWord of targetWords) {
+                    // Direct word match (high score)
+                    if (targetWord.includes(searchWord)) {
+                        bestScore = Math.max(bestScore, 90);
+                        foundMatch = true;
+                    }
+                    
+                    // Partial word match (medium score)
+                    if (searchWord.length > 2 && targetWord.includes(searchWord.substring(0, Math.max(2, searchWord.length - 1)))) {
+                        bestScore = Math.max(bestScore, 70);
+                        foundMatch = true;
+                    }
+                    
+                    // Fuzzy match for common variations (medium score)
+                    const variations = [
+                        searchWord.replace(/y$/, 'i'), // xinys -> xinyi
+                        searchWord.replace(/i$/, 'y'), // xinyi -> xinys
+                        searchWord.replace(/s$/, ''),  // xinys -> xiny
+                        searchWord + 's',             // xiny -> xinys
+                    ];
+                    
+                    for (const variation of variations) {
+                        if (targetWord.includes(variation) || variation.includes(targetWord)) {
+                            bestScore = Math.max(bestScore, 60);
+                            foundMatch = true;
+                        }
+                    }
+                }
+                
+                if (foundMatch) {
+                    totalScore += bestScore;
+                    matchedWords++;
+                }
+                
+                return foundMatch;
+            });
+            
+            if (allWordsMatch && matchedWords > 0) {
+                const finalScore = totalScore / matchedWords;
+                return { match: true, score: finalScore };
+            }
+            
+            return { match: false, score: 0 };
+        }
+        
+        // Get suggestions for partial matches
+        function getSuggestions(searchTerm, employees) {
+            if (!searchTerm || searchTerm.length < 2) return [];
+            
+            const suggestions = [];
+            const searchLower = searchTerm.toLowerCase();
+            
+            employees.forEach(employee => {
+                const name = employee['Employee Name'] || employee['Employee Name Alt'] || 'Unknown';
+                const nameLower = name.toLowerCase();
+                
+                // Direct substring match
+                if (nameLower.includes(searchLower)) {
+                    suggestions.push({ name, score: 100, type: 'exact' });
+                }
+                // Partial match (first few characters)
+                else if (nameLower.startsWith(searchLower)) {
+                    suggestions.push({ name, score: 90, type: 'starts' });
+                }
+                // Word boundary match
+                else if (nameLower.split(/\s+/).some(word => word.startsWith(searchLower))) {
+                    suggestions.push({ name, score: 80, type: 'word' });
+                }
+                // Partial word match (any part of any word)
+                else if (nameLower.split(/\s+/).some(word => word.includes(searchLower))) {
+                    suggestions.push({ name, score: 70, type: 'partial' });
+                }
+                // Character sequence match (e.g., "xoie" might match "Xinya" if it has similar characters)
+                else if (searchLower.length >= 3) {
+                    const nameChars = nameLower.replace(/\s+/g, '');
+                    const searchChars = searchLower.replace(/\s+/g, '');
+                    
+                    // Check if search characters appear in sequence in the name
+                    let nameIndex = 0;
+                    let matches = 0;
+                    for (let i = 0; i < searchChars.length; i++) {
+                        const char = searchChars[i];
+                        while (nameIndex < nameChars.length && nameChars[nameIndex] !== char) {
+                            nameIndex++;
+                        }
+                        if (nameIndex < nameChars.length) {
+                            matches++;
+                            nameIndex++;
+                        }
+                    }
+                    
+                    // If at least 60% of characters match in sequence
+                    if (matches / searchChars.length >= 0.6) {
+                        suggestions.push({ name, score: 60, type: 'sequence' });
+                    }
+                }
+                // Fuzzy match
+                else {
+                    const fuzzyResult = fuzzyMatch(searchTerm, name);
+                    if (fuzzyResult.match && fuzzyResult.score >= 40) {
+                        suggestions.push({ name, score: fuzzyResult.score, type: 'fuzzy' });
+                    }
+                }
+            });
+            
+            // Sort by score (highest first) and return top 5
+            return suggestions
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 5);
+        }
+
         // Search functionality
         function filterEmployees() {
             const searchBox = document.querySelector('.search-box');
             const searchIcon = document.querySelector('.search-icon');
-            const searchTerm = searchBox.value.toLowerCase();
+            const searchTerm = searchBox.value;
             const employeeCards = document.querySelectorAll('.employee-card');
             
             // Show/hide search icon based on input content
@@ -519,34 +629,93 @@ We need to continue growing the design strengths that could adapt with the curre
                 }
             }
             
+            let visibleCount = 0;
             employeeCards.forEach(card => {
-                const name = card.querySelector('.employee-name').textContent.toLowerCase();
-                if (name.includes(searchTerm)) {
+                const name = card.querySelector('.employee-name').textContent;
+                const fuzzyResult = fuzzyMatch(searchTerm, name);
+                if (fuzzyResult.match) {
                     card.style.display = 'block';
+                    visibleCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
             
-            // Show no results message if no cards are visible
-            const visibleCards = Array.from(employeeCards).filter(card => card.style.display !== 'none');
+            // Show suggestions or no results message
             let noResults = document.getElementById('no-results');
-            if (visibleCards.length === 0 && searchTerm) {
-                if (!noResults) {
-                    noResults = document.createElement('div');
-                    noResults.id = 'no-results';
-                    noResults.className = 'no-results';
+            let suggestions = document.getElementById('suggestions');
+            
+            if (searchTerm && searchTerm.length >= 2) {
+                // Get suggestions for partial matches
+                const searchSuggestions = getSuggestions(searchTerm, employees);
+                
+                if (searchSuggestions.length > 0) {
+                    // Show suggestions
+                    if (!suggestions) {
+                        suggestions = document.createElement('div');
+                        suggestions.id = 'suggestions';
+                        suggestions.className = 'suggestions-container';
+                        document.getElementById('employee-list').appendChild(suggestions);
+                    }
+                    
+                    suggestions.innerHTML = `
+                        <div class="suggestions-title">Did you mean:</div>
+                        ${searchSuggestions.map(suggestion => 
+                            `<div class="suggestion-item" onclick="selectSuggestion('${suggestion.name}')">
+                                ${suggestion.name}
+                            </div>`
+                        ).join('')}
+                    `;
+                    
+                    // Remove no results message
+                    if (noResults) {
+                        noResults.remove();
+                    }
+                } else {
+                    // Show no results message only if no suggestions
+                    if (!noResults) {
+                        noResults = document.createElement('div');
+                        noResults.id = 'no-results';
+                        noResults.className = 'no-results';
+                        document.getElementById('employee-list').appendChild(noResults);
+                    }
+                    
                     noResults.innerHTML = `
                         <div class="no-results-message">
-                            <div>No employees found matching "` + searchTerm + `"</div>
+                            <div>No employees found matching "${searchTerm}"</div>
                             <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.7;">Try adjusting your search terms</div>
                         </div>
                     `;
-                    document.getElementById('employee-list').appendChild(noResults);
+                    
+                    // Remove suggestions
+                    if (suggestions) {
+                        suggestions.remove();
+                    }
                 }
-            } else if (noResults) {
-                noResults.remove();
+            } else {
+                // Remove both suggestions and no results when search is empty or too short
+                if (noResults) {
+                    noResults.remove();
+                }
+                if (suggestions) {
+                    suggestions.remove();
+                }
             }
+        }
+        
+        // Select suggestion function
+        function selectSuggestion(name) {
+            const searchBox = document.querySelector('.search-box');
+            searchBox.value = name;
+            
+            // Close suggestion window
+            const suggestions = document.getElementById('suggestions');
+            if (suggestions) {
+                suggestions.remove();
+            }
+            
+            // Filter employees with the selected name
+            filterEmployees();
         }
         
         // Tab functionality

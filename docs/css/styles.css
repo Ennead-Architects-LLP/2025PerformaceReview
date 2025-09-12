@@ -486,6 +486,32 @@
             margin-top: 30px;
         }
         
+        .chart-divider {
+            grid-column: 1 / -1;
+            margin: 60px 0 40px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .divider-line {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #2B7A78, transparent);
+            margin: 20px 0;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1A5A58;
+            margin: 20px 0;
+            padding: 0 20px;
+            background: white;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+        
         .chart {
             background: white;
             border-radius: 12px;
@@ -505,41 +531,61 @@
         .no-results {
             text-align: center;
             color: #4A4A4A;
-            padding: 40px 20px;
+            padding: 60px 20px;
             font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            width: 100%;
         }
         
-        .suggestion-item {
-            cursor: pointer;
-            padding: 8px 16px;
-            background: rgba(43, 122, 120, 0.1);
-            border-radius: 8px;
-            border: 1px solid rgba(43, 122, 120, 0.2);
-            transition: all 0.2s ease;
-            margin: 4px 0;
-            text-align: left;
+        .no-results-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
-        .suggestion-item:hover {
-            background: rgba(43, 122, 120, 0.2);
-            border-color: rgba(43, 122, 120, 0.4);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(43, 122, 120, 0.15);
-        }
-        
-        .suggestions-container {
-            margin-top: 16px;
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .suggestions-title {
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-            font-weight: 500;
-            color: #2B7A78;
-        }
+.suggestion-item {
+    cursor: pointer;
+    padding: 8px 12px;
+    background: rgba(43, 122, 120, 0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(43, 122, 120, 0.2);
+    transition: all 0.2s ease;
+    margin: 3px 0;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #1A1A1A;
+}
+
+.suggestion-item:hover {
+    background: rgba(43, 122, 120, 0.2);
+    border-color: rgba(43, 122, 120, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(43, 122, 120, 0.15);
+}
+
+.suggestions-container {
+    margin-top: 12px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(43, 122, 120, 0.2);
+}
+
+.suggestions-title {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2B7A78;
+    text-align: center;
+}
         
         
         .footer {
@@ -584,6 +630,15 @@
             
             .chart-container {
                 grid-template-columns: 1fr;
+            }
+            
+            .chart-divider {
+                margin: 40px 0 30px 0;
+            }
+            
+            .section-title {
+                font-size: 1.25rem;
+                padding: 0 15px;
             }
         }
     </style>
