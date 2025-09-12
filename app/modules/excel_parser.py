@@ -4,6 +4,7 @@ Excel Parser for Employee Self-Evaluation Data
 Parses the Excel file exported from MS Form and converts it to structured JSON format.
 """
 
+import os
 import pandas as pd
 import json
 from typing import List, Dict, Any, Optional
@@ -102,7 +103,7 @@ class ExcelEmployeeParser:
         header_data.sort(key=lambda x: x['index_column'])
 
         # Save to JSON file
-        output_path = Path("assets/data/header_mappings.json")
+        output_path = Path(os.path.join("assets", "data", "header_mappings.json"))
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(output_path, 'w', encoding='utf-8') as f:

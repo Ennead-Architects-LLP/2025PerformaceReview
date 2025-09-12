@@ -22,29 +22,29 @@ class Config:
     OUTPUT_BASE_NAME = "_EvaluationSummary"
     
     # Excel parsing paths
-    EXCEL_INPUT_FILE = "assets/data/Employee Self-Evaluation Data Export From MS Form.xlsx"
-    JSON_OUTPUT_FILE = "assets/data/employee_data.json"
-    IMAGE_MAPPINGS_FILE = "assets/data/image_mappings.json"
+    EXCEL_INPUT_FILE = os.path.join("assets", "data", "Employee Self-Evaluation Data Export From MS Form.xlsx")
+    JSON_OUTPUT_FILE = os.path.join("assets", "data", "employee_data.json")
+    IMAGE_MAPPINGS_FILE = os.path.join("assets", "data", "image_mappings.json")
     
     # Image processing paths
-    IMAGE_SOURCE_DIR = "assets/images"
-    IMAGE_TARGET_DIR = "assets/images"
+    IMAGE_SOURCE_DIR = os.path.join("assets", "images")
+    IMAGE_TARGET_DIR = os.path.join("assets", "images")
     
     # Website generation paths
     WEBSITE_OUTPUT_DIR = "docs"
-    WEBSITE_CSS_DIR = "docs/css"
-    WEBSITE_JS_DIR = "docs/js"
-    WEBSITE_ASSETS_DIR = "docs/assets"
-    WEBSITE_IMAGES_DIR = "docs/assets/images"
+    WEBSITE_CSS_DIR = os.path.join("docs", "css")
+    WEBSITE_JS_DIR = os.path.join("docs", "js")
+    WEBSITE_ASSETS_DIR = os.path.join("docs", "assets")
+    WEBSITE_IMAGES_DIR = os.path.join("docs", "assets", "images")
     
     # Data directories
-    DATA_DIR = "assets/data"
+    DATA_DIR = os.path.join("assets", "data")
     ASSETS_DIR = "assets"
     
     # Default file names and paths
-    DEFAULT_AVATAR_PATH = "assets/images/default-avatar.png"
+    DEFAULT_AVATAR_PATH = os.path.join("assets", "images", "default-avatar.png")
     DEFAULT_JSON_OUTPUT = "employee_data.json"
-    DEFAULT_IMAGE_MAPPINGS = "data/image_mappings.json"
+    DEFAULT_IMAGE_MAPPINGS = os.path.join("data", "image_mappings.json")
     
     # File extensions and patterns
     SUPPORTED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".bmp"]

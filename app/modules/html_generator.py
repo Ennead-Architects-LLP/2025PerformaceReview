@@ -6,6 +6,7 @@ This module handles the generation of interactive HTML reports from employee eva
 
 import os
 import json
+import shutil
 from collections import defaultdict, Counter
 from typing import List, Dict, Any
 from datetime import datetime
@@ -634,7 +635,7 @@ def copy_images_to_website(output_path: Path):
         print(f"📸 Copied images to {target_images_dir}")
     
     # Copy rating icons
-    source_icons_dir = Path("assets/icons")
+    source_icons_dir = Path(os.path.join("assets", "icons"))
     target_icons_dir = output_path / "assets" / "icons"
     target_icons_dir.mkdir(parents=True, exist_ok=True)
     

@@ -146,7 +146,7 @@
     "image_match_confidence": 100,
     "last_updated": null,
     "profile_image_filename": "Leah Li_profile.jpg",
-    "profile_image_path": "assets/images/Leah Li_profile.jpg",
+    "profile_image_path": "assets\\images/Leah Li_profile.jpg",
     "start_time": "2025-09-09 21:46:46"
   },
   {
@@ -244,7 +244,7 @@
     "image_match_confidence": 91,
     "last_updated": null,
     "profile_image_filename": "Matt Hitscherich_profile.jpg",
-    "profile_image_path": "assets/images/Matt Hitscherich_profile.jpg",
+    "profile_image_path": "assets\\images/Matt Hitscherich_profile.jpg",
     "start_time": "2025-09-10 13:04:34"
   },
   {
@@ -294,7 +294,7 @@
     "image_match_confidence": 100,
     "last_updated": null,
     "profile_image_filename": "Clayton Kaul_profile.jpg",
-    "profile_image_path": "assets/images/Clayton Kaul_profile.jpg",
+    "profile_image_path": "assets\\images/Clayton Kaul_profile.jpg",
     "start_time": "2025-09-10 17:21:53"
   },
   {
@@ -344,7 +344,7 @@
     "image_match_confidence": 100,
     "last_updated": null,
     "profile_image_filename": "Regina Jiang_profile.jpg",
-    "profile_image_path": "assets/images/Regina Jiang_profile.jpg",
+    "profile_image_path": "assets\\images/Regina Jiang_profile.jpg",
     "start_time": "2025-09-11 04:30:02"
   },
   {
@@ -394,7 +394,7 @@
     "image_match_confidence": 93,
     "last_updated": null,
     "profile_image_filename": "Kevin Hamlett_profile.jpg",
-    "profile_image_path": "assets/images/Kevin Hamlett_profile.jpg",
+    "profile_image_path": "assets\\images/Kevin Hamlett_profile.jpg",
     "start_time": "2025-09-11 10:42:25"
   }
 ]
