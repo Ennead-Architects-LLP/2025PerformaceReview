@@ -66,11 +66,36 @@ class EmployeeEvaluationOrchestrator:
         output_dir = ensure_output_directory()
         log_info(f"Output directory: {output_dir}")
     
+    def _copy_images_from_external_repo(self) -> None:
+        """Copy images from external EmployeeData repository if configured."""
+        try:
+            from .external_repo_manager import copy_images_from_employee_data_repo
+            
+            # Check if external repo is configured
+            external_repo_path = Config.get_external_employee_data_repo_path()
+            if not external_repo_path:
+                log_info("ℹ️  No external EmployeeData repository configured - skipping external image copy")
+                return
+            
+            log_info("🔄 Copying images from external EmployeeData repository...")
+            success = copy_images_from_employee_data_repo(external_repo_path, force_copy=False)
+            
+            if success:
+                log_info("✅ Successfully copied images from EmployeeData repository")
+            else:
+                log_warning("⚠️  Failed to copy images from EmployeeData repository - continuing with existing images")
+                
+        except Exception as e:
+            log_warning(f"⚠️  Error copying images from external repository: {e} - continuing with existing images")
+    
     def _parse_data(self) -> None:
         """Parse Excel data to Employee objects with image processing."""
         log_info("Parsing Excel data...")
 
-        # Parse Excel to Employee objects with image processing
+        # Step 1: Copy images from external EmployeeData repository (if configured)
+        self._copy_images_from_external_repo()
+
+        # Step 2: Parse Excel to Employee objects with image processing
         excel_path = Config.get_excel_input_path()
         json_path = Config.get_json_output_path()
         

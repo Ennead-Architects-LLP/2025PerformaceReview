@@ -30,6 +30,10 @@ class Config:
     IMAGE_SOURCE_DIR = os.path.join("assets", "images")
     IMAGE_TARGET_DIR = os.path.join("assets", "images")
     
+    # External repository paths for image copying
+    EXTERNAL_EMPLOYEE_DATA_REPO = "C:\\Users\\szhang\\github\\EmployeeData"  # Set this to the path of EmployeeData repository
+    EXTERNAL_IMAGE_SOURCE_DIR = "assets\\images"  # Subdirectory within EmployeeData repo containing images
+    
     # Website generation paths
     WEBSITE_OUTPUT_DIR = "docs"
     WEBSITE_CSS_DIR = os.path.join("docs", "css")
@@ -167,6 +171,20 @@ class Config:
     def get_image_target_path(cls) -> str:
         """Get the image target directory path."""
         return os.path.join(cls.PROJECT_ROOT, cls.IMAGE_TARGET_DIR)
+    
+    @classmethod
+    def get_external_employee_data_repo_path(cls) -> str:
+        """Get the external EmployeeData repository path."""
+        if cls.EXTERNAL_EMPLOYEE_DATA_REPO is None:
+            return None
+        return cls.EXTERNAL_EMPLOYEE_DATA_REPO
+    
+    @classmethod
+    def get_external_image_source_path(cls) -> str:
+        """Get the external image source directory path within EmployeeData repo."""
+        if cls.EXTERNAL_EMPLOYEE_DATA_REPO is None:
+            return None
+        return os.path.join(cls.EXTERNAL_EMPLOYEE_DATA_REPO, cls.EXTERNAL_IMAGE_SOURCE_DIR)
     
     @classmethod
     def get_website_output_path(cls) -> str:

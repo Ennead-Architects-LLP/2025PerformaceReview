@@ -429,6 +429,33 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
             });
         }
         
+        // Show/hide scroll to top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const returnToTop = document.querySelector('.return-to-top');
+            if (returnToTop) {
+                if (window.pageYOffset > 300) {
+                    returnToTop.style.opacity = '1';
+                    returnToTop.style.visibility = 'visible';
+                } else {
+                    returnToTop.style.opacity = '0.6';
+                }
+            }
+        });
+        
+        // Ensure button is always visible and positioned correctly
+        document.addEventListener('DOMContentLoaded', function() {
+            const returnToTop = document.querySelector('.return-to-top');
+            if (returnToTop) {
+                // Make sure it's always visible
+                returnToTop.style.position = 'fixed';
+                returnToTop.style.bottom = '30px';
+                returnToTop.style.right = '30px';
+                returnToTop.style.zIndex = '9999';
+                returnToTop.style.display = 'flex';
+                returnToTop.style.visibility = 'visible';
+            }
+        });
+        
     </script>
     ''' + generate_footer() + '''
 </body>
@@ -1326,11 +1353,11 @@ def get_css_styles() -> str:
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(45, 122, 120, 0.3);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
+            z-index: 9999;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 1;
+            opacity: 0.8;
             visibility: visible;
             transform: translateY(0) scale(1);
         }
@@ -1339,6 +1366,7 @@ def get_css_styles() -> str:
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 8px 20px rgba(45, 122, 120, 0.4);
             background: linear-gradient(135deg, #2B7A78, #1A5A58);
+            opacity: 1;
         }
         
         .return-to-top:active {
@@ -1548,21 +1576,55 @@ def get_css_styles() -> str:
         
         
         .footer {
-            background: #F0F8F7;
-            border-top: 1px solid #1A5A58;
-            padding: 20px 30px;
+            background: linear-gradient(135deg, #F8FFFE 0%, #E8F5F4 100%);
+            border-top: 2px solid #3AAFA9;
+            padding: 30px 40px;
             text-align: center;
-            color: #4A4A4A;
-            font-size: 0.9rem;
+            color: #2B7A78;
+            font-size: 0.95rem;
+            font-weight: 500;
+            box-shadow: 0 -4px 20px rgba(58, 175, 169, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3AAFA9, #2B7A78, #1A5A58);
         }
         
         .footer a {
-            color: #2B7A78;
+            color: #1A5A58;
             text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
         }
         
         .footer a:hover {
-            text-decoration: underline;
+            color: #3AAFA9;
+            text-decoration: none;
+        }
+        
+        .footer a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            background: linear-gradient(90deg, #3AAFA9, #2B7A78);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .footer a:hover::after {
+            width: 100%;
         }
         
         @media (max-width: 768px) {
@@ -2511,6 +2573,33 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
                 behavior: 'smooth'
             }});
         }}
+        
+        // Show/hide scroll to top button based on scroll position
+        window.addEventListener('scroll', function() {{
+            const returnToTop = document.querySelector('.return-to-top');
+            if (returnToTop) {{
+                if (window.pageYOffset > 300) {{
+                    returnToTop.style.opacity = '1';
+                    returnToTop.style.visibility = 'visible';
+                }} else {{
+                    returnToTop.style.opacity = '0.6';
+                }}
+            }}
+        }});
+        
+        // Ensure button is always visible and positioned correctly
+        document.addEventListener('DOMContentLoaded', function() {{
+            const returnToTop = document.querySelector('.return-to-top');
+            if (returnToTop) {{
+                // Make sure it's always visible
+                returnToTop.style.position = 'fixed';
+                returnToTop.style.bottom = '30px';
+                returnToTop.style.right = '30px';
+                returnToTop.style.zIndex = '9999';
+                returnToTop.style.display = 'flex';
+                returnToTop.style.visibility = 'visible';
+            }}
+        }});
         
         
         // Call the function when the page loads

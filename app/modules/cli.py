@@ -33,6 +33,9 @@ Examples:
     parser.add_argument('--parse-excel', action='store_true', help='Parse Excel file to JSON format')
     parser.add_argument('--generate-website', action='store_true', help='Generate HTML website from parsed JSON data')
     parser.add_argument('--no-images', action='store_true', help='Skip copying employee profile images (used with --parse-excel)')
+    parser.add_argument('--copy-external-images', action='store_true', help='Copy images from external EmployeeData repository')
+    parser.add_argument('--external-repo-path', type=str, help='Path to external EmployeeData repository')
+    parser.add_argument('--force-copy-images', action='store_true', help='Force overwrite existing images when copying from external repo')
     parser.add_argument('--version', action='version', version='Employee Evaluation System v1.0.0')
     return parser
 
@@ -69,6 +72,23 @@ def run_cli(args: List[str] = None) -> int:
                 return 0
             else:
                 log_error("Failed to generate website")
+                return 1
+                
+        if parsed_args.copy_external_images:
+            log_info("Copying images from external EmployeeData repository...")
+            from .external_repo_manager import copy_images_from_employee_data_repo
+            
+            external_repo_path = parsed_args.external_repo_path or Config.get_external_employee_data_repo_path()
+            if not external_repo_path:
+                log_error("No external repository path provided. Use --external-repo-path or configure in config.py")
+                return 1
+            
+            success = copy_images_from_employee_data_repo(external_repo_path, parsed_args.force_copy_images)
+            if success:
+                log_info("Successfully copied images from external repository")
+                return 0
+            else:
+                log_error("Failed to copy images from external repository")
                 return 1
                 
         if parsed_args.validate:
