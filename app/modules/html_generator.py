@@ -226,10 +226,6 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
             }
         }
         
-        // Initialize charts function
-        function initializeCharts() {
-            // Charts will be initialized by the embedded chart scripts
-        }
         
         // Return to Top functionality
         function scrollToTop() {
@@ -323,15 +319,37 @@ def calculate_performance_stats(employees: List[Employee]) -> Dict[str, Any]:
 def generate_charts_for_employees(employees: List[Employee]) -> str:
     """Generate Chart.js charts for employee analytics using ChartType data."""
     # Calculate chart data from employee data
-    chart_data = calculate_chart_data(employees)
+    chart_result = calculate_chart_data(employees)
+    chart_data = chart_result['data']
+    field_types = chart_result['field_types']
     
     # Generate individual chart HTML for each field
     charts_html = ""
+    divider_added = False
+    
     for field_name, field_data in chart_data.items():
         # Create a clean chart title
         chart_title = field_name.replace('_FOR_TEST', '').replace('_', ' ').title()
         # Create consistent chart ID that matches the JavaScript transformation
-        chart_id = f"chart-{field_name.lower().replace(' ', '_').replace('&', '').replace(',', '').replace('__', '_')}"
+        chart_id = f"chart-{field_name.lower().replace(' ', '_').replace('&', '').replace(',', '').replace('/', '_').replace('__', '_')}"
+        
+        # Check if this is the first software tool chart (after rating charts)
+        is_software_chart = any(software_term in field_name.lower() for software_term in [
+            'revit', 'rhino', 'enscape', 'd5', 'vantage', 'deltek', 'newforma', 'bluebeam', 
+            'grasshopper', 'word', 'powerpoint', 'excel', 'illustrator', 'photoshop', 'indesign'
+        ])
+        
+        # Add divider before first software chart
+        if is_software_chart and not divider_added:
+            charts_html += """
+        <!-- Divider between rating charts and software charts -->
+        <div class="chart-divider">
+            <hr class="divider-line">
+            <h2 class="section-title">Software & Tools Proficiency</h2>
+            <hr class="divider-line">
+        </div>
+        """
+            divider_added = True
         
         charts_html += f"""
         <div class="chart">
@@ -348,14 +366,19 @@ def generate_charts_for_employees(employees: List[Employee]) -> str:
         <script>
             // Chart data from actual employee data
             const chartData = {json.dumps(chart_data)};
+            const fieldTypes = {json.dumps(field_types)};
             
             // Initialize all charts
             function initializeCharts() {{
                 Object.keys(chartData).forEach(field => {{
-                    const canvas = document.getElementById(`chart-${{field.toLowerCase().replace(/\\s+/g, '_').replace(/&/g, '').replace(/,/g, '').replace(/__/g, '_')}}`);
+                    const canvas = document.getElementById(`chart-${{field.toLowerCase().replace(/\\s+/g, '_').replace(/&/g, '').replace(/,/g, '').replace(/\\//g, '_').replace(/__/g, '_')}}`);
                     if (canvas) {{
                         const ctx = canvas.getContext('2d');
                         const data = chartData[field];
+                        
+                        // Check if this is a RATING_NUM field (not RATING_COMPLEX)
+                        const fieldType = fieldTypes[field];
+                        const isRatingNumField = fieldType === 'rating_num';
                         
                         new Chart(ctx, {{
                             type: 'doughnut',
@@ -395,10 +418,36 @@ def generate_charts_for_employees(employees: List[Employee]) -> str:
                                         position: 'bottom',
                                         labels: {{
                                             padding: 20,
-                                            usePointStyle: true,
+                                            usePointStyle: false,
+                                            pointStyle: 'circle',
                                             font: {{
                                                 family: 'Inter',
                                                 size: 12
+                                            }},
+                                            generateLabels: function(chart) {{
+                                                const original = Chart.defaults.plugins.legend.labels.generateLabels;
+                                                const labels = original.call(this, chart);
+                                                
+                                                if (isRatingNumField) {{
+                                                    labels.forEach((label, index) => {{
+                                                        const originalLabel = label.text;
+                                                        const rating = parseInt(originalLabel);
+                                                        if (!isNaN(rating) && rating >= 1 && rating <= 5) {{
+                                                            // Create rating display with star-like symbols
+                                                            let ratingDisplay = '';
+                                                            for (let i = 1; i <= 5; i++) {{
+                                                                if (i <= rating) {{
+                                                                    ratingDisplay += '★';
+                                                                }} else {{
+                                                                    ratingDisplay += '☆';
+                                                                }}
+                                                            }}
+                                                            label.text = ratingDisplay + ' (' + originalLabel + ')';
+                                                        }}
+                                                    }});
+                                                }}
+                                                
+                                                return labels;
                                             }}
                                         }}
                                     }},
@@ -409,7 +458,23 @@ def generate_charts_for_employees(employees: List[Employee]) -> str:
                                         borderColor: 'rgba(255, 255, 255, 0.1)',
                                         borderWidth: 1,
                                         cornerRadius: 8,
-                                        displayColors: true
+                                        displayColors: true,
+                                        callbacks: {{
+                                            label: function(context) {{
+                                                const originalLabel = context.label;
+                                                const rating = parseInt(originalLabel);
+                                                if (isRatingNumField && !isNaN(rating) && rating >= 1 && rating <= 5) {{
+                                                    let description = '';
+                                                    if (rating === 1) description = ' (Unsatisfactory)';
+                                                    else if (rating === 2) description = ' (Needs to Improve)';
+                                                    else if (rating === 3) description = ' (Meets Expectations)';
+                                                    else if (rating === 4) description = ' (Exceeds Expectations)';
+                                                    else if (rating === 5) description = ' (Exceptional)';
+                                                    return rating + description + ': ' + context.parsed + ' employees';
+                                                }}
+                                                return originalLabel + ': ' + context.parsed + ' employees';
+                                            }}
+                                        }}
                                     }}
                                 }},
                                 cutout: '60%',
@@ -430,9 +495,10 @@ def generate_charts_for_employees(employees: List[Employee]) -> str:
 
 def calculate_chart_data(employees: List[Employee]) -> Dict[str, Any]:
     """Calculate chart data from employee data using ChartType information."""
-    from .header_mapper import header_mapper, ChartType
+    from .header_mapper import header_mapper, ChartType, CardType
     
     chart_data = {}
+    field_types = {}  # Store field type information
     
     # Get all header mappings that should be shown in charts
     chart_fields = []
@@ -441,10 +507,47 @@ def calculate_chart_data(employees: List[Employee]) -> Dict[str, Any]:
             if mapping.data_type_in_chart == ChartType.DONUT:
                 chart_fields.append(mapping)
     
-    # Calculate data for each chart field
+    # Separate rating fields from other fields for proper ordering
+    rating_fields = []
+    other_fields = []
+    
     for mapping in chart_fields:
+        field_name = mapping.mapped_header.lower()
+        # Check if this is a rating-related field
+        if any(rating_term in field_name for rating_term in ['rating', 'performance']):
+            rating_fields.append(mapping)
+        else:
+            other_fields.append(mapping)
+    
+    # Sort rating fields by a specific order to ensure consistent placement
+    rating_field_order = [
+        'communication_rating',
+        'collaboration_rating', 
+        'professionalism_rating',
+        'technical_knowledge_expertise_rating',
+        'workflow_implementation_management_execution_rating',
+        'overall_performance_rating'
+    ]
+    
+    def get_rating_field_priority(mapping):
+        field_name_lower = mapping.mapped_header.lower().replace(' ', '_').replace('&', '').replace(',', '').replace('/', '_')
+        try:
+            return rating_field_order.index(field_name_lower)
+        except ValueError:
+            return len(rating_field_order)  # Put unknown rating fields at the end
+    
+    rating_fields.sort(key=get_rating_field_priority)
+    
+    # Combine ordered fields: rating fields first, then other fields
+    ordered_fields = rating_fields + other_fields
+    
+    # Calculate data for each chart field in the specified order
+    for mapping in ordered_fields:
         field_name = mapping.mapped_header
         field_data = {}
+        
+        # Store field type information
+        field_types[field_name] = mapping.data_type_in_card.value
         
         for employee in employees:
             # Get the value for this field from the employee
@@ -475,7 +578,11 @@ def calculate_chart_data(employees: List[Employee]) -> Dict[str, Any]:
         if field_data:  # Only add if there's data
             chart_data[field_name] = field_data
     
-    return chart_data
+    # Add field types to the returned data
+    return {
+        'data': chart_data,
+        'field_types': field_types
+    }
 
 
 def convert_to_flat_structure(employees: List[Dict[str, Any]]) -> List[Dict[str, str]]:
@@ -1996,9 +2103,6 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
             filterEmployees();
         }}
         
-        function initializeCharts() {{
-            // Define which fields should use line charts (progression charts)
-            const progressionFields = ['date_of_evaluation'];
 
             Object.keys(chartData).forEach(field => {{
                 const canvas = document.getElementById(`chart-${{field.toLowerCase().replace(/\\s+/g, '_').replace(/&/g, '').replace(/,/g, '').replace(/__/g, '_')}}`);
