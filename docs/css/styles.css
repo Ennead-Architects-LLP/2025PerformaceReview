@@ -418,6 +418,33 @@
             align-items: center;
             gap: 8px;
         }
+
+        /* CardType-specific styling based on mapping */
+        .rating-field .field-value {
+            font-weight: 600;
+            color: #1A5A58;
+        }
+
+        .multiline-field .field-value {
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .text-field .field-value {
+            color: #1A1A1A;
+        }
+
+        .empty-rating {
+            color: #6B7280;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .empty-text {
+            color: #6B7280;
+            font-style: italic;
+            font-weight: 400;
+        }
         
         .chart-container {
             display: grid;

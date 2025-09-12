@@ -122,17 +122,17 @@ class Employee:
     def set_performance_ratings(self, ratings: Dict[str, str]):
         """Set performance ratings from dictionary."""
         for key, value in ratings.items():
-            if key == 'communication':
+            if key == 'communication_rating':
                 self.performance_ratings.communication = value
-            elif key == 'collaboration':
+            elif key == 'collaboration_rating':
                 self.performance_ratings.collaboration = value
-            elif key == 'professionalism':
+            elif key == 'professionalism_rating':
                 self.performance_ratings.professionalism = value
-            elif key == 'technical_knowledge_&_expertise':
+            elif key == 'technical_knowledge_expertise_rating':
                 self.performance_ratings.technical_knowledge_expertise = value
-            elif key == 'workflow_implementation,_management,_execution':
+            elif key == 'workflow_implementation_management_execution_rating':
                 self.performance_ratings.workflow_implementation_management_execution = value
-            elif key == 'overall_performance_rating':
+            elif key == 'overall_performance':
                 self.performance_ratings.overall_performance = value
     
     def set_performance_comments(self, comments: Dict[str, str]):
@@ -144,9 +144,9 @@ class Employee:
                 self.performance_comments.collaboration_comments = value
             elif key == 'professionalism_comments':
                 self.performance_comments.professionalism_comments = value
-            elif key == 'technical_knowledge_&_expertise_comments':
+            elif key == 'technical_knowledge_expertise_comments':
                 self.performance_comments.technical_knowledge_expertise_comments = value
-            elif key == 'workflow_implementation,_management,_execution_comments':
+            elif key == 'workflow_implementation_management_execution_comments':
                 self.performance_comments.workflow_implementation_management_execution_comments = value
     
     def set_software_proficiency(self, proficiency: Dict[str, str]):

@@ -83,11 +83,11 @@ class HeaderMapper:
         
         # Basic Information Group (matching actual Excel column order)
         basic_mappings = [
-            (0, "ID", "id", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 1),
+            (0, "ID", "id", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 1),
             (1, "Start time", "start_time", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 6),
             (2, "Completion time", "completion_time", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 7),
             (3, "Email", "email", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 5),
-            (4, "Name", "employee_name", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 2),
+            (4, "Name", "employee_name", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 2),
             (5, "Last modified time", "last_modified", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 10),
             (6, "Employee Name", "employee_name_alt", CardGroup.BASIC_INFO, CardType.NOSHOW, ChartType.NOSHOW, 11),  # Alternative name field
             (7, "Title", "title", CardGroup.BASIC_INFO, CardType.TEXT, ChartType.NOSHOW, 3),
@@ -184,38 +184,59 @@ class HeaderMapper:
     def map_excel_headers(self, df: pd.DataFrame) -> Dict[int, HeaderMapping]:
         """
         Map actual Excel headers to our predefined mappings using column indices.
-        
+        Handles duplicate column names by preferring numeric data over text data.
+
         Args:
             df: Pandas DataFrame from Excel file
-            
+
         Returns:
             Dictionary mapping column indices to HeaderMapping objects
         """
         actual_mappings = {}
-        
+
+        # First pass: exact matches
         for col_index, actual_header in enumerate(df.columns):
-            # Try exact match first by header name
             if actual_header in self.header_mappings_by_name:
                 mapping = self.header_mappings_by_name[actual_header]
-                # Update the column index to match actual position
                 mapping.column_index = col_index
                 mapping.column_letter = self._column_number_to_letter(col_index)
                 actual_mappings[col_index] = mapping
+
+        # Second pass: fuzzy matches with conflict resolution
+        for col_index, actual_header in enumerate(df.columns):
+            # Skip if already mapped
+            if col_index in actual_mappings:
                 continue
-            
-            # Try fuzzy matching for variations
+
+            # Try fuzzy matching
             best_match = None
             best_score = 0
-            
+
             for predefined_mapping in self.header_mappings.values():
-                # Simple similarity check
                 similarity = self._calculate_similarity(actual_header, predefined_mapping.original_header)
-                if similarity > best_score and similarity > 0.7:  # 70% similarity threshold
+                if similarity > best_score and similarity > 0.7:
                     best_score = similarity
                     best_match = predefined_mapping
-            
+
             if best_match:
-                # Create a new mapping based on the best match
+                # Check for conflicts with existing mappings
+                existing_mapping = self._find_existing_mapping_for_field(actual_mappings, best_match.mapped_header)
+                if existing_mapping:
+                    # Resolve conflict by preferring numeric data over text data
+                    should_replace = self._should_replace_mapping(df, existing_mapping, col_index, actual_header, best_match)
+                    if should_replace:
+                        # Remove the old mapping
+                        old_col_index = None
+                        for col_idx, mapping in actual_mappings.items():
+                            if mapping.mapped_header == best_match.mapped_header:
+                                old_col_index = col_idx
+                                break
+                        if old_col_index is not None:
+                            del actual_mappings[old_col_index]
+                    else:
+                        # Don't add the new mapping, keep the existing one
+                        continue
+
                 actual_mappings[col_index] = HeaderMapping(
                     column_index=col_index,
                     column_letter=self._column_number_to_letter(col_index),
@@ -227,7 +248,7 @@ class HeaderMapper:
                     display_order=best_match.display_order
                 )
             else:
-                # Create a default mapping for unknown headers
+                # Create default mapping for unknown headers
                 actual_mappings[col_index] = HeaderMapping(
                     column_index=col_index,
                     column_letter=self._column_number_to_letter(col_index),
@@ -238,8 +259,49 @@ class HeaderMapper:
                     data_type_in_chart=ChartType.NOSHOW,
                     display_order=999
                 )
-        
+
         return actual_mappings
+
+    def _find_existing_mapping_for_field(self, mappings: Dict[int, HeaderMapping], target_field: str) -> Optional[HeaderMapping]:
+        """Find existing mapping for a target field."""
+        for mapping in mappings.values():
+            if mapping.mapped_header == target_field:
+                return mapping
+        return None
+
+    def _should_replace_mapping(self, df: pd.DataFrame, existing_mapping: HeaderMapping,
+                               new_col_index: int, new_header: str, predefined_mapping) -> bool:
+        """
+        Determine if a new mapping should replace an existing one.
+        Prefers numeric data over text data for the same field.
+        """
+        # Get sample values from both columns
+        try:
+            existing_value = df.iloc[0][existing_mapping.original_header]
+            new_value = df.iloc[0][new_header]
+        except (KeyError, IndexError):
+            return True  # Replace if we can't get sample values
+
+        # Check if values are numeric
+        existing_is_numeric = self._is_numeric_value(existing_value)
+        new_is_numeric = self._is_numeric_value(new_value)
+
+        # If the new column has numeric data and existing doesn't, replace
+        if new_is_numeric and not existing_is_numeric:
+            return True
+
+        # If both are numeric or both are text, keep the existing one (first match wins)
+        return False
+
+    def _is_numeric_value(self, value) -> bool:
+        """Check if a value is numeric (indicating it's likely a rating)."""
+        if pd.isna(value):
+            return False
+        try:
+            int(str(value).strip())
+            return True
+        except (ValueError, TypeError):
+            return False
     
     def _calculate_similarity(self, str1: str, str2: str) -> float:
         """Calculate similarity between two strings."""

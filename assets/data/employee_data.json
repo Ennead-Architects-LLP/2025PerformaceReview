@@ -16,11 +16,11 @@
       "match_confidence": null
     },
     "performance_ratings": {
-      "communication": null,
-      "collaboration": null,
-      "professionalism": null,
-      "technical_knowledge_expertise": null,
-      "workflow_implementation_management_execution": null,
+      "communication": "4",
+      "collaboration": "4",
+      "professionalism": "5",
+      "technical_knowledge_expertise": "4",
+      "workflow_implementation_management_execution": "4",
       "overall_performance": null
     },
     "performance_comments": {
@@ -77,11 +77,11 @@
       "match_confidence": null
     },
     "performance_ratings": {
-      "communication": null,
-      "collaboration": null,
-      "professionalism": null,
-      "technical_knowledge_expertise": null,
-      "workflow_implementation_management_execution": null,
+      "communication": "5",
+      "collaboration": "5",
+      "professionalism": "5",
+      "technical_knowledge_expertise": "4",
+      "workflow_implementation_management_execution": "4",
       "overall_performance": null
     },
     "performance_comments": {
@@ -131,18 +131,18 @@
     "completion_time": "2025-09-09 23:26:45",
     "date": "2025-09-10 00:00:00",
     "profile_image": {
-      "filename": "Leah Li_profile.jpg",
-      "path": "assets/images/Leah Li_profile.jpg",
-      "has_image": true,
-      "display_path": "assets/images/Leah Li_profile.jpg",
-      "match_confidence": 100
+      "filename": null,
+      "path": null,
+      "has_image": false,
+      "display_path": "assets/images/default-avatar.png",
+      "match_confidence": null
     },
     "performance_ratings": {
-      "communication": null,
-      "collaboration": null,
-      "professionalism": null,
-      "technical_knowledge_expertise": null,
-      "workflow_implementation_management_execution": null,
+      "communication": "5",
+      "collaboration": "5",
+      "professionalism": "4",
+      "technical_knowledge_expertise": "4",
+      "workflow_implementation_management_execution": "5",
       "overall_performance": null
     },
     "performance_comments": {
@@ -199,11 +199,11 @@
       "match_confidence": null
     },
     "performance_ratings": {
-      "communication": null,
-      "collaboration": null,
-      "professionalism": null,
-      "technical_knowledge_expertise": null,
-      "workflow_implementation_management_execution": null,
+      "communication": "4",
+      "collaboration": "4",
+      "professionalism": "4",
+      "technical_knowledge_expertise": "4",
+      "workflow_implementation_management_execution": "3",
       "overall_performance": null
     },
     "performance_comments": {
@@ -253,18 +253,18 @@
     "completion_time": "2025-09-10 13:14:04",
     "date": "2025-09-10 00:00:00",
     "profile_image": {
-      "filename": "Matt Hitscherich_profile.jpg",
-      "path": "assets/images/Matt Hitscherich_profile.jpg",
-      "has_image": true,
-      "display_path": "assets/images/Matt Hitscherich_profile.jpg",
-      "match_confidence": 100
+      "filename": null,
+      "path": null,
+      "has_image": false,
+      "display_path": "assets/images/default-avatar.png",
+      "match_confidence": null
     },
     "performance_ratings": {
-      "communication": null,
-      "collaboration": null,
-      "professionalism": null,
-      "technical_knowledge_expertise": null,
-      "workflow_implementation_management_execution": null,
+      "communication": "3",
+      "collaboration": "3",
+      "professionalism": "3",
+      "technical_knowledge_expertise": "3",
+      "workflow_implementation_management_execution": "3",
       "overall_performance": null
     },
     "performance_comments": {
@@ -314,18 +314,18 @@
     "completion_time": "2025-09-10 17:22:05",
     "date": "2025-09-09 00:00:00",
     "profile_image": {
-      "filename": "Clayton Kaul_profile.jpg",
-      "path": "assets/images/Clayton Kaul_profile.jpg",
-      "has_image": true,
-      "display_path": "assets/images/Clayton Kaul_profile.jpg",
-      "match_confidence": 100
+      "filename": null,
+      "path": null,
+      "has_image": false,
+      "display_path": "assets/images/default-avatar.png",
+      "match_confidence": null
     },
     "performance_ratings": {
-      "communication": null,
-      "collaboration": null,
-      "professionalism": null,
-      "technical_knowledge_expertise": null,
-      "workflow_implementation_management_execution": null,
+      "communication": "4",
+      "collaboration": "5",
+      "professionalism": "5",
+      "technical_knowledge_expertise": "4",
+      "workflow_implementation_management_execution": "4",
       "overall_performance": null
     },
     "performance_comments": {
@@ -375,18 +375,18 @@
     "completion_time": "2025-09-11 04:30:38",
     "date": "2025-09-11 00:00:00",
     "profile_image": {
-      "filename": "Regina Jiang_profile.jpg",
-      "path": "assets/images/Regina Jiang_profile.jpg",
-      "has_image": true,
-      "display_path": "assets/images/Regina Jiang_profile.jpg",
-      "match_confidence": 100
+      "filename": null,
+      "path": null,
+      "has_image": false,
+      "display_path": "assets/images/default-avatar.png",
+      "match_confidence": null
     },
     "performance_ratings": {
-      "communication": null,
-      "collaboration": null,
-      "professionalism": null,
-      "technical_knowledge_expertise": null,
-      "workflow_implementation_management_execution": null,
+      "communication": "4",
+      "collaboration": "5",
+      "professionalism": "4",
+      "technical_knowledge_expertise": "4",
+      "workflow_implementation_management_execution": "5",
       "overall_performance": null
     },
     "performance_comments": {
@@ -436,18 +436,18 @@
     "completion_time": "2025-09-11 11:27:42",
     "date": "2025-09-11 00:00:00",
     "profile_image": {
-      "filename": "Kevin Hamlett_profile.jpg",
-      "path": "assets/images/Kevin Hamlett_profile.jpg",
-      "has_image": true,
-      "display_path": "assets/images/Kevin Hamlett_profile.jpg",
-      "match_confidence": 100
+      "filename": null,
+      "path": null,
+      "has_image": false,
+      "display_path": "assets/images/default-avatar.png",
+      "match_confidence": null
     },
     "performance_ratings": {
-      "communication": null,
-      "collaboration": null,
-      "professionalism": null,
-      "technical_knowledge_expertise": null,
-      "workflow_implementation_management_execution": null,
+      "communication": "4",
+      "collaboration": "4",
+      "professionalism": "5",
+      "technical_knowledge_expertise": "5",
+      "workflow_implementation_management_execution": "4",
       "overall_performance": null
     },
     "performance_comments": {

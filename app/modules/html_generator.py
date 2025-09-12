@@ -12,38 +12,35 @@ from datetime import datetime
 from pathlib import Path
 # Removed parser import - functions moved to this module
 from .config import Config
-from .header_mapper import CardGroup, header_mapper
+from .header_mapper import CardGroup, CardType, header_mapper, ChartType
 
 
-def get_employee_initials(name: str) -> str:
-    """Get employee initials from name."""
-    return ''.join([word[0].upper() for word in name.split()[:2]])
-
-
-def clean_field_name(field_name: str) -> str:
-    """Clean field name for display."""
-    return field_name.replace("_", " ").title()
 
 
 def get_excluded_chart_fields() -> set:
-    """Return a set of fields to exclude from charts."""
-    return {
-        'professionalism_comments',
-        'communication_comments',
-        'collaboration_comments',
-        'workflow implementation, management, execution_comments',
-        'software & tools_overall_comments',
-        'employee strengths',
-        'employee areas for growth & development',
-        'additional_comments_regarding_performance',
-        'evaluator_name',
-        'technical knowledge & expertise_comments',
+    """Return a set of fields to exclude from charts based on header mapping system."""
+    excluded_fields = set()
+
+    # Get all header mappings
+    header_mappings = header_mapper.header_mappings_by_name
+
+    # Check each mapping to see if it should be excluded from charts
+    for mapping in header_mappings.values():
+        # If the field is marked as NOSHOW for charts, exclude it
+        if mapping.data_type_in_chart == ChartType.NOSHOW:
+            excluded_fields.add(mapping.mapped_header.lower())
+
+    # Also exclude some system fields that are never charted
+    system_exclusions = {
         'responder',
         'submitted',
         'employee name',
         'employee_name',
         'name'
     }
+    excluded_fields.update(system_exclusions)
+
+    return excluded_fields
 
 
 def create_html_output_from_json(data_file: str = None, output_dir: str = None) -> str:
@@ -127,30 +124,29 @@ def convert_to_flat_structure(employees: List[Dict[str, Any]]) -> List[Dict[str,
         profile_image = employee.get('profile_image', {})
         flat_emp['profile_image'] = profile_image
         
-        # Performance ratings
+        # Performance ratings - include ALL fields even if they're empty/None
+        # This ensures the HTML generator can show all mapped fields
         performance_ratings = employee.get('performance_ratings', {})
-        for key, value in performance_ratings.items():
-            if key == 'overall_performance':
+        rating_fields = ['communication', 'collaboration', 'professionalism',
+                        'technical_knowledge_expertise', 'workflow_implementation_management_execution',
+                        'overall_performance']
+
+        for field_key in rating_fields:
+            value = performance_ratings.get(field_key)
+            if field_key == 'overall_performance':
                 flat_emp['overall_performance'] = str(value) if value else ''
+            elif field_key == 'technical_knowledge_expertise':
+                flat_emp['technical_knowledge_expertise_rating'] = str(value) if value else ''
+            elif field_key == 'workflow_implementation_management_execution':
+                flat_emp['workflow_implementation_management_execution_rating'] = str(value) if value else ''
             else:
-                # Convert key to match expected format
-                clean_key = key.replace('_', ' ').title().replace(' ', ' & ').replace('&', '&')
-                if 'Technical' in clean_key:
-                    clean_key = 'Technical Knowledge & Expertise'
-                elif 'Workflow' in clean_key:
-                    clean_key = 'Workflow Implementation, Management, Execution'
-                flat_emp[f'{clean_key}_rating'] = str(value) if value else ''
-        
-        # Performance comments
+                flat_emp[f'{field_key}_rating'] = str(value) if value else ''
+
+        # Performance comments - use field names that match header mapper expectations
         performance_comments = employee.get('performance_comments', {})
         for key, value in performance_comments.items():
-            # Convert key to match expected format
-            clean_key = key.replace('_comments', '').replace('_', ' ').title()
-            if 'Technical' in clean_key:
-                clean_key = 'Technical Knowledge & Expertise'
-            elif 'Workflow' in clean_key:
-                clean_key = 'Workflow Implementation, Management, Execution'
-            flat_emp[f'{clean_key}_comments'] = str(value) if value else ''
+            # The JSON already has the correct field names, so just copy them over
+            flat_emp[key] = str(value) if value else ''
         
         # Software proficiency
         software_proficiency = employee.get('software_proficiency', {})
@@ -183,11 +179,14 @@ def extract_all_fields_from_flat(employees: List[Dict[str, str]]) -> List[str]:
     return list(all_fields)
 
 
-def prepare_chart_data_from_flat(employees: List[Dict[str, str]]) -> Dict[str, Dict[str, int]]:
+def prepare_chart_data_from_flat(employees: List[Dict[str, str]]) -> Dict[str, Any]:
     """Prepare chart data from flat employee data."""
     excluded_fields = get_excluded_chart_fields()
     field_value_counts = defaultdict(Counter)
-    
+
+    # Get header mappings to determine chart types
+    header_mappings = header_mapper.header_mappings_by_name
+
     for emp in employees:
         for field, value in emp.items():
             # Skip profile_image and other non-string fields
@@ -195,8 +194,55 @@ def prepare_chart_data_from_flat(employees: List[Dict[str, str]]) -> Dict[str, D
                 continue
             if field.lower() not in excluded_fields and value and value.strip():
                 field_value_counts[field][value] += 1
-    
-    return {field: dict(counter) for field, counter in field_value_counts.items()}
+
+    # Convert to dict and add progression data
+    chart_data = {field: dict(counter) for field, counter in field_value_counts.items()}
+
+    # Add progression chart data for date fields
+    progression_data = prepare_progression_chart_data(employees)
+    chart_data.update(progression_data)
+
+    return chart_data
+
+
+def prepare_progression_chart_data(employees: List[Dict[str, str]]) -> Dict[str, Dict[str, int]]:
+    """Prepare progression chart data showing daily submission counts."""
+    from collections import defaultdict
+    from datetime import datetime
+
+    # Group submissions by date
+    date_counts = defaultdict(int)
+
+    for emp in employees:
+        date_str = emp.get('date_of_evaluation', '')
+        if date_str:
+            # Parse date and extract just the date part (YYYY-MM-DD)
+            try:
+                # Handle different date formats
+                if ' ' in date_str:
+                    date_part = date_str.split(' ')[0]
+                else:
+                    date_part = date_str
+
+                # Parse and format as YYYY-MM-DD
+                parsed_date = datetime.strptime(date_part, '%Y-%m-%d')
+                formatted_date = parsed_date.strftime('%Y-%m-%d')
+                date_counts[formatted_date] += 1
+            except (ValueError, IndexError):
+                # Skip invalid dates
+                continue
+
+    # Sort dates and create daily counts (not cumulative)
+    if date_counts:
+        sorted_dates = sorted(date_counts.keys())
+        daily_data = {}
+
+        for date in sorted_dates:
+            daily_data[date] = date_counts[date]
+
+        return {'date_of_evaluation': daily_data}
+
+    return {}
 
 
 def copy_images_to_website(output_path: Path):
@@ -212,20 +258,6 @@ def copy_images_to_website(output_path: Path):
         print(f"📸 Copied images to {target_images_dir}")
 
 
-def create_html_output(employees: List[Dict[str, str]], all_fields: List[str], output_filename: str = 'OUTPUT.html') -> str:
-    """Legacy function for backward compatibility."""
-    chart_data = prepare_chart_data_from_flat(employees)
-    html_content = generate_html_template(employees, all_fields, chart_data)
-
-    docs_dir = Config.get_docs_dir()
-    output_path = Config.get_docs_output_path('html')
-    os.makedirs(docs_dir, exist_ok=True)
-
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(html_content)
-
-    print(f"HTML file created: {output_path}")
-    return output_path
 
 
 def generate_html_template(employees: List[Dict[str, str]], all_fields: List[str], chart_data: Dict[str, Dict[str, int]]) -> str:
@@ -678,6 +710,33 @@ def get_css_styles() -> str:
             align-items: center;
             gap: 8px;
         }
+
+        /* CardType-specific styling based on mapping */
+        .rating-field .field-value {
+            font-weight: 600;
+            color: #1A5A58;
+        }
+
+        .multiline-field .field-value {
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .text-field .field-value {
+            color: #1A1A1A;
+        }
+
+        .empty-rating {
+            color: #6B7280;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .empty-text {
+            color: #6B7280;
+            font-style: italic;
+            font-weight: 400;
+        }
         
         .chart-container {
             display: grid;
@@ -844,66 +903,18 @@ def generate_footer() -> str:
     """
 
 
-def generate_employee_card_with_mapping(employee: Dict[str, Any], header_mappings: Dict[str, Any]) -> str:
-    """Generate employee card using header mapping system."""
-    # Get visible fields in card group order
-    visible_fields = header_mapper.get_visible_fields(header_mappings)
-    
-    # Group fields by their card group
-    grouped_fields = {}
-    for field in visible_fields:
-        group = field.group_under
-        if group not in grouped_fields:
-            grouped_fields[group] = []
-        grouped_fields[group].append(field)
-    
-    # Generate card HTML
-    card_html = f"""
-    <div class="employee-card">
-        <div class="employee-header">
-            <img src="{employee.get('profile_image', {}).get('display_path', 'assets/images/default-avatar.png')}" 
-                 alt="{employee.get('name', '')}" class="profile-image">
-            <div class="employee-info">
-                <div class="employee-name">{employee.get('name', '')}</div>
-                <div class="employee-time">{employee.get('date_of_evaluation', '')}</div>
-            </div>
-        </div>
-        <div class="fields-container">
-"""
-    
-    # Generate field groups in order
-    for group in header_mapper.card_group_order:
-        if group in grouped_fields and grouped_fields[group]:
-            group_name = group.value.replace('_', ' ').title()
-            card_html += f'            <div class="field-group"><div class="group-title">{group_name}</div>'
-            
-            for field in grouped_fields[group]:
-                field_value = employee.get(field.mapped_header, '')
-                if field_value and str(field_value).strip():
-                    display_name = field.original_header.replace('_', ' ').title()
-                    card_html += f'<div class="field"><div class="field-label">{display_name}</div><div class="field-value">{field_value}</div></div>'
-            
-            card_html += '</div>'
-    
-    card_html += """
-        </div>
-    </div>
-"""
-    return card_html
 
 def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
-    """Generate HTML for employee cards from flat data."""
+    """Generate HTML for employee cards using header mapping system."""
     cards_html = ""
-    
+
+    # Get header mappings to determine what should be displayed
+    header_mappings = header_mapper.header_mappings_by_name
+
     for employee in employees:
         name = employee.get('employee_name', 'Unknown')
-        role = employee.get('employee_role', '')
-        title = employee.get('title', '')
-        email = employee.get('email', '')
-        evaluator = employee.get('evaluator_name', '')
         date = employee.get('date_of_evaluation', '')
-        submitted = employee.get('submitted', '')
-        
+
         # Profile Image
         profile_image_html = ""
         profile_image = employee.get('profile_image', {})
@@ -913,86 +924,29 @@ def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
         else:
             # Use default profile image
             profile_image_html = f'<img src="assets/images/DEFAULT_PROFILE.jpg" alt="{name}" class="profile-image">'
-        
-        # Basic Information
-        basic_info_html = ""
-        if title:
-            basic_info_html += f'<div class="field"><div class="field-label">Title</div><div class="field-value">{title}</div></div>'
-        if role:
-            basic_info_html += f'<div class="field"><div class="field-label">Role</div><div class="field-value">{role}</div></div>'
-        if email:
-            basic_info_html += f'<div class="field"><div class="field-label">Email</div><div class="field-value">{email}</div></div>'
-        if evaluator:
-            basic_info_html += f'<div class="field"><div class="field-label">Evaluator</div><div class="field-value">{evaluator}</div></div>'
-        if submitted:
-            basic_info_html += f'<div class="field"><div class="field-label">Submitted</div><div class="field-value">{submitted}</div></div>'
-        
-        # Performance Ratings
-        ratings_html = ""
-        rating_fields = ['Communication_rating', 'Collaboration_rating', 'Professionalism_rating', 
-                        'Technical Knowledge & Expertise_rating', 'Workflow Implementation, Management, Execution_rating']
-        
-        for field in rating_fields:
-            if field in employee and employee[field]:
-                value = employee[field]
-                if value and value != '0 (Not Applicable)':
-                    clean_name = field.replace('_rating', ' Rating')
-                    if '(' in value and ')' in value:
-                        rating_num = value.split('(')[0].strip()
-                        rating_desc = '(' + value.split('(')[1]
-                        ratings_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value"><span class="rating-number">{rating_num}</span><span class="rating-description">{rating_desc}</span></div></div>'
-                    else:
-                        ratings_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value">{value}</div></div>'
-        
-        # Performance Comments
-        comments_html = ""
-        comment_fields = ['Communication_comments', 'Collaboration_comments', 'Professionalism_comments',
-                         'Technical Knowledge & Expertise_comments', 'Workflow Implementation, Management, Execution_comments']
-        
-        for field in comment_fields:
-            if field in employee and employee[field]:
-                clean_name = field.replace('_comments', ' Comments').replace('_', ' ')
-                comments_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value">{employee[field]}</div></div>'
-        
-        # Overall Assessment
-        overall_html = ""
-        if employee.get('overall_performance'):
-            overall_html += f'<div class="field"><div class="field-label">Overall Performance</div><div class="field-value">{employee["overall_performance"]}</div></div>'
-        if employee.get('performance_examples'):
-            overall_html += f'<div class="field"><div class="field-label">Performance Examples</div><div class="field-value">{employee["performance_examples"]}</div></div>'
-        if employee.get('additional_resources'):
-            overall_html += f'<div class="field"><div class="field-label">Additional Resources Needed</div><div class="field-value">{employee["additional_resources"]}</div></div>'
-        
-        # Employee Development
-        development_html = ""
-        if employee.get('employee_strengths'):
-            development_html += f'<div class="field"><div class="field-label">Employee Strengths</div><div class="field-value">{employee["employee_strengths"]}</div></div>'
-        if employee.get('areas_for_growth'):
-            development_html += f'<div class="field"><div class="field-label">Areas for Growth & Development</div><div class="field-value">{employee["areas_for_growth"]}</div></div>'
-        if employee.get('studio_culture_feedback'):
-            development_html += f'<div class="field"><div class="field-label">Studio Culture Feedback</div><div class="field-value">{employee["studio_culture_feedback"]}</div></div>'
-        
-        # Software & Tools
-        software_html = ""
-        software_fields = ['revit', 'rhino', 'enscape', 'd5', 'vantage_point', 'deltek/adp', 'newforma', 
-                          'bluebeam', 'grasshopper', 'word', 'powerpoint', 'excel', 'illustrator', 'photoshop', 'indesign']
-        
-        for field in software_fields:
-            if field in employee and employee[field]:
-                value = employee[field]
-                if value and value != '0 (Not Applicable)':
-                    clean_name = field.replace('_', ' ').title()
-                    if '(' in value and ')' in value:
-                        rating_num = value.split('(')[0].strip()
-                        rating_desc = '(' + value.split('(')[1]
-                        software_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value"><span class="rating-number">{rating_num}</span><span class="rating-description">{rating_desc}</span></div></div>'
-                    else:
-                        software_html += f'<div class="field"><div class="field-label">{clean_name}</div><div class="field-value">{value}</div></div>'
-        
-        # Software Tools Feedback
-        if employee.get('software_tools_feedback'):
-            software_html += f'<div class="field"><div class="field-label">Software & Tools Feedback</div><div class="field-value">{employee["software_tools_feedback"]}</div></div>'
-        
+
+        # Group fields by their card group for ordered display
+        grouped_fields_html = ""
+
+        # Get all visible fields in proper order
+        visible_fields = header_mapper.get_visible_fields(header_mappings)
+
+        # Group visible fields by their card group
+        grouped_fields = {}
+        for mapping in visible_fields:
+            group = mapping.group_under
+            if group not in grouped_fields:
+                grouped_fields[group] = []
+            grouped_fields[group].append(mapping)
+
+        # Sort groups by display order and generate HTML for each group
+        for group in header_mapper.card_group_order:
+            if group in grouped_fields and grouped_fields[group]:
+                group_fields = sorted(grouped_fields[group], key=lambda x: x.display_order)
+                group_html = generate_field_group_html(employee, group, group_fields)
+                if group_html:
+                    grouped_fields_html += group_html
+
         card_html = f"""
         <div class="employee-card">
             <div class="employee-header">
@@ -1003,38 +957,133 @@ def generate_employee_cards(employees: List[Dict[str, str]]) -> str:
                 </div>
             </div>
             <div class="fields-container">
-                {f'<div class="field-group"><div class="group-title">Basic Information</div>{basic_info_html}</div>' if basic_info_html else ''}
-                {f'<div class="field-group"><div class="group-title">Performance Ratings</div>{ratings_html}</div>' if ratings_html else ''}
-                {f'<div class="field-group"><div class="group-title">Performance Comments</div>{comments_html}</div>' if comments_html else ''}
-                {f'<div class="field-group"><div class="group-title">Overall Assessment</div>{overall_html}</div>' if overall_html else ''}
-                {f'<div class="field-group"><div class="group-title">Employee Development</div>{development_html}</div>' if development_html else ''}
-                {f'<div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid">{software_html}</div></div>' if software_html else ''}
+                {grouped_fields_html}
             </div>
         </div>
         """
-        
+
         cards_html += card_html
-    
+
     return cards_html
+
+
+def generate_field_group_html(employee: Dict[str, str], group: CardGroup, field_mappings: List) -> str:
+    """Generate HTML for a field group using header mappings."""
+    fields_html = ""
+
+    for mapping in field_mappings:
+        # Only process fields that should be shown in cards
+        if mapping.data_type_in_card == CardType.NOSHOW:
+            continue
+
+        field_value = employee.get(mapping.mapped_header, '')
+        field_html = generate_field_html(mapping, field_value)
+        fields_html += field_html
+
+    if not fields_html:
+        return ""
+
+    # Use group name from CardGroup enum, formatted for display
+    group_title = group.value.replace("_", " ").title()
+
+    # Special handling for software tools group (use grid layout)
+    if group == CardGroup.SOFTWARE_TOOLS:
+        group_html = f'<div class="field-group"><div class="group-title">{group_title}</div><div class="software-tools-grid">{fields_html}</div></div>'
+    else:
+        group_html = f'<div class="field-group"><div class="group-title">{group_title}</div>{fields_html}</div>'
+
+    return group_html
+
+
+def generate_field_html(mapping, field_value: str) -> str:
+    """Generate HTML for a single field based entirely on CardType from mapping."""
+
+    # Use original_header from mapping for display label (cleaned up)
+    display_label = clean_display_label(mapping.original_header)
+
+    # Handle empty/null values - no hardcoded messages
+    if not field_value or not str(field_value).strip():
+        field_value = ""
+
+    # Generate HTML based solely on CardType
+    if mapping.data_type_in_card == CardType.RATING_NUM:
+        return generate_rating_field_html(display_label, field_value)
+    elif mapping.data_type_in_card == CardType.MULTILINE_TEXT:
+        return generate_multiline_field_html(display_label, field_value)
+    elif mapping.data_type_in_card == CardType.TEXT:
+        return generate_text_field_html(display_label, field_value)
+    else:
+        # Fallback for any unhandled CardType
+        return generate_text_field_html(display_label, field_value)
+
+
+def generate_rating_field_html(display_label: str, field_value: str) -> str:
+    """Generate HTML for rating fields based on CardType.RATING_NUM."""
+    if not field_value:
+        return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value empty-rating">Not rated</div></div>'
+
+    # Parse rating format: "4 (Exceeds Expectations)" -> number and description
+    if '(' in field_value and ')' in field_value:
+        rating_num = field_value.split('(')[0].strip()
+        rating_desc = '(' + field_value.split('(')[1]
+        return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value"><span class="rating-number">{rating_num}</span><span class="rating-description">{rating_desc}</span></div></div>'
+    else:
+        return f'<div class="field rating-field"><div class="field-label">{display_label}</div><div class="field-value">{field_value}</div></div>'
+
+
+def generate_multiline_field_html(display_label: str, field_value: str) -> str:
+    """Generate HTML for multiline text fields based on CardType.MULTILINE_TEXT."""
+    if not field_value:
+        return f'<div class="field multiline-field"><div class="field-label">{display_label}</div><div class="field-value empty-text">No content provided</div></div>'
+
+    return f'<div class="field multiline-field"><div class="field-label">{display_label}</div><div class="field-value">{field_value}</div></div>'
+
+
+def generate_text_field_html(display_label: str, field_value: str) -> str:
+    """Generate HTML for regular text fields based on CardType.TEXT."""
+    if not field_value:
+        return f'<div class="field text-field"><div class="field-label">{display_label}</div><div class="field-value empty-text">Not specified</div></div>'
+
+    return f'<div class="field text-field"><div class="field-label">{display_label}</div><div class="field-value">{field_value}</div></div>'
+
+
+def clean_display_label(original_header: str) -> str:
+    """Clean the original header for display as a field label."""
+    if not original_header:
+        return "Field"
+
+    # Remove common suffixes that make labels ugly
+    label = original_header
+    label = label.replace("2", "").strip()  # Remove "2" suffixes
+
+    # Clean up any trailing/leading whitespace
+    label = label.strip()
+
+    return label
 
 
 def generate_charts_html(all_fields: List[str]) -> str:
     """Generate HTML for charts."""
     charts_html = ""
     excluded_fields = get_excluded_chart_fields()
-    
+    progression_fields = ['date_of_evaluation']
+
     for field in all_fields:
         if field.lower() not in excluded_fields:
             clean_name = field.replace('_', ' ').title()
+
+            # Use taller height for progression charts (line charts)
+            chart_height = "400px" if field in progression_fields else "300px"
+
             charts_html += f"""
         <div class="chart">
             <h3>{clean_name}</h3>
-            <div style="position: relative; height: 300px;">
+            <div style="position: relative; height: {chart_height};">
                 <canvas id="chart-{field}"></canvas>
             </div>
         </div>
         """
-    
+
     return charts_html
 
 
@@ -1170,13 +1219,15 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
         }}
         
         // Find similar names using fuzzy search
-        function findSimilarNames(searchTerm, employeeNames, maxDistance = 3) {{
+        function findSimilarNames(searchTerm, employeeNames, maxDistance = 15) {{
             const suggestions = [];
-            const searchLower = searchTerm.toLowerCase();
-            
+            const searchLower = searchTerm.toLowerCase().trim();
+            const searchWords = searchLower.split(/\\s+/);
+
             employeeNames.forEach(name => {{
                 const nameLower = name.toLowerCase();
-                
+                const nameWords = nameLower.split(/\\s+/);
+
                 // Check for exact substring match first (highest priority)
                 if (nameLower.includes(searchLower) && nameLower !== searchLower) {{
                     suggestions.push({{
@@ -1187,25 +1238,52 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
                     }});
                     return;
                 }}
-                
-                // Check for starts with match
-                if (nameLower.startsWith(searchLower) && nameLower !== searchLower) {{
+
+                // Check for starts with match (more lenient)
+                if (nameLower.startsWith(searchLower.substring(0, Math.min(3, searchLower.length))) && nameLower !== searchLower) {{
                     suggestions.push({{
                         name: name,
                         distance: 0,
-                        similarity: 0.95,
+                        similarity: 0.9,
                         type: 'startsWith'
                     }});
                     return;
                 }}
-                
-                // Use Levenshtein distance for fuzzy matching
+
+                // Word-based matching for multi-word names
+                let wordMatches = 0;
+                let totalWords = Math.max(searchWords.length, nameWords.length);
+                searchWords.forEach(searchWord => {{
+                    if (searchWord.length >= 2) {{  // Only match words with 2+ characters
+                        nameWords.forEach(nameWord => {{
+                            if (nameWord.includes(searchWord) || searchWord.includes(nameWord) ||
+                                calculateLevenshteinDistance(searchWord, nameWord) <= 2) {{
+                                wordMatches++;
+                            }}
+                        }});
+                    }}
+                }});
+
+                if (wordMatches > 0) {{
+                    const wordSimilarity = wordMatches / totalWords;
+                    if (wordSimilarity > 0.3) {{
+                        suggestions.push({{
+                            name: name,
+                            distance: 0,
+                            similarity: Math.max(wordSimilarity, 0.4),
+                            type: 'wordMatch'
+                        }});
+                        return;
+                    }}
+                }}
+
+                // Use Levenshtein distance for fuzzy matching (much more lenient)
                 const distance = calculateLevenshteinDistance(searchLower, nameLower);
                 const maxLength = Math.max(searchLower.length, nameLower.length);
                 const similarity = 1 - (distance / maxLength);
-                
-                // Only suggest if similarity is above threshold and not exact match
-                if (similarity > 0.6 && distance <= maxDistance && nameLower !== searchLower) {{
+
+                // Very lenient threshold - allow very vague matches
+                if (similarity > 0.2 && distance <= maxDistance && nameLower !== searchLower) {{
                     suggestions.push({{
                         name: name,
                         distance: distance,
@@ -1218,17 +1296,22 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
             // Sort by type priority and then by similarity (highest first)
             return suggestions
                 .sort((a, b) => {{
-                    // Priority: substring > startsWith > fuzzy
-                    const typePriority = {{ 'substring': 3, 'startsWith': 2, 'fuzzy': 1 }};
+                    // Priority: substring > startsWith > wordMatch > fuzzy
+                    const typePriority = {{
+                        'substring': 4,
+                        'startsWith': 3,
+                        'wordMatch': 2,
+                        'fuzzy': 1
+                    }};
                     const aPriority = typePriority[a.type] || 0;
                     const bPriority = typePriority[b.type] || 0;
-                    
+
                     if (aPriority !== bPriority) {{
                         return bPriority - aPriority;
                     }}
                     return b.similarity - a.similarity;
                 }})
-                .slice(0, 3);
+                .slice(0, 5);  // Show more suggestions for very vague matches
         }}
         
         // Hide the Submitted field from employee cards
@@ -1328,76 +1411,179 @@ def generate_javascript(employees: List[Dict[str, str]], chart_data: Dict[str, D
         }}
         
         function initializeCharts() {{
+            // Define which fields should use line charts (progression charts)
+            const progressionFields = ['date_of_evaluation'];
+
             Object.keys(chartData).forEach(field => {{
                 const canvas = document.getElementById(`chart-${{field}}`);
                 if (canvas) {{
                     const ctx = canvas.getContext('2d');
                     const data = chartData[field];
-                    
-                    new Chart(ctx, {{
-                        type: 'doughnut',
-                        data: {{
-                            labels: Object.keys(data),
-                            datasets: [{{
-                                data: Object.values(data),
-                                backgroundColor: [
-                                    'rgba(43, 122, 120, 0.8)',    // Primary teal
-                                    'rgba(26, 90, 88, 0.8)',      // Darker teal
-                                    'rgba(15, 20, 25, 0.8)',      // Dark text
-                                    'rgba(58, 175, 169, 0.8)',    // Accent teal
-                                    'rgba(74, 74, 74, 0.8)',      // Secondary text
-                                    'rgba(240, 248, 247, 0.8)',   // Light background
-                                    'rgba(224, 232, 231, 0.8)',   // Border color
-                                    'rgba(43, 122, 120, 0.6)'     // Lighter primary
-                                ],
-                                borderColor: [
-                                    'rgba(43, 122, 120, 1)',
-                                    'rgba(26, 90, 88, 1)',
-                                    'rgba(15, 20, 25, 1)',
-                                    'rgba(58, 175, 169, 1)',
-                                    'rgba(74, 74, 74, 1)',
-                                    'rgba(240, 248, 247, 1)',
-                                    'rgba(224, 232, 231, 1)',
-                                    'rgba(43, 122, 120, 1)'
-                                ],
-                                borderWidth: 2,
-                                hoverOffset: 10
-                            }}]
-                        }},
-                        options: {{
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {{
-                                legend: {{
-                                    position: 'bottom',
-                                    labels: {{
-                                        padding: 20,
-                                        usePointStyle: true,
-                                        font: {{
-                                            family: 'Inter',
-                                            size: 12
+
+                    // Check if this is a progression field
+                    if (progressionFields.includes(field)) {{
+                        // Create line chart for progression data
+                        const labels = Object.keys(data);
+                        const values = Object.values(data);
+
+                        new Chart(ctx, {{
+                            type: 'line',
+                            data: {{
+                                labels: labels,
+                                datasets: [{{
+                                    label: 'Daily Submissions',
+                                    data: values,
+                                    borderColor: 'rgba(43, 122, 120, 1)',
+                                    backgroundColor: 'rgba(43, 122, 120, 0.1)',
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointBackgroundColor: 'rgba(43, 122, 120, 1)',
+                                    pointBorderColor: 'white',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 6,
+                                    pointHoverRadius: 8
+                                }}]
+                            }},
+                            options: {{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {{
+                                    legend: {{
+                                        display: false
+                                    }},
+                                    tooltip: {{
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                        titleColor: 'white',
+                                        bodyColor: 'white',
+                                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                                        borderWidth: 1,
+                                        cornerRadius: 8,
+                                        callbacks: {{
+                                            title: function(context) {{
+                                                return 'Date: ' + context[0].label;
+                                            }},
+                                            label: function(context) {{
+                                                return 'Submissions: ' + context.parsed.y;
+                                            }}
                                         }}
                                     }}
                                 }},
-                                tooltip: {{
-                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                    titleColor: 'white',
-                                    bodyColor: 'white',
-                                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                                    borderWidth: 1,
-                                    cornerRadius: 8,
-                                    displayColors: true
+                                scales: {{
+                                    x: {{
+                                        display: true,
+                                        title: {{
+                                            display: true,
+                                            text: 'Date',
+                                            color: '#1A5A58',
+                                            font: {{
+                                                weight: 'bold'
+                                            }}
+                                        }},
+                                        grid: {{
+                                            color: 'rgba(26, 90, 88, 0.1)'
+                                        }},
+                                        ticks: {{
+                                            color: '#4A4A4A'
+                                        }}
+                                    }},
+                                    y: {{
+                                        display: true,
+                                        title: {{
+                                            display: true,
+                                            text: 'Number of Submissions',
+                                            color: '#1A5A58',
+                                            font: {{
+                                                weight: 'bold'
+                                            }}
+                                        }},
+                                        beginAtZero: true,
+                                        grid: {{
+                                            color: 'rgba(26, 90, 88, 0.1)'
+                                        }},
+                                        ticks: {{
+                                            color: '#4A4A4A',
+                                            stepSize: 1
+                                        }}
+                                    }}
+                                }},
+                                animation: {{
+                                    duration: 1500,
+                                    easing: 'easeOutQuart'
+                                }},
+                                interaction: {{
+                                    intersect: false,
+                                    mode: 'index'
                                 }}
-                            }},
-                            cutout: '60%',
-                            animation: {{
-                                animateRotate: true,
-                                animateScale: true,
-                                duration: 1000,
-                                easing: 'easeOutQuart'
                             }}
-                        }}
-                    }});
+                        }});
+                    }} else {{
+                        // Create doughnut chart for regular data
+                        new Chart(ctx, {{
+                            type: 'doughnut',
+                            data: {{
+                                labels: Object.keys(data),
+                                datasets: [{{
+                                    data: Object.values(data),
+                                    backgroundColor: [
+                                        'rgba(43, 122, 120, 0.8)',    // Primary teal
+                                        'rgba(26, 90, 88, 0.8)',      // Darker teal
+                                        'rgba(15, 20, 25, 0.8)',      // Dark text
+                                        'rgba(58, 175, 169, 0.8)',    // Accent teal
+                                        'rgba(74, 74, 74, 0.8)',      // Secondary text
+                                        'rgba(240, 248, 247, 0.8)',   // Light background
+                                        'rgba(224, 232, 231, 0.8)',   // Border color
+                                        'rgba(43, 122, 120, 0.6)'     // Lighter primary
+                                    ],
+                                    borderColor: [
+                                        'rgba(43, 122, 120, 1)',
+                                        'rgba(26, 90, 88, 1)',
+                                        'rgba(15, 20, 25, 1)',
+                                        'rgba(58, 175, 169, 1)',
+                                        'rgba(74, 74, 74, 1)',
+                                        'rgba(240, 248, 247, 1)',
+                                        'rgba(224, 232, 231, 1)',
+                                        'rgba(43, 122, 120, 1)'
+                                    ],
+                                    borderWidth: 2,
+                                    hoverOffset: 10
+                                }}]
+                            }},
+                            options: {{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {{
+                                    legend: {{
+                                        position: 'bottom',
+                                        labels: {{
+                                            padding: 20,
+                                            usePointStyle: true,
+                                            font: {{
+                                                family: 'Inter',
+                                                size: 12
+                                            }}
+                                        }}
+                                    }},
+                                    tooltip: {{
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                        titleColor: 'white',
+                                        bodyColor: 'white',
+                                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                                        borderWidth: 1,
+                                        cornerRadius: 8,
+                                        displayColors: true
+                                    }}
+                                }},
+                                cutout: '60%',
+                                animation: {{
+                                    animateRotate: true,
+                                    animateScale: true,
+                                    duration: 1000,
+                                    easing: 'easeOutQuart'
+                                }}
+                            }}
+                        }});
+                    }}
                 }}
             }});
         }}

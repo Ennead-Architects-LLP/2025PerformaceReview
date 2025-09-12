@@ -427,6 +427,33 @@
             align-items: center;
             gap: 8px;
         }
+
+        /* CardType-specific styling based on mapping */
+        .rating-field .field-value {
+            font-weight: 600;
+            color: #1A5A58;
+        }
+
+        .multiline-field .field-value {
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .text-field .field-value {
+            color: #1A1A1A;
+        }
+
+        .empty-rating {
+            color: #6B7280;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .empty-text {
+            color: #6B7280;
+            font-style: italic;
+            font-weight: 400;
+        }
         
         .chart-container {
             display: grid;
@@ -572,12 +599,7 @@
                 </div>
             </div>
             <div class="fields-container">
-                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Title</div><div class="field-value">Security Architect</div></div><div class="field"><div class="field-label">Role</div><div class="field-value">M365 Architect, M365 Security Administration</div></div><div class="field"><div class="field-label">Email</div><div class="field-value">brett.fabrikant@ennead.com</div></div><div class="field"><div class="field-label">Submitted</div><div class="field-value">2025-09-09 13:44:11</div></div></div>
-                
-                <div class="field-group"><div class="group-title">Performance Comments</div><div class="field"><div class="field-label">Communication Comments</div><div class="field-value">My role is highly dependent on effective use of time, and I leverage tools and automation as much as possible to assist in the internal communications of our IT support needs.</div></div></div>
-                
-                
-                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Basic Info</div><div class="field text-field"><div class="field-label">Title</div><div class="field-value">Security Architect</div></div><div class="field text-field"><div class="field-label">Role</div><div class="field-value">M365 Architect, M365 Security Administration</div></div><div class="field text-field"><div class="field-label">Email</div><div class="field-value">brett.fabrikant@ennead.com</div></div><div class="field text-field"><div class="field-label">Date</div><div class="field-value">2025-09-09</div></div></div><div class="field-group"><div class="group-title">Performance Ratings</div><div class="field rating-field"><div class="field-label">Communication</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Collaboration</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Professionalism</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value">4</div></div></div><div class="field-group"><div class="group-title">Performance Comments</div><div class="field multiline-field"><div class="field-label">Communication</div><div class="field-value">My role is highly dependent on effective use of time, and I leverage tools and automation as much as possible to assist in the internal communications of our IT support needs.</div></div><div class="field multiline-field"><div class="field-label">Collaboration</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Professionalism</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Software Tools</div><div class="software-tools-grid"><div class="field rating-field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Deltek/ADP</div><div class="field-value empty-rating">Not rated</div></div><div class="field rating-field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div></div></div><div class="field-group"><div class="group-title">Employee Development</div><div class="field multiline-field"><div class="field-label">Employee Strengths</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Areas for Growth / Development Goals</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Overall Assessment</div><div class="field rating-field"><div class="field-label">Rate Your Overall Performance This Year</div><div class="field-value empty-rating">Not rated</div></div><div class="field multiline-field"><div class="field-label">Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">What additional resources would help you do your job more effectively?</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Additional Data</div><div class="field multiline-field"><div class="field-label">Please share your thoughts about the character and culture of our studio and practice.</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Software & Tools</div><div class="field-value empty-text">No content provided</div></div></div>
             </div>
         </div>
         
@@ -590,32 +612,22 @@
                 </div>
             </div>
             <div class="fields-container">
-                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Title</div><div class="field-value">Associate</div></div><div class="field"><div class="field-label">Role</div><div class="field-value">Architectural & Interior Designer, Interior Project Manager</div></div><div class="field"><div class="field-label">Email</div><div class="field-value">xli@ennead.com</div></div><div class="field"><div class="field-label">Submitted</div><div class="field-value">2025-09-09 22:56:15</div></div></div>
-                
-                <div class="field-group"><div class="group-title">Performance Comments</div><div class="field"><div class="field-label">Communication Comments</div><div class="field-value">Communicate clearly and adapt my style to different audiences. 
+                <div class="field-group"><div class="group-title">Basic Info</div><div class="field text-field"><div class="field-label">Title</div><div class="field-value">Associate</div></div><div class="field text-field"><div class="field-label">Role</div><div class="field-value">Architectural & Interior Designer, Interior Project Manager</div></div><div class="field text-field"><div class="field-label">Email</div><div class="field-value">xli@ennead.com</div></div><div class="field text-field"><div class="field-label">Date</div><div class="field-value">2025-09-10</div></div></div><div class="field-group"><div class="group-title">Performance Ratings</div><div class="field rating-field"><div class="field-label">Communication</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Collaboration</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Professionalism</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value">4</div></div></div><div class="field-group"><div class="group-title">Performance Comments</div><div class="field multiline-field"><div class="field-label">Communication</div><div class="field-value">Communicate clearly and adapt my style to different audiences. 
 Make sure to listen carefully, confirm understanding, and follow up in writing when needed. 
-This helps avoid confusion, build trust, and keep projects moving smoothly.</div></div></div>
-                
-                
-                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div>
+This helps avoid confusion, build trust, and keep projects moving smoothly.</div></div><div class="field multiline-field"><div class="field-label">Collaboration</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Professionalism</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Software Tools</div><div class="software-tools-grid"><div class="field rating-field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Deltek/ADP</div><div class="field-value empty-rating">Not rated</div></div><div class="field rating-field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div><div class="field-group"><div class="group-title">Employee Development</div><div class="field multiline-field"><div class="field-label">Employee Strengths</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Areas for Growth / Development Goals</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Overall Assessment</div><div class="field rating-field"><div class="field-label">Rate Your Overall Performance This Year</div><div class="field-value empty-rating">Not rated</div></div><div class="field multiline-field"><div class="field-label">Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">What additional resources would help you do your job more effectively?</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Additional Data</div><div class="field multiline-field"><div class="field-label">Please share your thoughts about the character and culture of our studio and practice.</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Software & Tools</div><div class="field-value empty-text">No content provided</div></div></div>
             </div>
         </div>
         
         <div class="employee-card">
             <div class="employee-header">
-                <img src="assets/images/Leah Li_profile.jpg" alt="Leah Li" class="profile-image">
+                <img src="assets/images/DEFAULT_PROFILE.jpg" alt="Leah Li" class="profile-image">
                 <div class="employee-info">
                     <div class="employee-name">Leah Li</div>
                     <div class="employee-time">2025-09-10</div>
                 </div>
             </div>
             <div class="fields-container">
-                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Title</div><div class="field-value">Office Manager (Shanghai)</div></div><div class="field"><div class="field-label">Role</div><div class="field-value">Office admin and HR</div></div><div class="field"><div class="field-label">Email</div><div class="field-value">lli@ennead.com</div></div><div class="field"><div class="field-label">Submitted</div><div class="field-value">2025-09-09 23:26:45</div></div></div>
-                
-                <div class="field-group"><div class="group-title">Performance Comments</div><div class="field"><div class="field-label">Communication Comments</div><div class="field-value">communication clearly in both verbal and written forms.</div></div></div>
-                
-                
-                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Basic Info</div><div class="field text-field"><div class="field-label">Title</div><div class="field-value">Office Manager (Shanghai)</div></div><div class="field text-field"><div class="field-label">Role</div><div class="field-value">Office admin and HR</div></div><div class="field text-field"><div class="field-label">Email</div><div class="field-value">lli@ennead.com</div></div><div class="field text-field"><div class="field-label">Date</div><div class="field-value">2025-09-10</div></div></div><div class="field-group"><div class="group-title">Performance Ratings</div><div class="field rating-field"><div class="field-label">Communication</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Collaboration</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Professionalism</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value">5</div></div></div><div class="field-group"><div class="group-title">Performance Comments</div><div class="field multiline-field"><div class="field-label">Communication</div><div class="field-value">communication clearly in both verbal and written forms.</div></div><div class="field multiline-field"><div class="field-label">Collaboration</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Professionalism</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Software Tools</div><div class="software-tools-grid"><div class="field rating-field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Deltek/ADP</div><div class="field-value empty-rating">Not rated</div></div><div class="field rating-field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div></div></div><div class="field-group"><div class="group-title">Employee Development</div><div class="field multiline-field"><div class="field-label">Employee Strengths</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Areas for Growth / Development Goals</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Overall Assessment</div><div class="field rating-field"><div class="field-label">Rate Your Overall Performance This Year</div><div class="field-value empty-rating">Not rated</div></div><div class="field multiline-field"><div class="field-label">Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">What additional resources would help you do your job more effectively?</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Additional Data</div><div class="field multiline-field"><div class="field-label">Please share your thoughts about the character and culture of our studio and practice.</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Software & Tools</div><div class="field-value empty-text">No content provided</div></div></div>
             </div>
         </div>
         
@@ -628,84 +640,59 @@ This helps avoid confusion, build trust, and keep projects moving smoothly.</div
                 </div>
             </div>
             <div class="fields-container">
-                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Role</div><div class="field-value">Architecture Designer</div></div><div class="field"><div class="field-label">Email</div><div class="field-value">Vivian.Zhan@ennead.com</div></div><div class="field"><div class="field-label">Submitted</div><div class="field-value">2025-09-10 08:49:35</div></div></div>
-                
-                <div class="field-group"><div class="group-title">Performance Comments</div><div class="field"><div class="field-label">Communication Comments</div><div class="field-value">I communicate clearly and professionally in both verbal and written formats. I adapt my style depending on the audience, ensuring clarity and conciseness. I also make an effort to actively listen and respond thoughtfully, which helps avoid misunderstandings and keeps collaboration efficient.</div></div></div>
-                
-                
-                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Basic Info</div><div class="field text-field"><div class="field-label">Title</div><div class="field-value empty-text">Not specified</div></div><div class="field text-field"><div class="field-label">Role</div><div class="field-value">Architecture Designer</div></div><div class="field text-field"><div class="field-label">Email</div><div class="field-value">Vivian.Zhan@ennead.com</div></div><div class="field text-field"><div class="field-label">Date</div><div class="field-value">2025-09-10</div></div></div><div class="field-group"><div class="group-title">Performance Ratings</div><div class="field rating-field"><div class="field-label">Communication</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Collaboration</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Professionalism</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value">3</div></div></div><div class="field-group"><div class="group-title">Performance Comments</div><div class="field multiline-field"><div class="field-label">Communication</div><div class="field-value">I communicate clearly and professionally in both verbal and written formats. I adapt my style depending on the audience, ensuring clarity and conciseness. I also make an effort to actively listen and respond thoughtfully, which helps avoid misunderstandings and keeps collaboration efficient.</div></div><div class="field multiline-field"><div class="field-label">Collaboration</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Professionalism</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Software Tools</div><div class="software-tools-grid"><div class="field rating-field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Deltek/ADP</div><div class="field-value empty-rating">Not rated</div></div><div class="field rating-field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div><div class="field-group"><div class="group-title">Employee Development</div><div class="field multiline-field"><div class="field-label">Employee Strengths</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Areas for Growth / Development Goals</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Overall Assessment</div><div class="field rating-field"><div class="field-label">Rate Your Overall Performance This Year</div><div class="field-value empty-rating">Not rated</div></div><div class="field multiline-field"><div class="field-label">Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">What additional resources would help you do your job more effectively?</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Additional Data</div><div class="field multiline-field"><div class="field-label">Please share your thoughts about the character and culture of our studio and practice.</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Software & Tools</div><div class="field-value empty-text">No content provided</div></div></div>
             </div>
         </div>
         
         <div class="employee-card">
             <div class="employee-header">
-                <img src="assets/images/Matt Hitscherich_profile.jpg" alt="Matt Hitscherich" class="profile-image">
+                <img src="assets/images/DEFAULT_PROFILE.jpg" alt="Matt Hitscherich" class="profile-image">
                 <div class="employee-info">
                     <div class="employee-name">Matt Hitscherich</div>
                     <div class="employee-time">2025-09-10</div>
                 </div>
             </div>
             <div class="fields-container">
-                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Role</div><div class="field-value">Draftsman</div></div><div class="field"><div class="field-label">Email</div><div class="field-value">mhitscherich@ennead.com</div></div><div class="field"><div class="field-label">Submitted</div><div class="field-value">2025-09-10 13:14:04</div></div></div>
-                
-                <div class="field-group"><div class="group-title">Performance Comments</div><div class="field"><div class="field-label">Communication Comments</div><div class="field-value">I have a lot to say...</div></div></div>
-                
-                
-                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Basic Info</div><div class="field text-field"><div class="field-label">Title</div><div class="field-value empty-text">Not specified</div></div><div class="field text-field"><div class="field-label">Role</div><div class="field-value">Draftsman</div></div><div class="field text-field"><div class="field-label">Email</div><div class="field-value">mhitscherich@ennead.com</div></div><div class="field text-field"><div class="field-label">Date</div><div class="field-value">2025-09-10</div></div></div><div class="field-group"><div class="group-title">Performance Ratings</div><div class="field rating-field"><div class="field-label">Communication</div><div class="field-value">3</div></div><div class="field rating-field"><div class="field-label">Collaboration</div><div class="field-value">3</div></div><div class="field rating-field"><div class="field-label">Professionalism</div><div class="field-value">3</div></div><div class="field rating-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value">3</div></div><div class="field rating-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value">3</div></div></div><div class="field-group"><div class="group-title">Performance Comments</div><div class="field multiline-field"><div class="field-label">Communication</div><div class="field-value">I have a lot to say...</div></div><div class="field multiline-field"><div class="field-label">Collaboration</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Professionalism</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Software Tools</div><div class="software-tools-grid"><div class="field rating-field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field rating-field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Deltek/ADP</div><div class="field-value empty-rating">Not rated</div></div><div class="field rating-field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field rating-field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div></div></div><div class="field-group"><div class="group-title">Employee Development</div><div class="field multiline-field"><div class="field-label">Employee Strengths</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Areas for Growth / Development Goals</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Overall Assessment</div><div class="field rating-field"><div class="field-label">Rate Your Overall Performance This Year</div><div class="field-value empty-rating">Not rated</div></div><div class="field multiline-field"><div class="field-label">Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">What additional resources would help you do your job more effectively?</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Additional Data</div><div class="field multiline-field"><div class="field-label">Please share your thoughts about the character and culture of our studio and practice.</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Software & Tools</div><div class="field-value empty-text">No content provided</div></div></div>
             </div>
         </div>
         
         <div class="employee-card">
             <div class="employee-header">
-                <img src="assets/images/Clayton Kaul_profile.jpg" alt="Clayton Kaul" class="profile-image">
+                <img src="assets/images/DEFAULT_PROFILE.jpg" alt="Clayton Kaul" class="profile-image">
                 <div class="employee-info">
                     <div class="employee-name">Clayton Kaul</div>
                     <div class="employee-time">2025-09-09</div>
                 </div>
             </div>
             <div class="fields-container">
-                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Title</div><div class="field-value">Senior Associate</div></div><div class="field"><div class="field-label">Role</div><div class="field-value">Project Architect / Project Manager</div></div><div class="field"><div class="field-label">Email</div><div class="field-value">ckaul@ennead.com</div></div><div class="field"><div class="field-label">Submitted</div><div class="field-value">2025-09-10 17:22:05</div></div></div>
-                
-                <div class="field-group"><div class="group-title">Performance Comments</div><div class="field"><div class="field-label">Communication Comments</div><div class="field-value">The past year has been a different role for me than typical given the full year in CA with a much smaller team.    believe I effectively communicate through e-mail, teams and meetings where required to ensure everyone is on the same page.   I like to directly address as soon as possible any thing that seems inconsistent with my understanding of what should be happening or how to improve on workflow.</div></div></div>
-                
-                
-                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Basic Info</div><div class="field text-field"><div class="field-label">Title</div><div class="field-value">Senior Associate</div></div><div class="field text-field"><div class="field-label">Role</div><div class="field-value">Project Architect / Project Manager</div></div><div class="field text-field"><div class="field-label">Email</div><div class="field-value">ckaul@ennead.com</div></div><div class="field text-field"><div class="field-label">Date</div><div class="field-value">2025-09-09</div></div></div><div class="field-group"><div class="group-title">Performance Ratings</div><div class="field rating-field"><div class="field-label">Communication</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Collaboration</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Professionalism</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value">4</div></div></div><div class="field-group"><div class="group-title">Performance Comments</div><div class="field multiline-field"><div class="field-label">Communication</div><div class="field-value">The past year has been a different role for me than typical given the full year in CA with a much smaller team.    believe I effectively communicate through e-mail, teams and meetings where required to ensure everyone is on the same page.   I like to directly address as soon as possible any thing that seems inconsistent with my understanding of what should be happening or how to improve on workflow.</div></div><div class="field multiline-field"><div class="field-label">Collaboration</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Professionalism</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Software Tools</div><div class="software-tools-grid"><div class="field rating-field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field rating-field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field rating-field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field rating-field"><div class="field-label">Deltek/ADP</div><div class="field-value empty-rating">Not rated</div></div><div class="field rating-field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">1</span><span class="rating-description">(Unsatisfactory)</span></div></div><div class="field rating-field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field rating-field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field rating-field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">4</span><span class="rating-description">(Exceeds Expectations)</span></div></div></div></div><div class="field-group"><div class="group-title">Employee Development</div><div class="field multiline-field"><div class="field-label">Employee Strengths</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Areas for Growth / Development Goals</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Overall Assessment</div><div class="field rating-field"><div class="field-label">Rate Your Overall Performance This Year</div><div class="field-value empty-rating">Not rated</div></div><div class="field multiline-field"><div class="field-label">Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">What additional resources would help you do your job more effectively?</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Additional Data</div><div class="field multiline-field"><div class="field-label">Please share your thoughts about the character and culture of our studio and practice.</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Software & Tools</div><div class="field-value empty-text">No content provided</div></div></div>
             </div>
         </div>
         
         <div class="employee-card">
             <div class="employee-header">
-                <img src="assets/images/Regina Jiang_profile.jpg" alt="Regina Jiang" class="profile-image">
+                <img src="assets/images/DEFAULT_PROFILE.jpg" alt="Regina Jiang" class="profile-image">
                 <div class="employee-info">
                     <div class="employee-name">Regina Jiang</div>
                     <div class="employee-time">2025-09-11</div>
                 </div>
             </div>
             <div class="fields-container">
-                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Title</div><div class="field-value">Associate Principal</div></div><div class="field"><div class="field-label">Role</div><div class="field-value">Project Manager</div></div><div class="field"><div class="field-label">Email</div><div class="field-value">rjiang@ennead.com</div></div><div class="field"><div class="field-label">Submitted</div><div class="field-value">2025-09-11 04:30:38</div></div></div>
-                
-                <div class="field-group"><div class="group-title">Performance Comments</div><div class="field"><div class="field-label">Communication Comments</div><div class="field-value">I strive to ensure my communication is clear and effective, whether in verbal discussions or written correspondence. I make a conscious effort to listen actively to clients, our design teams, and local partners, aiming to fully understand their perspectives and ensure we are aligned. I try to tailor my communication style to the audience, whether explaining a complex design intent to a client or coordinating technical details with our consultants. There is always room to improve, and I welcome feedback to ensure my communication remains as effective as possible.</div></div></div>
-                
-                
-                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Basic Info</div><div class="field text-field"><div class="field-label">Title</div><div class="field-value">Associate Principal</div></div><div class="field text-field"><div class="field-label">Role</div><div class="field-value">Project Manager</div></div><div class="field text-field"><div class="field-label">Email</div><div class="field-value">rjiang@ennead.com</div></div><div class="field text-field"><div class="field-label">Date</div><div class="field-value">2025-09-11</div></div></div><div class="field-group"><div class="group-title">Performance Ratings</div><div class="field rating-field"><div class="field-label">Communication</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Collaboration</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Professionalism</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value">5</div></div></div><div class="field-group"><div class="group-title">Performance Comments</div><div class="field multiline-field"><div class="field-label">Communication</div><div class="field-value">I strive to ensure my communication is clear and effective, whether in verbal discussions or written correspondence. I make a conscious effort to listen actively to clients, our design teams, and local partners, aiming to fully understand their perspectives and ensure we are aligned. I try to tailor my communication style to the audience, whether explaining a complex design intent to a client or coordinating technical details with our consultants. There is always room to improve, and I welcome feedback to ensure my communication remains as effective as possible.</div></div><div class="field multiline-field"><div class="field-label">Collaboration</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Professionalism</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Software Tools</div><div class="software-tools-grid"><div class="field rating-field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Deltek/ADP</div><div class="field-value empty-rating">Not rated</div></div><div class="field rating-field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div></div></div><div class="field-group"><div class="group-title">Employee Development</div><div class="field multiline-field"><div class="field-label">Employee Strengths</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Areas for Growth / Development Goals</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Overall Assessment</div><div class="field rating-field"><div class="field-label">Rate Your Overall Performance This Year</div><div class="field-value empty-rating">Not rated</div></div><div class="field multiline-field"><div class="field-label">Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">What additional resources would help you do your job more effectively?</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Additional Data</div><div class="field multiline-field"><div class="field-label">Please share your thoughts about the character and culture of our studio and practice.</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Software & Tools</div><div class="field-value empty-text">No content provided</div></div></div>
             </div>
         </div>
         
         <div class="employee-card">
             <div class="employee-header">
-                <img src="assets/images/Kevin Hamlett_profile.jpg" alt="Kevin Hamlett" class="profile-image">
+                <img src="assets/images/DEFAULT_PROFILE.jpg" alt="Kevin Hamlett" class="profile-image">
                 <div class="employee-info">
                     <div class="employee-name">Kevin Hamlett</div>
                     <div class="employee-time">2025-09-11</div>
                 </div>
             </div>
             <div class="fields-container">
-                <div class="field-group"><div class="group-title">Basic Information</div><div class="field"><div class="field-label">Title</div><div class="field-value">Senior Associate</div></div><div class="field"><div class="field-label">Role</div><div class="field-value">Senior Designer</div></div><div class="field"><div class="field-label">Email</div><div class="field-value">khamlett@ennead.com</div></div><div class="field"><div class="field-label">Submitted</div><div class="field-value">2025-09-11 11:27:42</div></div></div>
-                
-                <div class="field-group"><div class="group-title">Performance Comments</div><div class="field"><div class="field-label">Communication Comments</div><div class="field-value">I'm naturally an introverted person; however, I have no problem voicing my opinion on design-related issues. I feel that this is very important in maintaining a high level of quality for our projects. I am happy to be leading a lot of our international exterior & interior work.</div></div></div>
-                
-                
-                <div class="field-group"><div class="group-title">Software & Tools</div><div class="software-tools-grid"><div class="field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Deltek/Adp</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div></div></div>
+                <div class="field-group"><div class="group-title">Basic Info</div><div class="field text-field"><div class="field-label">Title</div><div class="field-value">Senior Associate</div></div><div class="field text-field"><div class="field-label">Role</div><div class="field-value">Senior Designer</div></div><div class="field text-field"><div class="field-label">Email</div><div class="field-value">khamlett@ennead.com</div></div><div class="field text-field"><div class="field-label">Date</div><div class="field-value">2025-09-11</div></div></div><div class="field-group"><div class="group-title">Performance Ratings</div><div class="field rating-field"><div class="field-label">Communication</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Collaboration</div><div class="field-value">4</div></div><div class="field rating-field"><div class="field-label">Professionalism</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value">5</div></div><div class="field rating-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value">4</div></div></div><div class="field-group"><div class="group-title">Performance Comments</div><div class="field multiline-field"><div class="field-label">Communication</div><div class="field-value">I'm naturally an introverted person; however, I have no problem voicing my opinion on design-related issues. I feel that this is very important in maintaining a high level of quality for our projects. I am happy to be leading a lot of our international exterior & interior work.</div></div><div class="field multiline-field"><div class="field-label">Collaboration</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Professionalism</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Technical Knowledge & Expertise</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Workflow Implementation, Management, Execution</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Software Tools</div><div class="software-tools-grid"><div class="field rating-field"><div class="field-label">Revit</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Rhino</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Enscape</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">D5</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">Vantage Point</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Deltek/ADP</div><div class="field-value empty-rating">Not rated</div></div><div class="field rating-field"><div class="field-label">Newforma</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Bluebeam</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field rating-field"><div class="field-label">Grasshopper</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">Word</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div><div class="field rating-field"><div class="field-label">Powerpoint</div><div class="field-value"><span class="rating-number">0</span><span class="rating-description">(Not Applicable)</span></div></div><div class="field rating-field"><div class="field-label">Excel</div><div class="field-value"><span class="rating-number">3</span><span class="rating-description">(Meets Expectations)</span></div></div><div class="field rating-field"><div class="field-label">Illustrator</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">Photoshop</div><div class="field-value"><span class="rating-number">2</span><span class="rating-description">(Needs to Improve)</span></div></div><div class="field rating-field"><div class="field-label">Indesign</div><div class="field-value"><span class="rating-number">5</span><span class="rating-description">(Exceptional)</span></div></div></div></div><div class="field-group"><div class="group-title">Employee Development</div><div class="field multiline-field"><div class="field-label">Employee Strengths</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Areas for Growth / Development Goals</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Overall Assessment</div><div class="field rating-field"><div class="field-label">Rate Your Overall Performance This Year</div><div class="field-value empty-rating">Not rated</div></div><div class="field multiline-field"><div class="field-label">Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">What additional resources would help you do your job more effectively?</div><div class="field-value empty-text">No content provided</div></div></div><div class="field-group"><div class="group-title">Additional Data</div><div class="field multiline-field"><div class="field-label">Please share your thoughts about the character and culture of our studio and practice.</div><div class="field-value empty-text">No content provided</div></div><div class="field multiline-field"><div class="field-label">Software & Tools</div><div class="field-value empty-text">No content provided</div></div></div>
             </div>
         </div>
         
@@ -717,156 +704,16 @@ This helps avoid confusion, build trust, and keep projects moving smoothly.</div
             <div class="chart-container">
                 
         <div class="chart">
-            <h3>Technical Knowledge & Expertise Rating</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-Technical Knowledge & Expertise_rating"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Workflow Implementation, Management, Execution Rating</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-Workflow Implementation, Management, Execution_rating"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Title</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-title"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Rhino</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-rhino"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Grasshopper</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-grasshopper"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Studio Culture Feedback</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-studio_culture_feedback"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Newforma</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-newforma"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Performance Examples</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-performance_examples"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Software Tools Feedback</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-software_tools_feedback"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
             <h3>Communication Rating</h3>
             <div style="position: relative; height: 300px;">
-                <canvas id="chart-Communication_rating"></canvas>
+                <canvas id="chart-communication_rating"></canvas>
             </div>
         </div>
         
         <div class="chart">
-            <h3>Overall Performance</h3>
+            <h3>Workflow Implementation Management Execution Rating</h3>
             <div style="position: relative; height: 300px;">
-                <canvas id="chart-overall_performance"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Employee Strengths</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-employee_strengths"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Date Of Evaluation</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-date_of_evaluation"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Additional Resources</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-additional_resources"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Excel</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-excel"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Bluebeam</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-bluebeam"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Powerpoint</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-powerpoint"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>D5</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-d5"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Areas For Growth</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-areas_for_growth"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Illustrator</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-illustrator"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Word</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-word"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Vantage Point</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-vantage_point"></canvas>
+                <canvas id="chart-workflow_implementation_management_execution_rating"></canvas>
             </div>
         </div>
         
@@ -878,44 +725,30 @@ This helps avoid confusion, build trust, and keep projects moving smoothly.</div
         </div>
         
         <div class="chart">
-            <h3>Enscape</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-enscape"></canvas>
+            <h3>Date Of Evaluation</h3>
+            <div style="position: relative; height: 400px;">
+                <canvas id="chart-date_of_evaluation"></canvas>
             </div>
         </div>
         
         <div class="chart">
             <h3>Professionalism Rating</h3>
             <div style="position: relative; height: 300px;">
-                <canvas id="chart-Professionalism_rating"></canvas>
+                <canvas id="chart-professionalism_rating"></canvas>
             </div>
         </div>
         
         <div class="chart">
-            <h3>Collaboration Rating</h3>
+            <h3>Illustrator</h3>
             <div style="position: relative; height: 300px;">
-                <canvas id="chart-Collaboration_rating"></canvas>
+                <canvas id="chart-illustrator"></canvas>
             </div>
         </div>
         
         <div class="chart">
-            <h3>Employee Role</h3>
+            <h3>Deltek/Adp</h3>
             <div style="position: relative; height: 300px;">
-                <canvas id="chart-employee_role"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Email</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-email"></canvas>
-            </div>
-        </div>
-        
-        <div class="chart">
-            <h3>Revit</h3>
-            <div style="position: relative; height: 300px;">
-                <canvas id="chart-revit"></canvas>
+                <canvas id="chart-deltek/adp"></canvas>
             </div>
         </div>
         
@@ -927,9 +760,107 @@ This helps avoid confusion, build trust, and keep projects moving smoothly.</div
         </div>
         
         <div class="chart">
-            <h3>Deltek/Adp</h3>
+            <h3>Excel</h3>
             <div style="position: relative; height: 300px;">
-                <canvas id="chart-deltek/adp"></canvas>
+                <canvas id="chart-excel"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Revit</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-revit"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Newforma</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-newforma"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Rhino</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-rhino"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Powerpoint</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-powerpoint"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Collaboration Rating</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-collaboration_rating"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>D5</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-d5"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Overall Performance</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-overall_performance"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Grasshopper</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-grasshopper"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Enscape</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-enscape"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Vantage Point</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-vantage_point"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Technical Knowledge Expertise Rating</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-technical_knowledge_expertise_rating"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Word</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-word"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Bluebeam</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-bluebeam"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart">
+            <h3>Evaluator Name</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="chart-evaluator_name"></canvas>
             </div>
         </div>
         
@@ -946,8 +877,8 @@ This helps avoid confusion, build trust, and keep projects moving smoothly.</div
     <button class="return-to-top" onclick="scrollToTop()" title="Return to top">↑</button>
     
     <script>
-        const employees = [{"employee_name": "Brett Fabrikant", "title": "Security Architect", "employee_role": "M365 Architect, M365 Security Administration", "email": "brett.fabrikant@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-09", "submitted": "2025-09-09 13:44:11", "responder": "brett.fabrikant@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "Communication_rating": "", "Collaboration_rating": "", "Professionalism_rating": "", "Technical Knowledge & Expertise_rating": "", "Workflow Implementation, Management, Execution_rating": "", "overall_performance": "", "Communication_comments": "My role is highly dependent on effective use of time, and I leverage tools and automation as much as possible to assist in the internal communications of our IT support needs.", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "", "Workflow Implementation, Management, Execution_comments": "", "revit": "0 (Not Applicable)", "rhino": "0 (Not Applicable)", "enscape": "0 (Not Applicable)", "d5": "0 (Not Applicable)", "vantage_point": "0 (Not Applicable)", "deltek/adp": "0 (Not Applicable)", "newforma": "2 (Needs to Improve)", "bluebeam": "0 (Not Applicable)", "grasshopper": "0 (Not Applicable)", "word": "4 (Exceeds Expectations)", "powerpoint": "4 (Exceeds Expectations)", "excel": "4 (Exceeds Expectations)", "illustrator": "0 (Not Applicable)", "photoshop": "0 (Not Applicable)", "indesign": "0 (Not Applicable)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Xinya Li", "title": "Associate", "employee_role": "Architectural & Interior Designer, Interior Project Manager", "email": "xli@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-09 22:56:15", "responder": "xli@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "Communication_rating": "", "Collaboration_rating": "", "Professionalism_rating": "", "Technical Knowledge & Expertise_rating": "", "Workflow Implementation, Management, Execution_rating": "", "overall_performance": "", "Communication_comments": "Communicate clearly and adapt my style to different audiences. \nMake sure to listen carefully, confirm understanding, and follow up in writing when needed. \nThis helps avoid confusion, build trust, and keep projects moving smoothly.", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "", "Workflow Implementation, Management, Execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "3 (Meets Expectations)", "d5": "4 (Exceeds Expectations)", "vantage_point": "3 (Meets Expectations)", "deltek/adp": "3 (Meets Expectations)", "newforma": "2 (Needs to Improve)", "bluebeam": "4 (Exceeds Expectations)", "grasshopper": "0 (Not Applicable)", "word": "4 (Exceeds Expectations)", "powerpoint": "4 (Exceeds Expectations)", "excel": "4 (Exceeds Expectations)", "illustrator": "4 (Exceeds Expectations)", "photoshop": "4 (Exceeds Expectations)", "indesign": "4 (Exceeds Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Leah Li", "title": "Office Manager (Shanghai)", "employee_role": "Office admin and HR", "email": "lli@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-09 23:26:45", "responder": "lli@ennead.com", "profile_image": {"filename": "Leah Li_profile.jpg", "path": "assets/images/Leah Li_profile.jpg", "has_image": true, "display_path": "assets/images/Leah Li_profile.jpg", "match_confidence": 100}, "Communication_rating": "", "Collaboration_rating": "", "Professionalism_rating": "", "Technical Knowledge & Expertise_rating": "", "Workflow Implementation, Management, Execution_rating": "", "overall_performance": "", "Communication_comments": "communication clearly in both verbal and written forms.", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "", "Workflow Implementation, Management, Execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "3 (Meets Expectations)", "d5": "3 (Meets Expectations)", "vantage_point": "3 (Meets Expectations)", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "3 (Meets Expectations)", "word": "3 (Meets Expectations)", "powerpoint": "3 (Meets Expectations)", "excel": "3 (Meets Expectations)", "illustrator": "3 (Meets Expectations)", "photoshop": "3 (Meets Expectations)", "indesign": "3 (Meets Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Vivian Zhan", "title": "", "employee_role": "Architecture Designer", "email": "Vivian.Zhan@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-10 08:49:35", "responder": "Vivian.Zhan@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "Communication_rating": "", "Collaboration_rating": "", "Professionalism_rating": "", "Technical Knowledge & Expertise_rating": "", "Workflow Implementation, Management, Execution_rating": "", "overall_performance": "", "Communication_comments": "I communicate clearly and professionally in both verbal and written formats. I adapt my style depending on the audience, ensuring clarity and conciseness. I also make an effort to actively listen and respond thoughtfully, which helps avoid misunderstandings and keeps collaboration efficient.", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "", "Workflow Implementation, Management, Execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "4 (Exceeds Expectations)", "enscape": "3 (Meets Expectations)", "d5": "4 (Exceeds Expectations)", "vantage_point": "3 (Meets Expectations)", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "3 (Meets Expectations)", "word": "3 (Meets Expectations)", "powerpoint": "3 (Meets Expectations)", "excel": "3 (Meets Expectations)", "illustrator": "4 (Exceeds Expectations)", "photoshop": "4 (Exceeds Expectations)", "indesign": "4 (Exceeds Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Matt Hitscherich", "title": "", "employee_role": "Draftsman", "email": "mhitscherich@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-10 13:14:04", "responder": "mhitscherich@ennead.com", "profile_image": {"filename": "Matt Hitscherich_profile.jpg", "path": "assets/images/Matt Hitscherich_profile.jpg", "has_image": true, "display_path": "assets/images/Matt Hitscherich_profile.jpg", "match_confidence": 100}, "Communication_rating": "", "Collaboration_rating": "", "Professionalism_rating": "", "Technical Knowledge & Expertise_rating": "", "Workflow Implementation, Management, Execution_rating": "", "overall_performance": "", "Communication_comments": "I have a lot to say...", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "", "Workflow Implementation, Management, Execution_comments": "", "revit": "1 (Unsatisfactory)", "rhino": "3 (Meets Expectations)", "enscape": "0 (Not Applicable)", "d5": "3 (Meets Expectations)", "vantage_point": "0 (Not Applicable)", "deltek/adp": "0 (Not Applicable)", "newforma": "0 (Not Applicable)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "1 (Unsatisfactory)", "word": "0 (Not Applicable)", "powerpoint": "0 (Not Applicable)", "excel": "0 (Not Applicable)", "illustrator": "0 (Not Applicable)", "photoshop": "3 (Meets Expectations)", "indesign": "3 (Meets Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Clayton Kaul", "title": "Senior Associate", "employee_role": "Project Architect / Project Manager", "email": "ckaul@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-09", "submitted": "2025-09-10 17:22:05", "responder": "ckaul@ennead.com", "profile_image": {"filename": "Clayton Kaul_profile.jpg", "path": "assets/images/Clayton Kaul_profile.jpg", "has_image": true, "display_path": "assets/images/Clayton Kaul_profile.jpg", "match_confidence": 100}, "Communication_rating": "", "Collaboration_rating": "", "Professionalism_rating": "", "Technical Knowledge & Expertise_rating": "", "Workflow Implementation, Management, Execution_rating": "", "overall_performance": "", "Communication_comments": "The past year has been a different role for me than typical given the full year in CA with a much smaller team.    believe I effectively communicate through e-mail, teams and meetings where required to ensure everyone is on the same page.   I like to directly address as soon as possible any thing that seems inconsistent with my understanding of what should be happening or how to improve on workflow.", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "", "Workflow Implementation, Management, Execution_comments": "", "revit": "5 (Exceptional)", "rhino": "3 (Meets Expectations)", "enscape": "3 (Meets Expectations)", "d5": "1 (Unsatisfactory)", "vantage_point": "1 (Unsatisfactory)", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "4 (Exceeds Expectations)", "grasshopper": "1 (Unsatisfactory)", "word": "5 (Exceptional)", "powerpoint": "5 (Exceptional)", "excel": "4 (Exceeds Expectations)", "illustrator": "4 (Exceeds Expectations)", "photoshop": "4 (Exceeds Expectations)", "indesign": "4 (Exceeds Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Regina Jiang", "title": "Associate Principal", "employee_role": "Project Manager", "email": "rjiang@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-11", "submitted": "2025-09-11 04:30:38", "responder": "rjiang@ennead.com", "profile_image": {"filename": "Regina Jiang_profile.jpg", "path": "assets/images/Regina Jiang_profile.jpg", "has_image": true, "display_path": "assets/images/Regina Jiang_profile.jpg", "match_confidence": 100}, "Communication_rating": "", "Collaboration_rating": "", "Professionalism_rating": "", "Technical Knowledge & Expertise_rating": "", "Workflow Implementation, Management, Execution_rating": "", "overall_performance": "", "Communication_comments": "I strive to ensure my communication is clear and effective, whether in verbal discussions or written correspondence. I make a conscious effort to listen actively to clients, our design teams, and local partners, aiming to fully understand their perspectives and ensure we are aligned. I try to tailor my communication style to the audience, whether explaining a complex design intent to a client or coordinating technical details with our consultants. There is always room to improve, and I welcome feedback to ensure my communication remains as effective as possible.", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "", "Workflow Implementation, Management, Execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "2 (Needs to Improve)", "d5": "2 (Needs to Improve)", "vantage_point": "0 (Not Applicable)", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "2 (Needs to Improve)", "word": "3 (Meets Expectations)", "powerpoint": "3 (Meets Expectations)", "excel": "3 (Meets Expectations)", "illustrator": "3 (Meets Expectations)", "photoshop": "3 (Meets Expectations)", "indesign": "3 (Meets Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Kevin Hamlett", "title": "Senior Associate", "employee_role": "Senior Designer", "email": "khamlett@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-11", "submitted": "2025-09-11 11:27:42", "responder": "khamlett@ennead.com", "profile_image": {"filename": "Kevin Hamlett_profile.jpg", "path": "assets/images/Kevin Hamlett_profile.jpg", "has_image": true, "display_path": "assets/images/Kevin Hamlett_profile.jpg", "match_confidence": 100}, "Communication_rating": "", "Collaboration_rating": "", "Professionalism_rating": "", "Technical Knowledge & Expertise_rating": "", "Workflow Implementation, Management, Execution_rating": "", "overall_performance": "", "Communication_comments": "I'm naturally an introverted person; however, I have no problem voicing my opinion on design-related issues. I feel that this is very important in maintaining a high level of quality for our projects. I am happy to be leading a lot of our international exterior & interior work.", "Collaboration_comments": "", "Professionalism_comments": "", "Technical Knowledge & Expertise_comments": "", "Workflow Implementation, Management, Execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "2 (Needs to Improve)", "d5": "2 (Needs to Improve)", "vantage_point": "0 (Not Applicable)", "deltek/adp": "5 (Exceptional)", "newforma": "3 (Meets Expectations)", "bluebeam": "5 (Exceptional)", "grasshopper": "2 (Needs to Improve)", "word": "5 (Exceptional)", "powerpoint": "0 (Not Applicable)", "excel": "3 (Meets Expectations)", "illustrator": "2 (Needs to Improve)", "photoshop": "2 (Needs to Improve)", "indesign": "5 (Exceptional)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}];
-        const chartData = {"title": {"Security Architect": 1, "Associate": 1, "Office Manager (Shanghai)": 1, "Senior Associate": 2, "Associate Principal": 1}, "employee_role": {"M365 Architect, M365 Security Administration": 1, "Architectural & Interior Designer, Interior Project Manager": 1, "Office admin and HR": 1, "Architecture Designer": 1, "Draftsman": 1, "Project Architect / Project Manager": 1, "Project Manager": 1, "Senior Designer": 1}, "email": {"brett.fabrikant@ennead.com": 1, "xli@ennead.com": 1, "lli@ennead.com": 1, "Vivian.Zhan@ennead.com": 1, "mhitscherich@ennead.com": 1, "ckaul@ennead.com": 1, "rjiang@ennead.com": 1, "khamlett@ennead.com": 1}, "date_of_evaluation": {"2025-09-09": 2, "2025-09-10": 4, "2025-09-11": 2}, "revit": {"0 (Not Applicable)": 1, "3 (Meets Expectations)": 5, "1 (Unsatisfactory)": 1, "5 (Exceptional)": 1}, "rhino": {"0 (Not Applicable)": 1, "3 (Meets Expectations)": 6, "4 (Exceeds Expectations)": 1}, "enscape": {"0 (Not Applicable)": 2, "3 (Meets Expectations)": 4, "2 (Needs to Improve)": 2}, "d5": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 2, "1 (Unsatisfactory)": 1, "2 (Needs to Improve)": 2}, "vantage_point": {"0 (Not Applicable)": 4, "3 (Meets Expectations)": 3, "1 (Unsatisfactory)": 1}, "deltek/adp": {"0 (Not Applicable)": 2, "3 (Meets Expectations)": 5, "5 (Exceptional)": 1}, "newforma": {"2 (Needs to Improve)": 2, "3 (Meets Expectations)": 5, "0 (Not Applicable)": 1}, "bluebeam": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 4, "5 (Exceptional)": 1}, "grasshopper": {"0 (Not Applicable)": 2, "3 (Meets Expectations)": 2, "1 (Unsatisfactory)": 2, "2 (Needs to Improve)": 2}, "word": {"4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 3, "0 (Not Applicable)": 1, "5 (Exceptional)": 2}, "powerpoint": {"4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 3, "0 (Not Applicable)": 2, "5 (Exceptional)": 1}, "excel": {"4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 4, "0 (Not Applicable)": 1}, "illustrator": {"0 (Not Applicable)": 2, "4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 2, "2 (Needs to Improve)": 1}, "photoshop": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 3, "2 (Needs to Improve)": 1}, "indesign": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 3, "5 (Exceptional)": 1}};
+        const employees = [{"employee_name": "Brett Fabrikant", "title": "Security Architect", "employee_role": "M365 Architect, M365 Security Administration", "email": "brett.fabrikant@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-09", "submitted": "2025-09-09 13:44:11", "responder": "brett.fabrikant@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "communication_rating": "4", "collaboration_rating": "4", "professionalism_rating": "5", "technical_knowledge_expertise_rating": "4", "workflow_implementation_management_execution_rating": "4", "overall_performance": "", "communication_comments": "My role is highly dependent on effective use of time, and I leverage tools and automation as much as possible to assist in the internal communications of our IT support needs.", "collaboration_comments": "", "professionalism_comments": "", "technical_knowledge_expertise_comments": "", "workflow_implementation_management_execution_comments": "", "revit": "0 (Not Applicable)", "rhino": "0 (Not Applicable)", "enscape": "0 (Not Applicable)", "d5": "0 (Not Applicable)", "vantage_point": "0 (Not Applicable)", "deltek/adp": "0 (Not Applicable)", "newforma": "2 (Needs to Improve)", "bluebeam": "0 (Not Applicable)", "grasshopper": "0 (Not Applicable)", "word": "4 (Exceeds Expectations)", "powerpoint": "4 (Exceeds Expectations)", "excel": "4 (Exceeds Expectations)", "illustrator": "0 (Not Applicable)", "photoshop": "0 (Not Applicable)", "indesign": "0 (Not Applicable)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Xinya Li", "title": "Associate", "employee_role": "Architectural & Interior Designer, Interior Project Manager", "email": "xli@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-09 22:56:15", "responder": "xli@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "communication_rating": "5", "collaboration_rating": "5", "professionalism_rating": "5", "technical_knowledge_expertise_rating": "4", "workflow_implementation_management_execution_rating": "4", "overall_performance": "", "communication_comments": "Communicate clearly and adapt my style to different audiences. \nMake sure to listen carefully, confirm understanding, and follow up in writing when needed. \nThis helps avoid confusion, build trust, and keep projects moving smoothly.", "collaboration_comments": "", "professionalism_comments": "", "technical_knowledge_expertise_comments": "", "workflow_implementation_management_execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "3 (Meets Expectations)", "d5": "4 (Exceeds Expectations)", "vantage_point": "3 (Meets Expectations)", "deltek/adp": "3 (Meets Expectations)", "newforma": "2 (Needs to Improve)", "bluebeam": "4 (Exceeds Expectations)", "grasshopper": "0 (Not Applicable)", "word": "4 (Exceeds Expectations)", "powerpoint": "4 (Exceeds Expectations)", "excel": "4 (Exceeds Expectations)", "illustrator": "4 (Exceeds Expectations)", "photoshop": "4 (Exceeds Expectations)", "indesign": "4 (Exceeds Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Leah Li", "title": "Office Manager (Shanghai)", "employee_role": "Office admin and HR", "email": "lli@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-09 23:26:45", "responder": "lli@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "communication_rating": "5", "collaboration_rating": "5", "professionalism_rating": "4", "technical_knowledge_expertise_rating": "4", "workflow_implementation_management_execution_rating": "5", "overall_performance": "", "communication_comments": "communication clearly in both verbal and written forms.", "collaboration_comments": "", "professionalism_comments": "", "technical_knowledge_expertise_comments": "", "workflow_implementation_management_execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "3 (Meets Expectations)", "d5": "3 (Meets Expectations)", "vantage_point": "3 (Meets Expectations)", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "3 (Meets Expectations)", "word": "3 (Meets Expectations)", "powerpoint": "3 (Meets Expectations)", "excel": "3 (Meets Expectations)", "illustrator": "3 (Meets Expectations)", "photoshop": "3 (Meets Expectations)", "indesign": "3 (Meets Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Vivian Zhan", "title": "", "employee_role": "Architecture Designer", "email": "Vivian.Zhan@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-10 08:49:35", "responder": "Vivian.Zhan@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "communication_rating": "4", "collaboration_rating": "4", "professionalism_rating": "4", "technical_knowledge_expertise_rating": "4", "workflow_implementation_management_execution_rating": "3", "overall_performance": "", "communication_comments": "I communicate clearly and professionally in both verbal and written formats. I adapt my style depending on the audience, ensuring clarity and conciseness. I also make an effort to actively listen and respond thoughtfully, which helps avoid misunderstandings and keeps collaboration efficient.", "collaboration_comments": "", "professionalism_comments": "", "technical_knowledge_expertise_comments": "", "workflow_implementation_management_execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "4 (Exceeds Expectations)", "enscape": "3 (Meets Expectations)", "d5": "4 (Exceeds Expectations)", "vantage_point": "3 (Meets Expectations)", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "3 (Meets Expectations)", "word": "3 (Meets Expectations)", "powerpoint": "3 (Meets Expectations)", "excel": "3 (Meets Expectations)", "illustrator": "4 (Exceeds Expectations)", "photoshop": "4 (Exceeds Expectations)", "indesign": "4 (Exceeds Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Matt Hitscherich", "title": "", "employee_role": "Draftsman", "email": "mhitscherich@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-10", "submitted": "2025-09-10 13:14:04", "responder": "mhitscherich@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "communication_rating": "3", "collaboration_rating": "3", "professionalism_rating": "3", "technical_knowledge_expertise_rating": "3", "workflow_implementation_management_execution_rating": "3", "overall_performance": "", "communication_comments": "I have a lot to say...", "collaboration_comments": "", "professionalism_comments": "", "technical_knowledge_expertise_comments": "", "workflow_implementation_management_execution_comments": "", "revit": "1 (Unsatisfactory)", "rhino": "3 (Meets Expectations)", "enscape": "0 (Not Applicable)", "d5": "3 (Meets Expectations)", "vantage_point": "0 (Not Applicable)", "deltek/adp": "0 (Not Applicable)", "newforma": "0 (Not Applicable)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "1 (Unsatisfactory)", "word": "0 (Not Applicable)", "powerpoint": "0 (Not Applicable)", "excel": "0 (Not Applicable)", "illustrator": "0 (Not Applicable)", "photoshop": "3 (Meets Expectations)", "indesign": "3 (Meets Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Clayton Kaul", "title": "Senior Associate", "employee_role": "Project Architect / Project Manager", "email": "ckaul@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-09", "submitted": "2025-09-10 17:22:05", "responder": "ckaul@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "communication_rating": "4", "collaboration_rating": "5", "professionalism_rating": "5", "technical_knowledge_expertise_rating": "4", "workflow_implementation_management_execution_rating": "4", "overall_performance": "", "communication_comments": "The past year has been a different role for me than typical given the full year in CA with a much smaller team.    believe I effectively communicate through e-mail, teams and meetings where required to ensure everyone is on the same page.   I like to directly address as soon as possible any thing that seems inconsistent with my understanding of what should be happening or how to improve on workflow.", "collaboration_comments": "", "professionalism_comments": "", "technical_knowledge_expertise_comments": "", "workflow_implementation_management_execution_comments": "", "revit": "5 (Exceptional)", "rhino": "3 (Meets Expectations)", "enscape": "3 (Meets Expectations)", "d5": "1 (Unsatisfactory)", "vantage_point": "1 (Unsatisfactory)", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "4 (Exceeds Expectations)", "grasshopper": "1 (Unsatisfactory)", "word": "5 (Exceptional)", "powerpoint": "5 (Exceptional)", "excel": "4 (Exceeds Expectations)", "illustrator": "4 (Exceeds Expectations)", "photoshop": "4 (Exceeds Expectations)", "indesign": "4 (Exceeds Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Regina Jiang", "title": "Associate Principal", "employee_role": "Project Manager", "email": "rjiang@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-11", "submitted": "2025-09-11 04:30:38", "responder": "rjiang@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "communication_rating": "4", "collaboration_rating": "5", "professionalism_rating": "4", "technical_knowledge_expertise_rating": "4", "workflow_implementation_management_execution_rating": "5", "overall_performance": "", "communication_comments": "I strive to ensure my communication is clear and effective, whether in verbal discussions or written correspondence. I make a conscious effort to listen actively to clients, our design teams, and local partners, aiming to fully understand their perspectives and ensure we are aligned. I try to tailor my communication style to the audience, whether explaining a complex design intent to a client or coordinating technical details with our consultants. There is always room to improve, and I welcome feedback to ensure my communication remains as effective as possible.", "collaboration_comments": "", "professionalism_comments": "", "technical_knowledge_expertise_comments": "", "workflow_implementation_management_execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "2 (Needs to Improve)", "d5": "2 (Needs to Improve)", "vantage_point": "0 (Not Applicable)", "deltek/adp": "3 (Meets Expectations)", "newforma": "3 (Meets Expectations)", "bluebeam": "3 (Meets Expectations)", "grasshopper": "2 (Needs to Improve)", "word": "3 (Meets Expectations)", "powerpoint": "3 (Meets Expectations)", "excel": "3 (Meets Expectations)", "illustrator": "3 (Meets Expectations)", "photoshop": "3 (Meets Expectations)", "indesign": "3 (Meets Expectations)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}, {"employee_name": "Kevin Hamlett", "title": "Senior Associate", "employee_role": "Senior Designer", "email": "khamlett@ennead.com", "evaluator_name": "", "date_of_evaluation": "2025-09-11", "submitted": "2025-09-11 11:27:42", "responder": "khamlett@ennead.com", "profile_image": {"filename": null, "path": null, "has_image": false, "display_path": "assets/images/default-avatar.png", "match_confidence": null}, "communication_rating": "4", "collaboration_rating": "4", "professionalism_rating": "5", "technical_knowledge_expertise_rating": "5", "workflow_implementation_management_execution_rating": "4", "overall_performance": "", "communication_comments": "I'm naturally an introverted person; however, I have no problem voicing my opinion on design-related issues. I feel that this is very important in maintaining a high level of quality for our projects. I am happy to be leading a lot of our international exterior & interior work.", "collaboration_comments": "", "professionalism_comments": "", "technical_knowledge_expertise_comments": "", "workflow_implementation_management_execution_comments": "", "revit": "3 (Meets Expectations)", "rhino": "3 (Meets Expectations)", "enscape": "2 (Needs to Improve)", "d5": "2 (Needs to Improve)", "vantage_point": "0 (Not Applicable)", "deltek/adp": "5 (Exceptional)", "newforma": "3 (Meets Expectations)", "bluebeam": "5 (Exceptional)", "grasshopper": "2 (Needs to Improve)", "word": "5 (Exceptional)", "powerpoint": "0 (Not Applicable)", "excel": "3 (Meets Expectations)", "illustrator": "2 (Needs to Improve)", "photoshop": "2 (Needs to Improve)", "indesign": "5 (Exceptional)", "performance_examples": "", "additional_resources": "", "employee_strengths": "", "areas_for_growth": "", "studio_culture_feedback": "", "software_tools_feedback": ""}];
+        const chartData = {"date_of_evaluation": {"2025-09-09": 2, "2025-09-10": 4, "2025-09-11": 2}, "communication_rating": {"4": 5, "5": 2, "3": 1}, "collaboration_rating": {"4": 3, "5": 4, "3": 1}, "professionalism_rating": {"5": 4, "4": 3, "3": 1}, "technical_knowledge_expertise_rating": {"4": 6, "3": 1, "5": 1}, "workflow_implementation_management_execution_rating": {"4": 4, "5": 2, "3": 2}, "revit": {"0 (Not Applicable)": 1, "3 (Meets Expectations)": 5, "1 (Unsatisfactory)": 1, "5 (Exceptional)": 1}, "rhino": {"0 (Not Applicable)": 1, "3 (Meets Expectations)": 6, "4 (Exceeds Expectations)": 1}, "enscape": {"0 (Not Applicable)": 2, "3 (Meets Expectations)": 4, "2 (Needs to Improve)": 2}, "d5": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 2, "1 (Unsatisfactory)": 1, "2 (Needs to Improve)": 2}, "vantage_point": {"0 (Not Applicable)": 4, "3 (Meets Expectations)": 3, "1 (Unsatisfactory)": 1}, "deltek/adp": {"0 (Not Applicable)": 2, "3 (Meets Expectations)": 5, "5 (Exceptional)": 1}, "newforma": {"2 (Needs to Improve)": 2, "3 (Meets Expectations)": 5, "0 (Not Applicable)": 1}, "bluebeam": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 4, "5 (Exceptional)": 1}, "grasshopper": {"0 (Not Applicable)": 2, "3 (Meets Expectations)": 2, "1 (Unsatisfactory)": 2, "2 (Needs to Improve)": 2}, "word": {"4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 3, "0 (Not Applicable)": 1, "5 (Exceptional)": 2}, "powerpoint": {"4 (Exceeds Expectations)": 2, "3 (Meets Expectations)": 3, "0 (Not Applicable)": 2, "5 (Exceptional)": 1}, "excel": {"4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 4, "0 (Not Applicable)": 1}, "illustrator": {"0 (Not Applicable)": 2, "4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 2, "2 (Needs to Improve)": 1}, "photoshop": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 3, "2 (Needs to Improve)": 1}, "indesign": {"0 (Not Applicable)": 1, "4 (Exceeds Expectations)": 3, "3 (Meets Expectations)": 3, "5 (Exceptional)": 1}};
         
         function showTab(tabName) {
             // Hide all tab contents
@@ -1011,13 +942,15 @@ This helps avoid confusion, build trust, and keep projects moving smoothly.</div
         }
         
         // Find similar names using fuzzy search
-        function findSimilarNames(searchTerm, employeeNames, maxDistance = 3) {
+        function findSimilarNames(searchTerm, employeeNames, maxDistance = 15) {
             const suggestions = [];
-            const searchLower = searchTerm.toLowerCase();
-            
+            const searchLower = searchTerm.toLowerCase().trim();
+            const searchWords = searchLower.split(/\s+/);
+
             employeeNames.forEach(name => {
                 const nameLower = name.toLowerCase();
-                
+                const nameWords = nameLower.split(/\s+/);
+
                 // Check for exact substring match first (highest priority)
                 if (nameLower.includes(searchLower) && nameLower !== searchLower) {
                     suggestions.push({
@@ -1028,25 +961,52 @@ This helps avoid confusion, build trust, and keep projects moving smoothly.</div
                     });
                     return;
                 }
-                
-                // Check for starts with match
-                if (nameLower.startsWith(searchLower) && nameLower !== searchLower) {
+
+                // Check for starts with match (more lenient)
+                if (nameLower.startsWith(searchLower.substring(0, Math.min(3, searchLower.length))) && nameLower !== searchLower) {
                     suggestions.push({
                         name: name,
                         distance: 0,
-                        similarity: 0.95,
+                        similarity: 0.9,
                         type: 'startsWith'
                     });
                     return;
                 }
-                
-                // Use Levenshtein distance for fuzzy matching
+
+                // Word-based matching for multi-word names
+                let wordMatches = 0;
+                let totalWords = Math.max(searchWords.length, nameWords.length);
+                searchWords.forEach(searchWord => {
+                    if (searchWord.length >= 2) {  // Only match words with 2+ characters
+                        nameWords.forEach(nameWord => {
+                            if (nameWord.includes(searchWord) || searchWord.includes(nameWord) ||
+                                calculateLevenshteinDistance(searchWord, nameWord) <= 2) {
+                                wordMatches++;
+                            }
+                        });
+                    }
+                });
+
+                if (wordMatches > 0) {
+                    const wordSimilarity = wordMatches / totalWords;
+                    if (wordSimilarity > 0.3) {
+                        suggestions.push({
+                            name: name,
+                            distance: 0,
+                            similarity: Math.max(wordSimilarity, 0.4),
+                            type: 'wordMatch'
+                        });
+                        return;
+                    }
+                }
+
+                // Use Levenshtein distance for fuzzy matching (much more lenient)
                 const distance = calculateLevenshteinDistance(searchLower, nameLower);
                 const maxLength = Math.max(searchLower.length, nameLower.length);
                 const similarity = 1 - (distance / maxLength);
-                
-                // Only suggest if similarity is above threshold and not exact match
-                if (similarity > 0.6 && distance <= maxDistance && nameLower !== searchLower) {
+
+                // Very lenient threshold - allow very vague matches
+                if (similarity > 0.2 && distance <= maxDistance && nameLower !== searchLower) {
                     suggestions.push({
                         name: name,
                         distance: distance,
@@ -1059,17 +1019,22 @@ This helps avoid confusion, build trust, and keep projects moving smoothly.</div
             // Sort by type priority and then by similarity (highest first)
             return suggestions
                 .sort((a, b) => {
-                    // Priority: substring > startsWith > fuzzy
-                    const typePriority = { 'substring': 3, 'startsWith': 2, 'fuzzy': 1 };
+                    // Priority: substring > startsWith > wordMatch > fuzzy
+                    const typePriority = {
+                        'substring': 4,
+                        'startsWith': 3,
+                        'wordMatch': 2,
+                        'fuzzy': 1
+                    };
                     const aPriority = typePriority[a.type] || 0;
                     const bPriority = typePriority[b.type] || 0;
-                    
+
                     if (aPriority !== bPriority) {
                         return bPriority - aPriority;
                     }
                     return b.similarity - a.similarity;
                 })
-                .slice(0, 3);
+                .slice(0, 5);  // Show more suggestions for very vague matches
         }
         
         // Hide the Submitted field from employee cards
@@ -1169,76 +1134,179 @@ This helps avoid confusion, build trust, and keep projects moving smoothly.</div
         }
         
         function initializeCharts() {
+            // Define which fields should use line charts (progression charts)
+            const progressionFields = ['date_of_evaluation'];
+
             Object.keys(chartData).forEach(field => {
                 const canvas = document.getElementById(`chart-${field}`);
                 if (canvas) {
                     const ctx = canvas.getContext('2d');
                     const data = chartData[field];
-                    
-                    new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: Object.keys(data),
-                            datasets: [{
-                                data: Object.values(data),
-                                backgroundColor: [
-                                    'rgba(43, 122, 120, 0.8)',    // Primary teal
-                                    'rgba(26, 90, 88, 0.8)',      // Darker teal
-                                    'rgba(15, 20, 25, 0.8)',      // Dark text
-                                    'rgba(58, 175, 169, 0.8)',    // Accent teal
-                                    'rgba(74, 74, 74, 0.8)',      // Secondary text
-                                    'rgba(240, 248, 247, 0.8)',   // Light background
-                                    'rgba(224, 232, 231, 0.8)',   // Border color
-                                    'rgba(43, 122, 120, 0.6)'     // Lighter primary
-                                ],
-                                borderColor: [
-                                    'rgba(43, 122, 120, 1)',
-                                    'rgba(26, 90, 88, 1)',
-                                    'rgba(15, 20, 25, 1)',
-                                    'rgba(58, 175, 169, 1)',
-                                    'rgba(74, 74, 74, 1)',
-                                    'rgba(240, 248, 247, 1)',
-                                    'rgba(224, 232, 231, 1)',
-                                    'rgba(43, 122, 120, 1)'
-                                ],
-                                borderWidth: 2,
-                                hoverOffset: 10
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'bottom',
-                                    labels: {
-                                        padding: 20,
-                                        usePointStyle: true,
-                                        font: {
-                                            family: 'Inter',
-                                            size: 12
+
+                    // Check if this is a progression field
+                    if (progressionFields.includes(field)) {
+                        // Create line chart for progression data
+                        const labels = Object.keys(data);
+                        const values = Object.values(data);
+
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Daily Submissions',
+                                    data: values,
+                                    borderColor: 'rgba(43, 122, 120, 1)',
+                                    backgroundColor: 'rgba(43, 122, 120, 0.1)',
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.4,
+                                    pointBackgroundColor: 'rgba(43, 122, 120, 1)',
+                                    pointBorderColor: 'white',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 6,
+                                    pointHoverRadius: 8
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    },
+                                    tooltip: {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                        titleColor: 'white',
+                                        bodyColor: 'white',
+                                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                                        borderWidth: 1,
+                                        cornerRadius: 8,
+                                        callbacks: {
+                                            title: function(context) {
+                                                return 'Date: ' + context[0].label;
+                                            },
+                                            label: function(context) {
+                                                return 'Submissions: ' + context.parsed.y;
+                                            }
                                         }
                                     }
                                 },
-                                tooltip: {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                    titleColor: 'white',
-                                    bodyColor: 'white',
-                                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                                    borderWidth: 1,
-                                    cornerRadius: 8,
-                                    displayColors: true
+                                scales: {
+                                    x: {
+                                        display: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Date',
+                                            color: '#1A5A58',
+                                            font: {
+                                                weight: 'bold'
+                                            }
+                                        },
+                                        grid: {
+                                            color: 'rgba(26, 90, 88, 0.1)'
+                                        },
+                                        ticks: {
+                                            color: '#4A4A4A'
+                                        }
+                                    },
+                                    y: {
+                                        display: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Number of Submissions',
+                                            color: '#1A5A58',
+                                            font: {
+                                                weight: 'bold'
+                                            }
+                                        },
+                                        beginAtZero: true,
+                                        grid: {
+                                            color: 'rgba(26, 90, 88, 0.1)'
+                                        },
+                                        ticks: {
+                                            color: '#4A4A4A',
+                                            stepSize: 1
+                                        }
+                                    }
+                                },
+                                animation: {
+                                    duration: 1500,
+                                    easing: 'easeOutQuart'
+                                },
+                                interaction: {
+                                    intersect: false,
+                                    mode: 'index'
                                 }
-                            },
-                            cutout: '60%',
-                            animation: {
-                                animateRotate: true,
-                                animateScale: true,
-                                duration: 1000,
-                                easing: 'easeOutQuart'
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        // Create doughnut chart for regular data
+                        new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: Object.keys(data),
+                                datasets: [{
+                                    data: Object.values(data),
+                                    backgroundColor: [
+                                        'rgba(43, 122, 120, 0.8)',    // Primary teal
+                                        'rgba(26, 90, 88, 0.8)',      // Darker teal
+                                        'rgba(15, 20, 25, 0.8)',      // Dark text
+                                        'rgba(58, 175, 169, 0.8)',    // Accent teal
+                                        'rgba(74, 74, 74, 0.8)',      // Secondary text
+                                        'rgba(240, 248, 247, 0.8)',   // Light background
+                                        'rgba(224, 232, 231, 0.8)',   // Border color
+                                        'rgba(43, 122, 120, 0.6)'     // Lighter primary
+                                    ],
+                                    borderColor: [
+                                        'rgba(43, 122, 120, 1)',
+                                        'rgba(26, 90, 88, 1)',
+                                        'rgba(15, 20, 25, 1)',
+                                        'rgba(58, 175, 169, 1)',
+                                        'rgba(74, 74, 74, 1)',
+                                        'rgba(240, 248, 247, 1)',
+                                        'rgba(224, 232, 231, 1)',
+                                        'rgba(43, 122, 120, 1)'
+                                    ],
+                                    borderWidth: 2,
+                                    hoverOffset: 10
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            padding: 20,
+                                            usePointStyle: true,
+                                            font: {
+                                                family: 'Inter',
+                                                size: 12
+                                            }
+                                        }
+                                    },
+                                    tooltip: {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                        titleColor: 'white',
+                                        bodyColor: 'white',
+                                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                                        borderWidth: 1,
+                                        cornerRadius: 8,
+                                        displayColors: true
+                                    }
+                                },
+                                cutout: '60%',
+                                animation: {
+                                    animateRotate: true,
+                                    animateScale: true,
+                                    duration: 1000,
+                                    easing: 'easeOutQuart'
+                                }
+                            }
+                        });
+                    }
                 }
             });
         }

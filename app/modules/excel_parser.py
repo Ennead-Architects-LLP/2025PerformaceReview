@@ -119,7 +119,7 @@ class ExcelEmployeeParser:
         # Process each column using header mappings
         for col_index, mapping in self.header_mappings.items():
             original_header = mapping.original_header
-            if original_header in row.index:
+            if original_header in row:
                 value = row[original_header]
                 
                 # Skip empty values
