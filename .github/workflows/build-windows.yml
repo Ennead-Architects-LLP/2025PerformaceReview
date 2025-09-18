@@ -1,0 +1,90 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'app/**'
+      - 'assets/**'
+      - 'docs/**'
+      - 'requirements.txt'
+      - 'main.py'
+      - '.github/workflows/build-windows.yml'
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'assets/**'
+      - 'docs/**'
+      - 'requirements.txt'
+      - 'main.py'
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build single-file EXE with PyInstaller
+        shell: pwsh
+        run: |
+          if (Test-Path build) { Remove-Item -Recurse -Force build }
+          if (Test-Path dist) { Remove-Item -Recurse -Force dist }
+          $appName = '2025 Ennead Performance Report'
+          pyinstaller `
+            --noconfirm `
+            --name "$appName" `
+            --windowed `
+            --onefile `
+            --add-data "assets;assets" `
+            --add-data "docs;docs" `
+            --hidden-import app.modules `
+            main.py
+          if (!(Test-Path OUTPUT)) { New-Item -ItemType Directory -Path OUTPUT | Out-Null }
+          $exePath = "dist/$appName.exe"
+          if (Test-Path $exePath) { Copy-Item $exePath OUTPUT -Force }
+
+      - name: Auto-commit OUTPUT exe to repo (skip CI)
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config pull.rebase true
+          git fetch origin
+          git checkout $env:GITHUB_REF_NAME
+          git add OUTPUT/*.exe
+          try {
+            git diff --cached --quiet OUTPUT/*.exe
+            $hasChanges = $false
+          } catch {
+            $hasChanges = $true
+          }
+          if ($hasChanges) {
+            git pull --rebase origin $env:GITHUB_REF_NAME
+            git commit -m "ci: update built exe in OUTPUT [skip ci]"
+            git push
+          } else {
+            Write-Host "No changes to commit in OUTPUT."
+          }
+
+      - name: Upload artifact (single file)
+        uses: actions/upload-artifact@v4
+        with:
+          name: 2025-Ennead-Performance-Report-single-file
+          path: OUTPUT/*.exe
+          if-no-files-found: error

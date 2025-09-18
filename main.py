@@ -1,10 +1,11 @@
 import sys
 
-from app.modules.cli import run_cli
+from app.modules.gui_app import launch_gui
 
 
 def main() -> int:
-    return run_cli()
+    launch_gui()
+    return 0
 
 
 if __name__ == "__main__":

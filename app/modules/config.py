@@ -5,6 +5,7 @@ This module contains configuration settings for the Employee Evaluation system.
 """
 
 import os
+import sys
 from typing import Dict, Any
 
 
@@ -117,8 +118,22 @@ class Config:
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
 
     @classmethod
+    def _get_project_root(cls) -> str:
+        """Return the project root, handling frozen executable case."""
+        try:
+            if getattr(sys, 'frozen', False):
+                # Prefer PyInstaller one-file temp dir if available
+                base = getattr(sys, '_MEIPASS', None)
+                if base and os.path.isdir(base):
+                    return base
+                return os.path.dirname(sys.executable)
+        except Exception:
+            pass
+        return cls.PROJECT_ROOT
+
+    @classmethod
     def get_docs_dir(cls) -> str:
-        return os.path.join(cls.PROJECT_ROOT, cls.DOCS_DIR_NAME)
+        return os.path.join(cls._get_project_root(), cls.DOCS_DIR_NAME)
 
     @classmethod
     def get_docs_output_path(cls, extension_without_dot: str) -> str:
@@ -150,27 +165,27 @@ class Config:
     @classmethod
     def get_excel_input_path(cls) -> str:
         """Get the Excel input file path."""
-        return os.path.join(cls.PROJECT_ROOT, cls.EXCEL_INPUT_FILE)
+        return os.path.join(cls._get_project_root(), cls.EXCEL_INPUT_FILE)
     
     @classmethod
     def get_json_output_path(cls) -> str:
         """Get the JSON output file path."""
-        return os.path.join(cls.PROJECT_ROOT, cls.JSON_OUTPUT_FILE)
+        return os.path.join(cls._get_project_root(), cls.JSON_OUTPUT_FILE)
     
     @classmethod
     def get_image_mappings_path(cls) -> str:
         """Get the image mappings file path."""
-        return os.path.join(cls.PROJECT_ROOT, cls.IMAGE_MAPPINGS_FILE)
+        return os.path.join(cls._get_project_root(), cls.IMAGE_MAPPINGS_FILE)
     
     @classmethod
     def get_image_source_path(cls) -> str:
         """Get the image source directory path."""
-        return os.path.join(cls.PROJECT_ROOT, cls.IMAGE_SOURCE_DIR)
+        return os.path.join(cls._get_project_root(), cls.IMAGE_SOURCE_DIR)
     
     @classmethod
     def get_image_target_path(cls) -> str:
         """Get the image target directory path."""
-        return os.path.join(cls.PROJECT_ROOT, cls.IMAGE_TARGET_DIR)
+        return os.path.join(cls._get_project_root(), cls.IMAGE_TARGET_DIR)
     
     @classmethod
     def get_external_employee_data_repo_path(cls) -> str:
@@ -189,17 +204,17 @@ class Config:
     @classmethod
     def get_website_output_path(cls) -> str:
         """Get the website output directory path."""
-        return os.path.join(cls.PROJECT_ROOT, cls.WEBSITE_OUTPUT_DIR)
+        return os.path.join(cls._get_project_root(), cls.WEBSITE_OUTPUT_DIR)
     
     @classmethod
     def get_data_dir_path(cls) -> str:
         """Get the data directory path."""
-        return os.path.join(cls.PROJECT_ROOT, cls.DATA_DIR)
+        return os.path.join(cls._get_project_root(), cls.DATA_DIR)
     
     @classmethod
     def get_assets_dir_path(cls) -> str:
         """Get the assets directory path."""
-        return os.path.join(cls.PROJECT_ROOT, cls.ASSETS_DIR)
+        return os.path.join(cls._get_project_root(), cls.ASSETS_DIR)
     
     @classmethod
     def ensure_directory_exists(cls, directory_path: str) -> bool:
