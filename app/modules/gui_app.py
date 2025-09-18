@@ -103,6 +103,12 @@ class GuiApp:
         self.root = Tk()
         self.root.title("Employee Evaluation Report Generator")
         self.root.configure(bg=DARK_BG)
+        try:
+            icon_path = os.path.join(Config.get_assets_dir_path(), "icons", "ennead_architects_logo.ico")
+            if os.path.exists(icon_path):
+                self.root.iconbitmap(icon_path)
+        except Exception:
+            pass
 
         self.selected_file = StringVar(value="No file selected")
 
