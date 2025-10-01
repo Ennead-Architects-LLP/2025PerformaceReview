@@ -142,9 +142,9 @@ class EmployeeManager:
             with open(output_file, 'w', encoding='utf-8') as f:
                 json.dump(self.to_json_list(), f, indent=2, ensure_ascii=False)
             
-            print(f"💾 Saved {len(self.employees)} employees to {output_file}")
+            print(f"[SAVED] Saved {len(self.employees)} employees to {output_file}")
             return True
             
         except Exception as e:
-            print(f"❌ Error saving employee data: {e}")
+            print(f"[ERROR] Error saving employee data: {e}")
             return False
