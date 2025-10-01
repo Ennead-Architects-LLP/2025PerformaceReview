@@ -45,7 +45,7 @@ def create_html_output_from_employees(employees: List[Employee], output_dir: str
         if output_dir is None:
             output_dir = Config.get_website_output_path()
 
-        print(f"✅ Using {len(employees)} employee records from Employee objects")
+        print(f"[OK] Using {len(employees)} employee records from Employee objects")
 
         # Generate HTML directly from Employee objects
         html_content = generate_html_template_from_employees(employees)
@@ -80,7 +80,7 @@ def create_html_output_from_employees(employees: List[Employee], output_dir: str
         return str(output_path / "index.html")
 
     except Exception as e:
-        print(f"❌ Error creating HTML output: {e}")
+        print(f"[ERROR] Error creating HTML output: {e}")
         return ""
 
 
@@ -101,6 +101,28 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
     <title>Employee Evaluation Report</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10000; }
+        .modal-overlay[hidden] { display: none; }
+        /* On-screen: larger landscape modal for more space */
+        .modal-content { position: relative; background: #FFFFFF; width: min(95vw, 1400px); height: min(90vh, 900px); aspect-ratio: auto; padding: 16px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden; }
+        .modal-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border: none; border-radius: 16px; background: rgba(0,0,0,0.6); color: #FFFFFF; cursor: pointer; font-size: 18px; line-height: 32px; text-align: center; }
+        .modal-body { height: 100%; }
+        .modal-body { overflow: auto; }
+        .modal-body .employee-card { box-shadow: none; border: 1px solid #E0E8E7; height: auto; overflow: visible; }
+        .modal-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border: none; border-radius: 20px; background: rgba(0,0,0,0.45); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .modal-nav-btn:hover { background: rgba(0,0,0,0.6); }
+        #modalPrev { left: 12px; }
+        #modalNext { right: 12px; }
+        .modal-hint { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); font-size: 12px; color: rgba(0,0,0,0.6); background: rgba(255,255,255,0.8); padding: 4px 8px; border-radius: 6px; }
+        @media print {
+            @page { size: letter; margin: 0; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .modal-overlay { position: static; background: white !important; }
+            .modal-content { width: 816px !important; height: 1056px !important; aspect-ratio: auto; box-shadow: none; border-radius: 0; }
+            .modal-close, .modal-nav-btn, .modal-hint, .tabs, .search-container, .return-to-top { display: none !important; }
+        }
+    </style>
 </head>
 <body>
     <div class="background-container"></div>
@@ -145,10 +167,90 @@ def generate_html_template_from_employees(employees: List[Employee]) -> str:
         </button>
     </div>
     
+    <!-- Modal Overlay for Enlarge-on-Click -->
+    <div id="modalOverlay" class="modal-overlay" hidden>
+        <div class="modal-content" role="dialog" aria-modal="true">
+            <button class="modal-close" aria-label="Close">×</button>
+            <button id="modalPrev" class="modal-nav-btn" aria-label="Previous">‹</button>
+            <button id="modalNext" class="modal-nav-btn" aria-label="Next">›</button>
+            <div id="modalBody" class="modal-body"></div>
+            <div class="modal-hint">Use ← and → keys or buttons to navigate</div>
+        </div>
+    </div>
+    
     <script>
         // Employee data for charts and search
         const employees = ''' + json.dumps([employee.__dict__ for employee in employees]) + ''';
         
+        // Modal enlarge-on-click handlers
+        (function setupCardEnlarge() {
+            const overlay = document.getElementById('modalOverlay');
+            const modalBody = document.getElementById('modalBody');
+            const closeBtn = overlay ? overlay.querySelector('.modal-close') : null;
+            const prevBtn = overlay ? overlay.querySelector('#modalPrev') : null;
+            const nextBtn = overlay ? overlay.querySelector('#modalNext') : null;
+            const listEl = document.getElementById('employee-list');
+            function getCards() { return Array.from(listEl ? listEl.querySelectorAll('.employee-card') : []); }
+            let currentIndex = -1;
+
+            function openAt(index) {
+                const cards = getCards();
+                if (!overlay || !modalBody || cards.length === 0) return;
+                const normalized = ((index % cards.length) + cards.length) % cards.length;
+                currentIndex = normalized;
+                const card = cards[normalized];
+                modalBody.innerHTML = '';
+                const clone = card.cloneNode(true);
+                clone.style.transform = 'none';
+                clone.style.cursor = 'default';
+                modalBody.appendChild(clone);
+                overlay.hidden = false;
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeOverlay() {
+                if (!overlay) return;
+                overlay.hidden = true;
+                document.body.style.overflow = '';
+                modalBody.innerHTML = '';
+                currentIndex = -1;
+            }
+
+            document.addEventListener('click', function(e){
+                const card = e.target.closest && e.target.closest('.employee-card');
+                const cards = getCards();
+                if (card && listEl && listEl.contains(card)) {
+                    const idx = cards.indexOf(card);
+                    if (idx !== -1) openAt(idx);
+                }
+            });
+
+            document.addEventListener('keydown', function(e){
+                if (e.key === 'Escape') { closeOverlay(); return; }
+                if (overlay && !overlay.hidden && currentIndex !== -1) {
+                    if (e.key === 'ArrowLeft') {
+                        openAt(currentIndex - 1);
+                        e.preventDefault();
+                    } else if (e.key === 'ArrowRight') {
+                        openAt(currentIndex + 1);
+                        e.preventDefault();
+                    }
+                }
+            });
+
+            if (closeBtn) closeBtn.addEventListener('click', closeOverlay);
+            if (overlay) overlay.addEventListener('click', function(e){
+                if (e.target === overlay) closeOverlay();
+            });
+            if (prevBtn) prevBtn.addEventListener('click', function(){ if (currentIndex !== -1) openAt(currentIndex - 1); });
+            if (nextBtn) nextBtn.addEventListener('click', function(){ if (currentIndex !== -1) openAt(currentIndex + 1); });
+
+            // Expose for automation/export
+            window.__openModalAt = openAt;
+            window.__closeModal = closeOverlay;
+            window.__employeeCount = function(){ return getCards().length; };
+        })();
+
         // Fuzzy search function with scoring
         function fuzzyMatch(searchTerm, target) {
             if (!searchTerm) return { match: true, score: 100 };
@@ -942,7 +1044,7 @@ def copy_images_to_website(output_path: Path):
         for image_file in source_images_dir.iterdir():
             if image_file.is_file():
                 shutil.copy2(image_file, target_images_dir / image_file.name)
-        print(f"📸 Copied images to {target_images_dir}")
+        print(f"[INFO] Copied images to {target_images_dir}")
     
     # Copy rating icons
     source_icons_dir = Path(os.path.join("assets", "icons"))
@@ -1891,7 +1993,7 @@ def generate_employee_cards(employees) -> str:
                 grouped_fields_html += group_html
 
         card_html = f"""
-        <div class="employee-card">
+        <div class="employee-card" data-employee-index="{len(cards_html)}" role="button" tabindex="0">
             <div class="employee-header">
                 {profile_image_html}
                 <div class="employee-info">

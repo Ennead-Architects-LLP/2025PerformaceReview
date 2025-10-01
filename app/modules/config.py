@@ -110,6 +110,11 @@ class Config:
     
     ANIMATION_DURATION = 1000
     ANIMATION_EASING = "easeOutQuart"
+
+    # Export settings
+    ENABLE_PDF_EXPORT = False
+    PDF_EXPORT_DIR = os.path.join("OUTPUT", "ModalPDF")
+    PDF_FILE_NAMING = "2025PerformanceReview_{name}.pdf"  # expects a 'name' safe string
     
     # Removed REQUIRED_FIELDS and EXCLUDED_FIELDS - no longer needed for Excel parsing
     

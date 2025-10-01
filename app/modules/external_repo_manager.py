@@ -64,7 +64,7 @@ class ExternalRepoManager:
                 if Config.is_supported_image_file(file):
                     image_files.append(file)
             
-            log_info(f"📸 Found {len(image_files)} images in external repository: {self.external_image_dir}")
+            log_info(f"[INFO] Found {len(image_files)} images in external repository: {self.external_image_dir}")
             return image_files
             
         except Exception as e:
@@ -103,7 +103,7 @@ class ExternalRepoManager:
         copied_count = 0
         skipped_count = 0
         
-        log_info(f"📸 Copying images from external repository...")
+        log_info(f"[INFO] Copying images from external repository...")
         log_info(f"   Source: {self.external_image_dir}")
         log_info(f"   Target: {self.local_target_dir}")
         

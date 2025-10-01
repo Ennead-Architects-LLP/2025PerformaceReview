@@ -44,10 +44,10 @@ class ImageManager:
         """
         try:
             self.target_dir.mkdir(parents=True, exist_ok=True)
-            print(f"✅ Created/verified directory: {self.target_dir}")
+            print(f"[OK] Created/verified directory: {self.target_dir}")
             return True
         except Exception as e:
-            print(f"❌ Error creating directory {self.target_dir}: {e}")
+            print(f"[ERROR] Error creating directory {self.target_dir}: {e}")
             return False
     
     def scan_source_images(self) -> List[str]:
@@ -58,7 +58,7 @@ class ImageManager:
             List of image filenames found
         """
         if not self.source_dir.exists():
-            print(f"⚠️  Source image directory not found: {self.source_dir}")
+            print(f"[WARN] Source image directory not found: {self.source_dir}")
             return []
         
         image_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'}
@@ -69,7 +69,7 @@ class ImageManager:
                 images.append(file_path.name)
         
         self.available_images = images
-        print(f"📸 Found {len(images)} images in source directory")
+        print(f"[INFO] Found {len(images)} images in source directory")
         return images
     
     def normalize_name(self, name: str) -> str:
@@ -150,7 +150,7 @@ class ImageManager:
                     print(f"🎯 Matched '{employee_name}' to '{img_file}' (confidence: {confidence}%)")
                     return img_file, confidence
         
-        print(f"⚠️  No good match found for '{employee_name}' (best match: {matches[0][1] if matches else 0}%)")
+        print(f"[WARN] No good match found for '{employee_name}' (best match: {matches[0][1] if matches else 0}%)")
         return None, None
     
     def copy_employee_images(self, employees: List[Any]) -> Dict[str, Dict[str, Any]]:
@@ -168,11 +168,11 @@ class ImageManager:
         
         available_images = self.scan_source_images()
         if not available_images:
-            print("⚠️  No images available to copy")
+            print("[WARN] No images available to copy")
             return {}
         
         # First, copy ALL images to the asset library
-        print(f"📸 Copying all {len(available_images)} images to asset library...")
+        print(f"[INFO] Copying all {len(available_images)} images to asset library...")
         all_images_copied = 0
         for image_file in available_images:
             source_path = self.source_dir / image_file
@@ -183,11 +183,11 @@ class ImageManager:
                 if not target_path.exists():
                     shutil.copy2(source_path, target_path)
                     all_images_copied += 1
-                    print(f"✅ Copied asset: {image_file}")
+                    print(f"[OK] Copied asset: {image_file}")
                 else:
-                    print(f"⏭️  Asset already exists: {image_file}")
+                    print(f"[SKIP] Asset already exists: {image_file}")
             except Exception as e:
-                print(f"❌ Error copying asset {image_file}: {e}")
+                print(f"[ERROR] Error copying asset {image_file}: {e}")
         
         print(f"📦 Asset Library Summary: {all_images_copied} new images copied")
         
@@ -231,11 +231,11 @@ class ImageManager:
                 matched_count += 1
                 print(f"🎯 Matched {employee_name}: {best_match} (confidence: {confidence}%)")
             else:
-                print(f"⚠️  No image match found for {employee_name}")
+                print(f"[WARN] No image match found for {employee_name}")
             
             self.image_mappings[employee_name] = image_info
         
-        print(f"\n📊 Employee Image Matching Summary:")
+        print(f"\n[INFO] Employee Image Matching Summary:")
         print(f"   Total employees: {len(employees)}")
         print(f"   Images matched: {matched_count}")
         print(f"   Match rate: {matched_count/len(employees)*100:.1f}%")
@@ -263,11 +263,11 @@ class ImageManager:
             with open(output_path, 'w', encoding='utf-8') as f:
                 json.dump(self.image_mappings, f, indent=2, ensure_ascii=False)
             
-            print(f"💾 Saved image mappings to {output_path}")
+            print(f"[SAVED] Saved image mappings to {output_path}")
             return True
             
         except Exception as e:
-            print(f"❌ Error saving image mappings: {e}")
+            print(f"[ERROR] Error saving image mappings: {e}")
             return False
     
     def get_image_path(self, employee_name: str) -> Optional[str]:
