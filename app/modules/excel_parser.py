@@ -5,6 +5,7 @@ Parses the Excel file exported from MS Form and converts it to structured JSON f
 """
 
 import os
+import sys
 import pandas as pd
 import json
 from typing import List, Dict, Any, Optional
@@ -14,6 +15,15 @@ from .image_manager import ImageManager
 from .employee import Employee, EmployeeManager
 from .config import Config
 from .header_mapper import HeaderMapper, CardGroup
+
+# Fix console encoding for Windows (safe)
+try:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
 
 
 class ExcelEmployeeParser:
@@ -44,7 +54,7 @@ class ExcelEmployeeParser:
                 print(f"Error: Excel file not found at {self.excel_path}")
                 return False
                 
-            self.df = pd.read_excel(self.excel_path)
+            self.df = pd.read_excel(self.excel_path, engine='openpyxl')
             print(f"✅ Successfully loaded Excel file: {self.df.shape[0]} rows, {self.df.shape[1]} columns")
             
             # Create header mappings
@@ -67,17 +77,17 @@ class ExcelEmployeeParser:
         """Print a summary of header mappings for inspection."""
         summary = self.header_mapper.get_mapping_summary()
         
-        print(f"\n📊 Header Mapping Summary:")
+        print(f"\n[INFO] Header Mapping Summary:")
         print(f"   Total mappings: {summary['total_mappings']}")
-        print(f"   Card group order: {' → '.join(summary['card_group_order'])}")
+        print(f"   Card group order: {' -> '.join(summary['card_group_order'])}")
         
         for group_name, group_info in summary['groups'].items():
             if group_info['count'] > 0:
-                print(f"\n   📁 {group_name.replace('_', ' ').title()} ({group_info['count']} fields):")
+                print(f"\n   [GROUP] {group_name.replace('_', ' ').title()} ({group_info['count']} fields):")
                 for field in group_info['fields']:
-                    visibility = "👁️" if field['data_type_in_card'] != 'noshow' else "🙈"
-                    chart_type = "📊" if field['data_type_in_chart'] != 'noshow' else "🚫"
-                    print(f"      {visibility}{chart_type} {field['column_index']}: {field['original_header']} → {field['mapped_header']} ({field['data_type_in_card']})")
+                    visibility = "[VISIBLE]" if field['data_type_in_card'] != 'noshow' else "[HIDDEN]"
+                    chart_type = "[CHART]" if field['data_type_in_chart'] != 'noshow' else "[NO-CHART]"
+                    print(f"      {visibility}{chart_type} {field['column_index']}: {field['original_header']} -> {field['mapped_header']} ({field['data_type_in_card']})")
 
     def _save_header_mappings_json(self):
         """Save header mappings to a JSON file for debugging and reference."""
@@ -109,7 +119,7 @@ class ExcelEmployeeParser:
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(header_data, f, indent=2, ensure_ascii=False)
 
-        print(f"💾 Saved header mappings to {output_path}")
+        print(f"[SAVED] Saved header mappings to {output_path}")
 
     def clean_column_name(self, col_name: str) -> str:
         """
@@ -204,7 +214,7 @@ class ExcelEmployeeParser:
         
         employees = []
         
-        print(f"📊 Parsing {len(self.df)} employee records...")
+        print(f"[INFO] Parsing {len(self.df)} employee records...")
         
         for index, row in self.df.iterrows():
             try:
@@ -224,15 +234,35 @@ class ExcelEmployeeParser:
                     # Create Employee object from data
                     employee = Employee.from_excel_data(employee_data)
                     employees.append(employee)
-                    print(f"✅ Parsed employee: {employee}")
+                    print(f"[OK] Parsed employee: {employee}")
                 else:
-                    print(f"⚠️  Skipped row {index}: Missing employee name")
+                    print(f"[WARN] Skipped row {index}: Missing employee name")
                     
             except Exception as e:
-                print(f"❌ Error parsing row {index}: {e}")
+                print(f"[ERROR] Error parsing row {index}: {e}")
                 continue
         
-        print(f"🎉 Successfully parsed {len(employees)} employee records")
+        print(f"[SUCCESS] Successfully parsed {len(employees)} employee records")
+        return employees
+
+    def parse_all_employees_as_dicts(self) -> List[Dict[str, Any]]:
+        """Return each employee as a flat dict using existing mapping logic."""
+        if self.df is None:
+            return []
+        employees: List[Dict[str, Any]] = []
+        for _, row in self.df.iterrows():
+            try:
+                emp = self.extract_employee_data(row)
+                # ensure name exists
+                name = None
+                for k, v in emp.items():
+                    if v and "name" in k.lower():
+                        name = v
+                        break
+                if name:
+                    employees.append(emp)
+            except Exception:
+                continue
         return employees
     
     def save_to_json(self, employees: List[Employee], output_path: str = None) -> bool:
@@ -262,7 +292,7 @@ class ExcelEmployeeParser:
             with open(output_file, 'w', encoding='utf-8') as f:
                 json.dump(json_data, f, indent=2, ensure_ascii=False)
             
-            print(f"💾 Successfully saved employee data to {output_file}")
+            print(f"[SAVED] Successfully saved employee data to {output_file}")
             print(f"   Records saved: {len(employees)}")
             print(f"   File size: {output_file.stat().st_size / 1024:.1f} KB")
             
@@ -348,7 +378,7 @@ def parse_excel_to_json(excel_path: str, output_path: str = None,
     
     # Copy employee images if requested
     if copy_images:
-        print("\n🖼️  Processing employee profile images...")
+        print("\n[INFO] Processing employee profile images...")
         try:
             # Set default image source directory
             if not image_source_dir:
@@ -374,7 +404,7 @@ def parse_excel_to_json(excel_path: str, output_path: str = None,
                         setattr(employee, 'profile_image_filename', image_info['filename'])
                         setattr(employee, 'profile_image_path', f"{Config.IMAGE_TARGET_DIR}/{image_info['filename']}")
                         setattr(employee, 'image_match_confidence', image_info['confidence'])
-                        print(f"✅ Set image for {emp_name}: {image_info['filename']}")
+                        print(f"[OK] Set image for {emp_name}: {image_info['filename']}")
                     else:
                         setattr(employee, 'profile_image_filename', None)
                         setattr(employee, 'profile_image_path', None)
@@ -394,7 +424,7 @@ def parse_excel_to_json(excel_path: str, output_path: str = None,
             print(f"   Available: {asset_stats['unmatched_images']}")
                     
         except Exception as e:
-            print(f"⚠️  Warning: Could not process images: {e}")
+            print(f"[WARN] Warning: Could not process images: {e}")
             for employee in employees:
                 setattr(employee, 'profile_image_filename', None)
                 setattr(employee, 'profile_image_path', None)
@@ -410,7 +440,7 @@ def parse_excel_to_json(excel_path: str, output_path: str = None,
         return False
     
     # Print summary
-    print("\n📈 Parsing Summary:")
+    print("\n[INFO] Parsing Summary:")
     print(f"   Total employees: {len(employees)}")
     # Count employees with ratings (any non-empty rating)
     ratings_count = sum(1 for emp in employees
@@ -446,8 +476,8 @@ if __name__ == "__main__":
     
     success = parse_excel_to_json(excel_file, json_file)
     if success:
-        print(f"\n🎉 Pipeline completed successfully!")
+        print(f"\n[SUCCESS] Pipeline completed successfully!")
         print(f"   Excel file: {excel_file}")
         print(f"   JSON output: {json_file}")
     else:
-        print(f"\n❌ Pipeline failed!")
+        print(f"\n[ERROR] Pipeline failed!")
