@@ -238,7 +238,7 @@ def _export_pdf_reportlab(employees: list, export_dir: str, log_func, header_map
             for k, v in emp.items():
                 if not v:
                     continue
-                ensure_space(4)
+                ensure_space_lines(4)
                 label = k.replace('_', ' ').title()
                 draw_text(label, label_font, label_size)
                 draw_text(v, body_font, body_size, extra_gap=4)
@@ -346,8 +346,16 @@ def run_pipeline(excel_path: str, log_func) -> str:
             log_func(f"Excel not found: {excel_path}")
             return ""
 
-        log_func("Parsing Excel ...")
+        # Clear cached JSON to ensure fresh parsing from Excel
         json_output = Config.get_json_output_path()
+        if os.path.exists(json_output):
+            try:
+                os.remove(json_output)
+                log_func("Cleared cached data.")
+            except Exception:
+                pass
+
+        log_func("Parsing Excel ...")
         success = parse_excel_to_json(excel_path, json_output, copy_images=True)
         if not success:
             log_func("Failed to parse Excel.")
@@ -396,7 +404,7 @@ def run_pipeline(excel_path: str, log_func) -> str:
 class GuiApp:
     def __init__(self):
         self.root = Tk()
-        self.root.title("Employee Evaluation Report Generator")
+        self.root.title("Employee Evaluation Report Generator - Version 1.1")
         self.root.configure(bg=DARK_BG)
         try:
             icon_path = os.path.join(Config.get_assets_dir_path(), "icons", "ennead_architects_logo.ico")
@@ -505,19 +513,27 @@ class GuiApp:
             if not self.pdf_output_dir:
                 self.log("Please pick a PDF output folder.")
                 return
+            if not self.file_path or not os.path.exists(self.file_path):
+                self.log("Excel file not found. Please generate the report first.")
+                return
             self.log("Exporting PDFs (letter size) with dedicated module...")
+            self.log(f"DEBUG: Using Excel file: {self.file_path}")
             # Reuse parsed data for accurate PDF content
             try:
                 from .config import Config as _C
                 from .excel_parser import ExcelEmployeeParser as _P
-                parser = _P(_C.get_excel_input_path())
+                parser = _P(self.file_path)  # Use the selected Excel file, not default path
+                self.log(f"DEBUG: Parser created with path: {parser.excel_path}")
                 if parser.load_excel():
                     employees_dicts = parser.parse_all_employees_as_dicts()
+                    self.log(f"DEBUG: Parsed {len(employees_dicts)} employees from Excel")
                     header_mappings = parser.header_mappings
                 else:
+                    self.log("DEBUG: Failed to load Excel file")
                     employees_dicts = []
                     header_mappings = None
-            except Exception:
+            except Exception as e:
+                self.log(f"DEBUG: Exception during parsing: {e}")
                 employees_dicts = []
                 header_mappings = None
 
