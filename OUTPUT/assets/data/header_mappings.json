@@ -1,0 +1,382 @@
+[
+  {
+    "index_column": 0,
+    "index_letter": "A",
+    "header_text": "ID",
+    "mapped_header": "id",
+    "group_under": "basic_info",
+    "data_type_in_card": "noshow",
+    "data_type_in_chart": "noshow",
+    "display_order": 1
+  },
+  {
+    "index_column": 1,
+    "index_letter": "B",
+    "header_text": "Start time",
+    "mapped_header": "start_time",
+    "group_under": "basic_info",
+    "data_type_in_card": "noshow",
+    "data_type_in_chart": "noshow",
+    "display_order": 6
+  },
+  {
+    "index_column": 2,
+    "index_letter": "C",
+    "header_text": "Completion time",
+    "mapped_header": "completion_time",
+    "group_under": "basic_info",
+    "data_type_in_card": "noshow",
+    "data_type_in_chart": "noshow",
+    "display_order": 7
+  },
+  {
+    "index_column": 3,
+    "index_letter": "D",
+    "header_text": "Email",
+    "mapped_header": "Email",
+    "group_under": "basic_info",
+    "data_type_in_card": "text",
+    "data_type_in_chart": "noshow",
+    "display_order": 5
+  },
+  {
+    "index_column": 4,
+    "index_letter": "E",
+    "header_text": "Name",
+    "mapped_header": "Employee Name",
+    "group_under": "basic_info",
+    "data_type_in_card": "noshow",
+    "data_type_in_chart": "noshow",
+    "display_order": 2
+  },
+  {
+    "index_column": 5,
+    "index_letter": "F",
+    "header_text": "Last modified time",
+    "mapped_header": "last_modified",
+    "group_under": "basic_info",
+    "data_type_in_card": "noshow",
+    "data_type_in_chart": "noshow",
+    "display_order": 10
+  },
+  {
+    "index_column": 7,
+    "index_letter": "H",
+    "header_text": "Employee Name ",
+    "mapped_header": "Employee Name Alt",
+    "group_under": "basic_info",
+    "data_type_in_card": "noshow",
+    "data_type_in_chart": "noshow",
+    "display_order": 11
+  },
+  {
+    "index_column": 8,
+    "index_letter": "I",
+    "header_text": "Employee Role/Titled ",
+    "mapped_header": "Title",
+    "group_under": "basic_info",
+    "data_type_in_card": "text",
+    "data_type_in_chart": "noshow",
+    "display_order": 3
+  },
+  {
+    "index_column": 9,
+    "index_letter": "J",
+    "header_text": "Date",
+    "mapped_header": "Date of Evaluation",
+    "group_under": "basic_info",
+    "data_type_in_card": "noshow",
+    "data_type_in_chart": "progression",
+    "display_order": 8
+  },
+  {
+    "index_column": 10,
+    "index_letter": "K",
+    "header_text": "Communication",
+    "mapped_header": "Communication Rating",
+    "group_under": "performance_ratings",
+    "data_type_in_card": "rating_num",
+    "data_type_in_chart": "donut",
+    "display_order": 1
+  },
+  {
+    "index_column": 11,
+    "index_letter": "L",
+    "header_text": "Communication2",
+    "mapped_header": "Communication Comments",
+    "group_under": "performance_comments",
+    "data_type_in_card": "multiline_text",
+    "data_type_in_chart": "noshow",
+    "display_order": 1
+  },
+  {
+    "index_column": 12,
+    "index_letter": "M",
+    "header_text": "Collaboration \n",
+    "mapped_header": "Collaboration Rating",
+    "group_under": "performance_ratings",
+    "data_type_in_card": "rating_num",
+    "data_type_in_chart": "donut",
+    "display_order": 2
+  },
+  {
+    "index_column": 13,
+    "index_letter": "N",
+    "header_text": "Collaboration",
+    "mapped_header": "Collaboration Comments",
+    "group_under": "performance_comments",
+    "data_type_in_card": "multiline_text",
+    "data_type_in_chart": "noshow",
+    "display_order": 2
+  },
+  {
+    "index_column": 14,
+    "index_letter": "O",
+    "header_text": "Professionalism\n",
+    "mapped_header": "Professionalism Rating",
+    "group_under": "performance_ratings",
+    "data_type_in_card": "rating_num",
+    "data_type_in_chart": "donut",
+    "display_order": 3
+  },
+  {
+    "index_column": 15,
+    "index_letter": "P",
+    "header_text": "Professionalism",
+    "mapped_header": "Professionalism Comments",
+    "group_under": "performance_comments",
+    "data_type_in_card": "multiline_text",
+    "data_type_in_chart": "noshow",
+    "display_order": 3
+  },
+  {
+    "index_column": 16,
+    "index_letter": "Q",
+    "header_text": "Technical Knowledge & Expertise \n",
+    "mapped_header": "Technical Knowledge & Expertise Rating",
+    "group_under": "performance_ratings",
+    "data_type_in_card": "rating_num",
+    "data_type_in_chart": "donut",
+    "display_order": 4
+  },
+  {
+    "index_column": 17,
+    "index_letter": "R",
+    "header_text": "Technical Knowledge & Expertise ",
+    "mapped_header": "Technical Knowledge & Expertise Comments",
+    "group_under": "performance_comments",
+    "data_type_in_card": "multiline_text",
+    "data_type_in_chart": "noshow",
+    "display_order": 4
+  },
+  {
+    "index_column": 18,
+    "index_letter": "S",
+    "header_text": "Workflow Implementation, Management, Execution (Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office) ",
+    "mapped_header": "Workflow Implementation, Management, Execution Rating(Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office)",
+    "group_under": "performance_ratings",
+    "data_type_in_card": "rating_num",
+    "data_type_in_chart": "donut",
+    "display_order": 5
+  },
+  {
+    "index_column": 19,
+    "index_letter": "T",
+    "header_text": "Workflow Implementation, Management, Execution (Projects, Proposals, Employee Relations, Accounting, Marketing, IT, Technology and Office) ",
+    "mapped_header": "Workflow Implementation, Management, Execution Comments",
+    "group_under": "performance_comments",
+    "data_type_in_card": "multiline_text",
+    "data_type_in_chart": "noshow",
+    "display_order": 5
+  },
+  {
+    "index_column": 20,
+    "index_letter": "U",
+    "header_text": "Revit",
+    "mapped_header": "Revit",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 1
+  },
+  {
+    "index_column": 21,
+    "index_letter": "V",
+    "header_text": "Rhino",
+    "mapped_header": "Rhino",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 2
+  },
+  {
+    "index_column": 22,
+    "index_letter": "W",
+    "header_text": "Enscape",
+    "mapped_header": "Enscape",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 3
+  },
+  {
+    "index_column": 23,
+    "index_letter": "X",
+    "header_text": "D5",
+    "mapped_header": "D5",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 4
+  },
+  {
+    "index_column": 24,
+    "index_letter": "Y",
+    "header_text": "Vantage Point ",
+    "mapped_header": "Vantage Point",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 5
+  },
+  {
+    "index_column": 25,
+    "index_letter": "Z",
+    "header_text": "Deltek/ADP",
+    "mapped_header": "Deltek/ADP",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 6
+  },
+  {
+    "index_column": 26,
+    "index_letter": "AA",
+    "header_text": "Newforma",
+    "mapped_header": "Newforma",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 7
+  },
+  {
+    "index_column": 27,
+    "index_letter": "AB",
+    "header_text": "Bluebeam",
+    "mapped_header": "Bluebeam",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 8
+  },
+  {
+    "index_column": 28,
+    "index_letter": "AC",
+    "header_text": "Grasshopper",
+    "mapped_header": "Grasshopper",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 9
+  },
+  {
+    "index_column": 29,
+    "index_letter": "AD",
+    "header_text": "Word",
+    "mapped_header": "Word",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 10
+  },
+  {
+    "index_column": 30,
+    "index_letter": "AE",
+    "header_text": "Powerpoint",
+    "mapped_header": "Powerpoint",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 11
+  },
+  {
+    "index_column": 31,
+    "index_letter": "AF",
+    "header_text": "Excel",
+    "mapped_header": "excel",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 12
+  },
+  {
+    "index_column": 32,
+    "index_letter": "AG",
+    "header_text": "Illustrator ",
+    "mapped_header": "Illustrator",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 13
+  },
+  {
+    "index_column": 33,
+    "index_letter": "AH",
+    "header_text": "Photoshop",
+    "mapped_header": "Photoshop",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 14
+  },
+  {
+    "index_column": 34,
+    "index_letter": "AI",
+    "header_text": "Indesign",
+    "mapped_header": "Indesign",
+    "group_under": "software_tools",
+    "data_type_in_card": "rating_complex",
+    "data_type_in_chart": "donut",
+    "display_order": 15
+  },
+  {
+    "index_column": 35,
+    "index_letter": "AJ",
+    "header_text": "Software & Tools2",
+    "mapped_header": "Software & Tools Feedback",
+    "group_under": "additional_data",
+    "data_type_in_card": "multiline_text",
+    "data_type_in_chart": "noshow",
+    "display_order": 2
+  },
+  {
+    "index_column": 36,
+    "index_letter": "AK",
+    "header_text": "Are there specific examples of the employee's performance you’d like to share that weren’t captured in earlier questions?",
+    "mapped_header": "are_there_specific_examples_of_the_employees_performance_youd_like_to_share_that_werent_captured_in_earlier_questions",
+    "group_under": "additional_data",
+    "data_type_in_card": "text",
+    "data_type_in_chart": "noshow",
+    "display_order": 999
+  },
+  {
+    "index_column": 37,
+    "index_letter": "AL",
+    "header_text": "Areas for Growth / Development Goals",
+    "mapped_header": "Areas for Growth / Development Goals",
+    "group_under": "employee_development",
+    "data_type_in_card": "multiline_text",
+    "data_type_in_chart": "noshow",
+    "display_order": 2
+  },
+  {
+    "index_column": 38,
+    "index_letter": "AM",
+    "header_text": "Rate The Employee's Overall Performance This Year",
+    "mapped_header": "rate_the_employees_overall_performance_this_year",
+    "group_under": "additional_data",
+    "data_type_in_card": "text",
+    "data_type_in_chart": "noshow",
+    "display_order": 999
+  }
+]

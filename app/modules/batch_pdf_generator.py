@@ -258,15 +258,24 @@ def export_batch_pdfs_with_dual_images(
     for idx, emp_data in enumerate(employees_data):
         try:
             # Get evaluator and employee names from raw Excel data
-            # Column 6: "Evaluator Name" (not in header mappings, so get from raw DataFrame)
-            # Column 7: "Employee Name\xa0" (mapped as "Employee Name Alt")
+            # Column E (index 4): "Name" = Evaluator Name
+            # Column 7: "Employee Name\xa0" (mapped as "Employee Name Alt") = Employee Name
             evaluator_name = None
             employee_name = None
             
-            # Get evaluator name from raw Excel column 6
+            # Get evaluator name from column E (index 4) - "Name" field
             if df is not None and idx < len(df):
                 try:
-                    # Column 6 is "Evaluator Name"
+                    # Column E (index 4) is "Name" which refers to the Evaluator
+                    evaluator_name_raw = df.iloc[idx, 4]
+                    if pd.notna(evaluator_name_raw):
+                        evaluator_name = str(evaluator_name_raw).strip()
+                except (IndexError, KeyError):
+                    pass
+            
+            # Fallback: try column 6 "Evaluator Name" if column E didn't work
+            if not evaluator_name and df is not None and idx < len(df):
+                try:
                     evaluator_name_raw = df.iloc[idx, 6]
                     if pd.notna(evaluator_name_raw):
                         evaluator_name = str(evaluator_name_raw).strip()
@@ -276,12 +285,9 @@ def export_batch_pdfs_with_dual_images(
             # Get employee name from mapped data (column 7 -> "Employee Name Alt")
             employee_name = emp_data.get('Employee Name Alt') or emp_data.get('Employee Name')
             
-            # Fallback: try to find in mapped data if raw access didn't work
+            # Additional fallback: try to find in mapped data if raw access didn't work
             if not evaluator_name:
-                # Try "Name" field (column 4, which is the evaluator)
-                evaluator_name = emp_data.get('Employee Name')  # Column 4 "Name" is mapped as "Employee Name"
-                if not evaluator_name:
-                    evaluator_name = _find_name_field(emp_data, ['evaluator name', 'evaluator_name', 'name'])
+                evaluator_name = _find_name_field(emp_data, ['evaluator name', 'evaluator_name', 'name'])
             
             if not employee_name:
                 employee_name = _find_name_field(emp_data, ['employee name', 'employee_name'])
@@ -313,8 +319,8 @@ def export_batch_pdfs_with_dual_images(
             header_y = height - 0.75*inch
             img_size = 0.9*inch
             left_margin = 0.75*inch
-            spacing = 0.3*inch  # Space between images
-            name_gap = 0.12*inch  # Gap between image and name (increased to prevent overlap)
+            spacing = 1.0*inch  # Space between images (increased significantly for clear separation)
+            name_gap = 0.2*inch  # Gap between image and name (increased further to prevent overlap)
             circle_border_width = 2  # Border width for circular images
             
             # Helper function to draw circular image with visible border
@@ -348,8 +354,8 @@ def export_batch_pdfs_with_dual_images(
                         # Draw circular image
                         c.drawImage(ImageReader(img_bytes), x, y, size, size, preserveAspectRatio=True, mask='auto')
                         
-                        # Draw visible circle border
-                        c.setStrokeColorRGB(0.5, 0.5, 0.5)  # Gray border
+                        # Draw visible circle border in teal (matching other elements)
+                        c.setStrokeColorRGB(*TEAL)  # Teal border to match design
                         c.setLineWidth(circle_border_width)
                         # Draw circle outline (centered on image)
                         c.circle(x + size/2, y + size/2, size/2, stroke=1, fill=0)
@@ -362,8 +368,8 @@ def export_batch_pdfs_with_dual_images(
                 # Fallback: draw regular image (square/rectangular) with border
                 try:
                     c.drawImage(img_path, x, y, size, size, preserveAspectRatio=True, mask='auto')
-                    # Draw border around square image
-                    c.setStrokeColorRGB(0.5, 0.5, 0.5)  # Gray border
+                    # Draw border around square image in teal
+                    c.setStrokeColorRGB(*TEAL)  # Teal border to match design
                     c.setLineWidth(circle_border_width)
                     c.rect(x, y, size, size, stroke=1, fill=0)
                 except Exception:
@@ -381,37 +387,62 @@ def export_batch_pdfs_with_dual_images(
             if evaluator_img_path and os.path.exists(evaluator_img_path):
                 draw_circular_image(evaluator_img_path, evaluator_img_x, evaluator_img_y, img_size)
             
-            # Draw names below images (closer to images)
-            name_y = header_y - img_size - name_gap
-            c.setFont('Helvetica-Bold', 16)
+            # Draw role labels and names below images
+            label_y = header_y - img_size - name_gap
+            name_y = label_y - 14  # Names below labels
             
-            # Employee name (left) - centered below image
+            # Employee label and name (left) - centered below image
+            c.setFont('Helvetica-Bold', 11)
+            c.setFillColorRGB(*TEAL)
+            employee_label = "Employee"
+            if employee_img_path:
+                label_width = c.stringWidth(employee_label, 'Helvetica-Bold', 11)
+                label_x = employee_img_x + (img_size - label_width) / 2
+                c.drawString(label_x, label_y, employee_label)
+            else:
+                c.drawString(left_margin, label_y, employee_label)
+            
+            # Employee name
+            c.setFont('Helvetica-Bold', 16)
+            c.setFillColorRGB(0, 0, 0)  # Black for name
             if employee_img_path:
                 name_width = c.stringWidth(employee_name, 'Helvetica-Bold', 16)
-                # Center name below image
                 name_x = employee_img_x + (img_size - name_width) / 2
                 c.drawString(name_x, name_y, employee_name)
             else:
-                # If no image, put name at left margin
                 c.drawString(left_margin, name_y, employee_name)
             
-            # Evaluator name (right) - centered below image
+            # Evaluator label and name (right) - centered below image
+            c.setFont('Helvetica-Bold', 11)
+            c.setFillColorRGB(*TEAL)
+            evaluator_label = "Evaluator"
+            if evaluator_img_path:
+                label_width = c.stringWidth(evaluator_label, 'Helvetica-Bold', 11)
+                label_x = evaluator_img_x + (img_size - label_width) / 2
+                c.drawString(label_x, label_y, evaluator_label)
+            else:
+                label_width = c.stringWidth(evaluator_label, 'Helvetica-Bold', 11)
+                label_x = width - left_margin - label_width
+                c.drawString(label_x, label_y, evaluator_label)
+            
+            # Evaluator name
+            c.setFont('Helvetica-Bold', 16)
+            c.setFillColorRGB(0, 0, 0)  # Black for name
             if evaluator_img_path:
                 name_width = c.stringWidth(evaluator_name, 'Helvetica-Bold', 16)
-                # Center name below image
                 name_x = evaluator_img_x + (img_size - name_width) / 2
                 c.drawString(name_x, name_y, evaluator_name)
             else:
-                # If no evaluator image, align to right
                 name_width = c.stringWidth(evaluator_name, 'Helvetica-Bold', 16)
                 name_x = width - left_margin - name_width
                 c.drawString(name_x, name_y, evaluator_name)
             
-            # Date if available (positioned closer to names)
+            # Date if available (positioned below names)
             date_val = _find_name_field(emp_data, ['date', 'evaluation'])
             if date_val:
                 c.setFont('Helvetica', 10)
-                date_y = name_y - 14  # Closer to names
+                c.setFillColorRGB(0, 0, 0)  # Black for date
+                date_y = name_y - 14  # Below names
                 date_str = _format_date_only(date_val)
                 # Center date below employee name if image exists
                 if employee_img_path:
@@ -421,8 +452,8 @@ def export_batch_pdfs_with_dual_images(
                 else:
                     c.drawString(left_margin, date_y, date_str)
             
-            # Divider line (closer to header)
-            divider_y = name_y - 0.2*inch  # Reduced gap
+            # Divider line (below date/names)
+            divider_y = date_y - 0.15*inch if date_val else name_y - 0.15*inch
             c.setLineWidth(1)
             c.setStrokeColorRGB(*TEAL)
             c.line(left_margin, divider_y, width - left_margin, divider_y)
@@ -503,8 +534,17 @@ def export_batch_pdfs_with_dual_images(
                     c.setStrokeColorRGB(*TEAL)
                     c.line(x, y, x + max_width, y)
                     y -= 8
-                    # Include all fields, not just basic_allow
+                    # Exclude certain fields from Basic Info section
                     for label, val, m in values:
+                        # Skip excluded fields in Basic Info: id, Employee Name, Employee Name Alt
+                        if grp == CardGroup.BASIC_INFO:
+                            label_str = str(label).strip()
+                            label_lower = label_str.lower()
+                            # Exclude: id, Employee Name, Employee Name Alt
+                            if (label_lower == "id" or 
+                                label_str == "Employee Name" or 
+                                label_str == "Employee Name Alt"):
+                                continue
                         mapping = m
                         base_gap = 18
                         if getattr(mapping, 'data_type_in_card', None) and mapping.data_type_in_card.value.lower() == 'rating_num':
