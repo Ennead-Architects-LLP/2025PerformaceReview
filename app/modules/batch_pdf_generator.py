@@ -317,9 +317,9 @@ def export_batch_pdfs_with_dual_images(
             name_gap = 0.12*inch  # Gap between image and name (increased to prevent overlap)
             circle_border_width = 2  # Border width for circular images
             
-            # Helper function to draw circular image
+            # Helper function to draw circular image with visible border
             def draw_circular_image(img_path, x, y, size):
-                """Draw an image with a circular mask."""
+                """Draw an image with a circular mask and visible border."""
                 if PIL_AVAILABLE:
                     try:
                         from reportlab.lib.utils import ImageReader
@@ -347,14 +347,25 @@ def export_batch_pdfs_with_dual_images(
                         
                         # Draw circular image
                         c.drawImage(ImageReader(img_bytes), x, y, size, size, preserveAspectRatio=True, mask='auto')
+                        
+                        # Draw visible circle border
+                        c.setStrokeColorRGB(0.5, 0.5, 0.5)  # Gray border
+                        c.setLineWidth(circle_border_width)
+                        # Draw circle outline (centered on image)
+                        c.circle(x + size/2, y + size/2, size/2, stroke=1, fill=0)
+                        
                         return
                     except Exception:
                         # Fallback to regular image if circular fails
                         pass
                 
-                # Fallback: draw regular image (square/rectangular)
+                # Fallback: draw regular image (square/rectangular) with border
                 try:
                     c.drawImage(img_path, x, y, size, size, preserveAspectRatio=True, mask='auto')
+                    # Draw border around square image
+                    c.setStrokeColorRGB(0.5, 0.5, 0.5)  # Gray border
+                    c.setLineWidth(circle_border_width)
+                    c.rect(x, y, size, size, stroke=1, fill=0)
                 except Exception:
                     pass
             
