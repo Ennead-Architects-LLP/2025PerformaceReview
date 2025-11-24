@@ -22,10 +22,10 @@ def create_argument_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python main.py                           # Generate complete pipeline (Excel to website)
-  python main.py --validate                # Validate system configuration
-  python main.py --parse-excel             # Parse Excel file to JSON only
-  python main.py --generate-website        # Generate HTML website from JSON data
+  python employee_self_evaluation_app.py   # Generate complete pipeline (Excel to website)
+  python employee_self_evaluation_app.py --validate                # Validate system configuration
+  python employee_self_evaluation_app.py --parse-excel             # Parse Excel file to JSON only
+  python employee_self_evaluation_app.py --generate-website        # Generate HTML website from JSON data
         """
     )
     parser.add_argument('--validate', '-v', action='store_true', help='Validate system configuration and exit')

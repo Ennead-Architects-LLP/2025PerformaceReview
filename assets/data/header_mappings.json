@@ -60,9 +60,9 @@
     "display_order": 10
   },
   {
-    "index_column": 6,
-    "index_letter": "G",
-    "header_text": "Employee Name",
+    "index_column": 7,
+    "index_letter": "H",
+    "header_text": "Employee Name ",
     "mapped_header": "Employee Name Alt",
     "group_under": "basic_info",
     "data_type_in_card": "noshow",
@@ -70,24 +70,14 @@
     "display_order": 11
   },
   {
-    "index_column": 7,
-    "index_letter": "H",
-    "header_text": "Title",
+    "index_column": 8,
+    "index_letter": "I",
+    "header_text": "Employee Role/Titled ",
     "mapped_header": "Title",
     "group_under": "basic_info",
     "data_type_in_card": "text",
     "data_type_in_chart": "noshow",
     "display_order": 3
-  },
-  {
-    "index_column": 8,
-    "index_letter": "I",
-    "header_text": "Role",
-    "mapped_header": "Employee Role",
-    "group_under": "basic_info",
-    "data_type_in_card": "text",
-    "data_type_in_chart": "noshow",
-    "display_order": 4
   },
   {
     "index_column": 9,
@@ -362,46 +352,16 @@
   {
     "index_column": 36,
     "index_letter": "AK",
-    "header_text": "Rate Your Overall Performance This Year",
-    "mapped_header": "Current YearOverall Performance Rating",
-    "group_under": "overall_assessment",
-    "data_type_in_card": "rating_num",
-    "data_type_in_chart": "donut",
-    "display_order": 1
+    "header_text": "Are there specific examples of the employee's performance you’d like to share that weren’t captured in earlier questions?",
+    "mapped_header": "are_there_specific_examples_of_the_employees_performance_youd_like_to_share_that_werent_captured_in_earlier_questions",
+    "group_under": "additional_data",
+    "data_type_in_card": "text",
+    "data_type_in_chart": "noshow",
+    "display_order": 999
   },
   {
     "index_column": 37,
     "index_letter": "AL",
-    "header_text": "Are there specific examples of your performance you’d like to share that weren’t captured in earlier questions?",
-    "mapped_header": "Are there specific examples of your performance you'd like to share that weren't captured in earlier questions?",
-    "group_under": "overall_assessment",
-    "data_type_in_card": "multiline_text",
-    "data_type_in_chart": "noshow",
-    "display_order": 2
-  },
-  {
-    "index_column": 38,
-    "index_letter": "AM",
-    "header_text": "What additional resources would help you do your job more effectively?",
-    "mapped_header": "What additional resources would help you do your job more effectively?",
-    "group_under": "overall_assessment",
-    "data_type_in_card": "multiline_text",
-    "data_type_in_chart": "noshow",
-    "display_order": 3
-  },
-  {
-    "index_column": 39,
-    "index_letter": "AN",
-    "header_text": "Employee Strengths",
-    "mapped_header": "Employee Strengths",
-    "group_under": "employee_development",
-    "data_type_in_card": "multiline_text",
-    "data_type_in_chart": "noshow",
-    "display_order": 1
-  },
-  {
-    "index_column": 40,
-    "index_letter": "AO",
     "header_text": "Areas for Growth / Development Goals",
     "mapped_header": "Areas for Growth / Development Goals",
     "group_under": "employee_development",
@@ -410,13 +370,13 @@
     "display_order": 2
   },
   {
-    "index_column": 41,
-    "index_letter": "AP",
-    "header_text": "Please share your thoughts about the character and culture of our studio and practice. \nWe value your perspective and insights, as someone with firsthand experience of the firm. Please share your ...",
-    "mapped_header": "Please share your thoughts about the character and culture of our studio and practice.",
+    "index_column": 38,
+    "index_letter": "AM",
+    "header_text": "Rate The Employee's Overall Performance This Year",
+    "mapped_header": "rate_the_employees_overall_performance_this_year",
     "group_under": "additional_data",
-    "data_type_in_card": "multiline_text",
+    "data_type_in_card": "text",
     "data_type_in_chart": "noshow",
-    "display_order": 1
+    "display_order": 999
   }
 ]

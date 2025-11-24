@@ -29,7 +29,7 @@ Or generate your own report locally:
 ### Usage
 3. **Run the application:**
    ```bash
-   python main.py
+   python employee_self_evaluation_app.py
    ```
 
 4. **View the report:**
@@ -65,7 +65,8 @@ Or generate your own report locally:
 │   ├── assets/
 │   ├── css/
 │   └── js/
-├── main.py                      # Application entry point
+├── employee_self_evaluation_app.py  # Application entry point (self-evaluation report generator)
+├── evaluator_employee_pdf_maker.py # Batch PDF maker for evaluator-employee pairs
 └── requirements.txt
 ```
 
